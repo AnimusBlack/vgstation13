@@ -329,7 +329,7 @@ proc/establish_db_connection()
 	if(q.ErrorMsg())
 		dbcon.Disconnect()
 	if(!dbcon || !dbcon.IsConnected())
-		return// setup_database_connection()
+		return setup_database_connection()
 	else
 		return 1
 
