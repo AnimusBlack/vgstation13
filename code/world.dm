@@ -66,10 +66,10 @@
 	data_core = new /obj/effect/datacore()
 	paiController = new /datum/paiController()
 
-//	if(!setup_database_connection())
-//		world.log << "Your server failed to establish a connection with the feedback database."
-//	else
-//		world.log << "Feedback database connection established."
+	if(!setup_database_connection())
+		world.log << "Your server failed to establish a connection with the feedback database."
+	else
+		world.log << "Feedback database connection established."
 
 	plmaster = new /obj/effect/overlay()
 	plmaster.icon = 'icons/effects/tile_effects.dmi'
@@ -292,7 +292,7 @@
 
 #define FAILED_DB_CONNECTION_CUTOFF 5
 var/failed_db_connections = 0
-/*
+
 proc/setup_database_connection()
 
 	if(failed_db_connections > FAILED_DB_CONNECTION_CUTOFF)	//If it failed to establish a connection more than 5 times in a row, don't bother attempting to conenct anymore.
@@ -300,14 +300,14 @@ proc/setup_database_connection()
 
 	if(!dbcon)
 		dbcon = new()
-/*
+
 	var/user = sqllogin
 	var/pass = sqlpass
 	var/db = sqldb
 	var/address = sqladdress
 	var/port = sqlport
-*/
-//	dbcon.Connect("dbi:mysql:[db]:[address]:[port]","[user]","[pass]")
+
+	dbcon.Connect("dbi:mysql:[db]:[address]:[port]","[user]","[pass]")
 	. = dbcon.IsConnected()
 	if ( . )
 		failed_db_connections = 0	//If this connection succeeded, reset the failed connections counter.
@@ -315,7 +315,7 @@ proc/setup_database_connection()
 		world.log << "Database Error: [dbcon.ErrorMsg()]"
 		failed_db_connections++		//If it failed, increase the failed connections counter.
 
-	return .*/
+	return .
 
 //This proc ensures that the connection to the feedback database (global variable dbcon) is established
 proc/establish_db_connection()
