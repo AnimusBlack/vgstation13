@@ -17,15 +17,31 @@ mob/living/carbon/proc/dream()
 		"an abandoned laboratory","The Syndicate","blood","falling","flames","ice","the cold","an operating table","a war","red men","malfunctioning robots",
 		"a ship full of spiders","valids","hardcore","your mom","lewd","explosions","broken bones","clowns everywhere","features","a crash","a skrell","a unathi","a tajaran"
 		)
+
+	var/list/future = list(
+		"the Elegrad", "animatronic bear", "a rooftop", "the library", "there is no escape", "a water", "the cursed city", "soon", "the Alma",
+		"the dead planet", "a sniper", "a fall"
+		)
+
 	spawn(0)
 		for(var/i = rand(1,4),i > 0, i--)
 			var/dream_image = pick(dreams)
-			dreams -= dream_image
-			src << "\blue <i>... [dream_image] ...</i>"
-			sleep(rand(40,70))
-			if(paralysis <= 0)
-				dreaming = 0
-				return 0
+			if(prob(30))
+				dream_image = pick(future)
+				src << "\red <b>... [dream_image] ...</b>"
+				src << 'sound/effects/ghost2.ogg'
+				sleep(rand(40,70))
+				if(paralysis <= 0)
+					dreaming = 0
+					return 0
+			else
+				dream_image = pick(dreams)
+				dreams -= dream_image
+				src << "\blue <i>... [dream_image] ...</i>"
+				sleep(rand(40,70))
+				if(paralysis <= 0)
+					dreaming = 0
+					return 0
 		dreaming = 0
 		return 1
 
