@@ -321,7 +321,7 @@ proc/slur(phrase)
 	return newphrase
 
 /proc/stutter(text)
-	text = html_decode(text)
+	text = sanitize_uni(text)
 	var/t = ""
 	var/lenght = length(text)//length of the entire word
 	var/alphabet[0]

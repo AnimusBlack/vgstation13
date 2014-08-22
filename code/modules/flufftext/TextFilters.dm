@@ -24,7 +24,7 @@ proc/Intoxicated(phrase)
 	return newphrase
 
 proc/NewStutter(phrase,stunned)
-	phrase = html_decode(phrase)
+	phrase = sanitize_uni(phrase)
 
 	var/list/split_phrase = text2list(phrase," ") //Split it up into words.
 
@@ -57,7 +57,7 @@ proc/NewStutter(phrase,stunned)
 
 		split_phrase[index] = word
 
-	return sanitize(dd_list2text(split_phrase," "))
+	return sanitize_uni(dd_list2text(split_phrase," "))
 
 proc/Stagger(mob/M,d) //Technically not a filter, but it relates to drunkenness.
 	step(M, pick(d,turn(d,90),turn(d,-90)))
