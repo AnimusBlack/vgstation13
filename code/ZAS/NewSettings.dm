@@ -43,7 +43,7 @@ var/global/ZAS_Settings/zas_settings = new
 	name = "Fire - Air Consumption Ratio"
 	desc = "Ratio of air removed and combusted per tick."
 	valtype=ZAS_TYPE_NUMERIC
-	value = 0.60
+	value = 0.90
 
 /datum/ZAS_Setting/fire_firelevel_multiplier
 	value = 25
@@ -52,7 +52,7 @@ var/global/ZAS_Settings/zas_settings = new
 	valtype=ZAS_TYPE_NUMERIC
 
 /datum/ZAS_Setting/fire_fuel_energy_release
-	value = 850000
+	value = 950000
 	name = "Fire - Fuel energy release"
 	desc = "The energy in joule released when burning one mol of a burnable substance"
 	valtype=ZAS_TYPE_NUMERIC
@@ -124,7 +124,7 @@ var/global/ZAS_Settings/zas_settings = new
 	valtype=ZAS_TYPE_NUMERIC
 
 /datum/ZAS_Setting/airflow_mob_slowdown
-	value = 1
+	value = 3
 	name = "Airflow Slowdown"
 	desc = "Time in tenths of a second to add as a delay to each movement by a mob if they are fighting the pull of the airflow."
 	valtype=ZAS_TYPE_NUMERIC
@@ -242,12 +242,12 @@ var/global/ZAS_Settings/zas_settings = new
 		src.settings[id]=new S
 
 
-	if(fexists("config/ZAS.txt") == 0)
+	if(fexists("config.txt") == 0)
 		Save()
 	Load()
 
 /ZAS_Settings/proc/Save()
-	var/F = file("config/ZAS.txt")
+	var/F = file("config.txt")
 	fdel(F)
 	for(var/id in src.settings)
 		var/datum/ZAS_Setting/setting = src.settings[id]
@@ -257,7 +257,7 @@ var/global/ZAS_Settings/zas_settings = new
 		F << ""
 
 /ZAS_Settings/proc/Load()
-	for(var/t in file2list("config/ZAS.txt"))
+	for(var/t in file2list("config.txt"))
 		if(!t)	continue
 
 		t = trim(t)

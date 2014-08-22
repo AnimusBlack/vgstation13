@@ -147,7 +147,8 @@
 		buckled_mob.buckled = null
 		buckled_mob.update_canmove()
 		buckled_mob = null
-	density = 0	icon_state = "down"
+		density = 0
+		icon_state = "down"
 	..()
 	return
 
