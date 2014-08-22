@@ -10,14 +10,13 @@
 		user << "<span class='sinister'>All you hear on the frequency is static and panicked screaming. There will be no shuttle call today.</span>"
 	return 0
 
-// Apply changes when exiting state
-/datum/universal_state/supermatter_cascade/OnExit()
-
 /datum/universal_state/supermatter_cascade/OnTurfChange(var/turf/T)
 	var/turf/space/spess = T
 	if(istype(spess))
 		spess.overlays += "end01"
 
+/datum/universal_state/supermatter_cascade/DecayTurf(var/turf/T)
+	return ..()
 
 // Apply changes when entering state
 /datum/universal_state/supermatter_cascade/OnEnter()
@@ -197,5 +196,6 @@ AUTOMATED ALERT: Link to [command_name()] lost."}
 
 		sleep(300)
 		log_game("Rebooting due to universal collapse")
+		CallHook("Reboot",list())
 		world.Reboot()
 		return
