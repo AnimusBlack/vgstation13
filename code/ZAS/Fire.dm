@@ -10,7 +10,7 @@ Attach to transfer valve and open. BOOM.
 
 */
 /atom
-	var/autoignition_temperature = 573 // In Kelvin.  0 = Not flammable
+	var/autoignition_temperature = 1073 // In Kelvin.  0 = Not flammable
 	var/on_fire=0
 	var/fire_fuel=0 // Do NOT rely on this.  getFireFuel may be overridden.
 	var/fire_dmi = 'icons/effects/fire.dmi'
@@ -43,7 +43,7 @@ Attach to transfer valve and open. BOOM.
 
 /atom/proc/ignite(var/temperature)
 	on_fire=1
-	visible_message("\The [src] bursts into flame!")
+	//visible_message("\The [src] bursts into flame!")
 	if(fire_dmi && fire_sprite)
 		fire_overlay = image(fire_dmi,fire_sprite)
 		overlays += fire_overlay
@@ -131,6 +131,7 @@ Attach to transfer valve and open. BOOM.
 
 	anchored = 1
 	mouse_opacity = 0
+	autoignition_temperature = 0
 
 	//luminosity = 3
 

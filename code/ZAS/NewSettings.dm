@@ -43,10 +43,10 @@ var/global/ZAS_Settings/zas_settings = new
 	name = "Fire - Air Consumption Ratio"
 	desc = "Ratio of air removed and combusted per tick."
 	valtype=ZAS_TYPE_NUMERIC
-	value = 0.90
+	value = 1.90
 
 /datum/ZAS_Setting/fire_firelevel_multiplier
-	value = 25
+	value = 10
 	name = "Fire - Firelevel Constant"
 	desc = "Multiplied by the equation for firelevel, affects mainly the extingiushing of fires."
 	valtype=ZAS_TYPE_NUMERIC
