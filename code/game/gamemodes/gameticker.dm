@@ -335,6 +335,9 @@ var/global/datum/controller/gameticker/ticker
 
 			spawn
 				declare_completion()
+				sleep(50)
+				CallHook("Reboot",list())
+				world.Reboot()
 
 			spawn(50)
 				if (mode.station_was_nuked)
