@@ -478,6 +478,12 @@ proc/get_damage_icon_part(damage_state, body_part)
 //vvvvvv UPDATE_INV PROCS vvvvvv
 
 /mob/living/carbon/human/update_inv_w_uniform(var/update_icons=1)
+
+	var/fat = (M_FAT in src.mutations)
+
+	if(gender == PLURAL && !fat)
+		gender = prev_gender
+
 	if(w_uniform && istype(w_uniform, /obj/item/clothing/under) )
 		w_uniform.screen_loc = ui_iclothing
 		var/t_color = w_uniform._color

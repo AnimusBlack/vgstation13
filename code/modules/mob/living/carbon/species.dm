@@ -416,6 +416,10 @@
 	default_mutations=list(M_REMOTE_TALK)
 	default_block_names=list("REMOTETALK")
 
+	equip(var/mob/living/carbon/human/H)
+		H.gender = "male"
+		H.prev_gender = "male"
+
 /datum/species/muton // /vg/
 	name = "Muton"
 	icobase = 'icons/mob/human_races/r_muton.dmi'
@@ -555,3 +559,29 @@
 	blood_color = "#004400"
 	flesh_color = "#907E4A"
 
+/datum/species/ipc
+	name = "IPC"
+	icobase = 'icons/mob/human_races/r_machine.dmi'
+	deform = 'icons/mob/human_races/r_machine.dmi'
+	language = "Sol Common"
+	attack_verb = "bumps"
+	punch_damage = 3
+	primitive = /mob/living/carbon/monkey/
+	darksight = 3
+
+	cold_level_1 = 220 //Default 260 - Lower is better
+	cold_level_2 = 180 //Default 200
+	cold_level_3 = 100 //Default 120
+
+	heat_level_1 = 560 //Default 360 - Higher is better
+	heat_level_2 = 680 //Default 400
+	heat_level_3 = 1100 //Default 1000
+
+	flags = IS_WHITELISTED | NO_BREATHE | NO_BLOOD | NO_PAIN
+
+	blood_color = "#000000"
+	flesh_color = "#333333"
+
+	equip(var/mob/living/carbon/human/H)
+		H.gender = "male"
+		H.prev_gender = "male"
