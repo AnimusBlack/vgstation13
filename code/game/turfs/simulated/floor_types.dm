@@ -269,6 +269,7 @@
 	name = "snow"
 	icon = 'icons/turf/snow.dmi'
 	icon_state = "snow"
+	temperature = 230
 
 /turf/simulated/floor/plating/snow/concrete
 	name = "concrete"
