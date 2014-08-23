@@ -348,7 +348,7 @@
 	tail = "tajtail"
 	attack_verb = "scratch"
 	punch_damage = 5
-	base_color = "#333333"
+	base_color = "#000000"
 	darksight = 8
 
 	cold_level_1 = 200 //Default 260

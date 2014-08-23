@@ -52,7 +52,7 @@
 		src << "Only administrators may use this command."
 		return
 
-	var/msg = input("Message:", text("Subtle PM to [M.key]")) as text
+	var/msg = sanitize_uni(input("Message:", text("Subtle PM to [M.key]"))) as text
 
 	if (!msg)
 		return
@@ -62,7 +62,7 @@
 				if(M.mind.assigned_role == "Chaplain")
 					M << "\bold You hear the voice of [ticker.Bible_deity_name] in your head... \italic [sanitize(html_decode(msg))]"
 				else
-					M << "\bold You hear a voice in your head... \italic [sanitize(html_decode(msg))]"
+					M << "\bold You hear a voice in your head... \italic [sanitize_uni(html_decode(msg))]"
 
 	log_admin("SubtlePM: [key_name(usr)] -> [key_name(M)] : [msg]")
 	message_admins("\blue \bold SubtleMessage: [key_name_admin(usr)] -> [key_name_admin(M)] : [msg]", 1)
