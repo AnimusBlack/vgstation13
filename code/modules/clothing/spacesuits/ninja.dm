@@ -68,3 +68,12 @@
 	var/obj/effect/overlay/hologram//Is the AI hologram on or off? Visible only to the wearer of the suit. This works by attaching an image to a blank overlay.
 	var/flush = 0//If an AI purge is in progress.
 	var/s_control = 1//If user in control of the suit.
+
+/obj/item/clothing/suit/space/inspector
+	name = "inspector suit"
+	desc = "A unique, vaccum-proof suit of nano-enhanced armor designed specifically for NanoTrasen representatives."
+	icon_state = "s-ninja"
+	item_state = "s-ninja_suit"
+	allowed = list(/obj/item/weapon/gun,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs,/obj/item/weapon/tank/emergency_oxygen,/obj/item/weapon/tank/emergency_nitrogen,/obj/item/weapon/cell)
+	slowdown = 0
+	armor = list(melee = 60, bullet = 50, laser = 30, energy = 55, bomb = 30, bio = 30, rad = 30)

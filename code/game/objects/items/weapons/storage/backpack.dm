@@ -27,8 +27,9 @@
 	desc = "A backpack that opens into a localized pocket of Blue Space."
 	origin_tech = "bluespace=4"
 	icon_state = "holdingpack"
-	max_w_class = 4
-	max_combined_w_class = 28
+	storage_slots = 8
+	max_w_class = 8
+	max_combined_w_class = 48
 
 	suicide_act(mob/user)
 		viewers(user) << "\red <b>[user] puts the [src.name] on \his head and stretches the bag around \himself. With a sudden snapping sound, the bag shrinks to it's original size, leaving no trace of [user] </b>"

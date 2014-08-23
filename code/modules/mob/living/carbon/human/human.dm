@@ -1647,7 +1647,7 @@ mob/living/carbon/human/yank_out_object()
 	else
 		usr << "\blue [self ? "Your" : "[src]'s"] pulse is [src.get_pulse(GETPULSE_HAND)]."
 
-/mob/living/carbon/human/proc/set_species(var/new_species, var/force_organs)
+/mob/living/carbon/human/proc/set_species(var/new_species, var/force_organs, var/default_colour)
 
 	if(!dna)
 		if(!new_species)
@@ -1672,20 +1672,22 @@ mob/living/carbon/human/yank_out_object()
 	if(species.language)
 		add_language(species.language)
 
-	see_in_dark = species.darksight
-	if(see_in_dark > 2)
-		see_invisible = SEE_INVISIBLE_LEVEL_ONE
+	if(species.base_color && default_colour)
+		//Apply colour.
+		r_skin = hex2num(copytext(species.base_color,2,4))
+		g_skin = hex2num(copytext(species.base_color,4,6))
+		b_skin = hex2num(copytext(species.base_color,6,8))
 	else
-		see_invisible = SEE_INVISIBLE_LIVING
+		r_skin = 0
+		g_skin = 0
+		b_skin = 0
 
-	if(species.default_mutations.len>0 || species.default_blocks.len>0)
-		do_deferred_species_setup=1
+	species.handle_post_spawn(src)
 
 	spawn(0)
 		update_icons()
 
 	if(species)
-		species.handle_post_spawn(src)
 		return 1
 	else
 		return 0

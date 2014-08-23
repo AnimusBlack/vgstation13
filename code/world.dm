@@ -46,6 +46,7 @@
 	jobban_updatelegacybans()
 	appearance_loadbanfile()
 	load_bwhitelist()
+	load_donator()
 	LoadBans()
 	SetupHooks() // /vg/
 

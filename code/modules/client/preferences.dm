@@ -1355,6 +1355,10 @@ datum/preferences
 		character.g_facial = g_facial
 		character.b_facial = b_facial
 
+		character.r_skin = r_skin
+		character.g_skin = g_skin
+		character.b_skin = b_skin
+
 		character.s_tone = s_tone
 
 		character.h_style = h_style

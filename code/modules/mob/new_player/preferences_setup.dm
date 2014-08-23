@@ -172,6 +172,10 @@ datum/preferences
 		green = max(min(green + rand (-25, 25), 255), 0)
 		blue = max(min(blue + rand (-25, 25), 255), 0)
 
+		r_skin = red
+		g_skin = green
+		b_skin = blue
+
 	proc/update_preview_icon()		//seriously. This is horrendous.
 		del(preview_icon_front)
 		del(preview_icon_side)
@@ -195,14 +199,20 @@ datum/preferences
 		for(var/name in list("r_arm","r_hand","r_leg","r_foot","l_leg","l_foot","l_arm","l_hand"))
 			if(organ_data[name] == "amputated") continue
 
-			var/icon/temp = new /icon(icobase, "[name]_[g]")
+			var/icon/temp = new /icon(icobase, "[name]")
 			if(organ_data[name] == "cyborg")
 				temp.MapColors(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(0,0,0))
 
 			preview_icon.Blend(temp, ICON_OVERLAY)
 
 		//Tail
+		if(current_species && (current_species.flags & HAS_TAIL))
+			var/icon/temp = new/icon("icon" = 'icons/effects/species.dmi', "icon_state" = "[current_species.tail]_s")
+			preview_icon.Blend(temp, ICON_OVERLAY)
 
+		// Skin color
+		if(current_species && (current_species.flags & HAS_SKIN_COLOR))
+			preview_icon.Blend(rgb(r_skin, g_skin, b_skin), ICON_ADD)
 
 
 		// Skin tone

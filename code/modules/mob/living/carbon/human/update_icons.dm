@@ -280,6 +280,9 @@ proc/get_damage_icon_part(damage_state, body_part)
 		husk_over.Blend(mask, ICON_ADD)
 		stand_icon.Blend(husk_over, ICON_OVERLAY)
 
+	if (species.flags & HAS_SKIN_COLOR)
+		stand_icon.Blend(rgb(r_skin, g_skin, b_skin), ICON_ADD)
+
 	if(has_head)
 		//Eyes
 		if(!skeleton)
@@ -847,8 +850,11 @@ proc/get_damage_icon_part(damage_state, body_part)
 	overlays_standing[TAIL_LAYER] = null
 
 	if(species.tail && species.flags & HAS_TAIL)
-		if(!wear_suit || !(wear_suit.flags_inv & HIDEJUMPSUIT) && !istype(wear_suit, /obj/item/clothing/suit/space))
-			overlays_standing[TAIL_LAYER] = image("icon" = 'icons/effects/species.dmi', "icon_state" = "[species.tail]_s")
+		if(!wear_suit || !(wear_suit.flags_inv) && !istype(wear_suit, /obj/item/clothing/suit/space))
+			var/icon/tail_s = new/icon("icon" = 'icons/effects/species.dmi', "icon_state" = "[species.tail]_s")
+			tail_s.Blend(rgb(r_skin, g_skin, b_skin), ICON_ADD)
+
+			overlays_standing[TAIL_LAYER]	= image(tail_s)
 
 	if(update_icons)
 		update_icons()

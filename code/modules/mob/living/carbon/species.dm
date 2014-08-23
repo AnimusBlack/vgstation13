@@ -60,6 +60,7 @@
 	var/belt_icons      = 'icons/mob/belt.dmi'
 	var/wear_suit_icons = 'icons/mob/suit.dmi'
 	var/wear_mask_icons = 'icons/mob/mask.dmi'
+	var/base_color
 	var/back_icons      = 'icons/mob/back.dmi'
 
 /datum/species/proc/create_organs(var/mob/living/carbon/human/H) //Handles creation of mob organs.
@@ -294,6 +295,7 @@
 	attack_verb = "scratch"
 	punch_damage = 5
 	primitive = /mob/living/carbon/monkey/unathi
+	base_color = "#066000"
 	darksight = 3
 
 	cold_level_1 = 280 //Default 260 - Lower is better
@@ -304,7 +306,7 @@
 	heat_level_2 = 480 //Default 400
 	heat_level_3 = 1100 //Default 1000
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL
+	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL | HAS_SKIN_COLOR
 
 	flesh_color = "#34AF10"
 
@@ -338,6 +340,7 @@
 	tail = "tajtail"
 	attack_verb = "scratch"
 	punch_damage = 5
+	base_color = "#333333"
 	darksight = 8
 
 	cold_level_1 = 200 //Default 260
@@ -350,7 +353,7 @@
 
 	primitive = /mob/living/carbon/monkey/tajara
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL
+	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL | HAS_SKIN_COLOR
 
 	flesh_color = "#AFA59E"
 
@@ -366,7 +369,7 @@
 			"silly rabbit",
 			"sandwich", // won't work too well with plurals OH WELL
 			"recolor",
-			"party pooper"
+			"party foxy"
 		)
 	)
 	filter.addWordReplacement("me","meow")
@@ -383,14 +386,14 @@
 		message = ""
 		if(prob(50))
 			message = pick(
-				"GOD, PLEASE",
-				"NO, GOD",
-				"AGGGGGGGH",
+				"MEOW!",
+				"Purr. Purr.",
+				"Raaaawr!",
 			)+" "
 		message += pick(
-			"KILL ME",
-			"END MY SUFFERING",
-			"I CAN'T DO THIS ANYMORE",
+			"Meowl!",
+			"Surrrf",
+			"Mooowrl",
 		)
 		return message
 	if(copytext(message, 1, 2) != "*")
@@ -451,7 +454,7 @@
 	language = "Skrellian"
 	primitive = /mob/living/carbon/monkey/skrell
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR
+	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_SKIN_COLOR
 
 	flesh_color = "#8CD7A3"
 

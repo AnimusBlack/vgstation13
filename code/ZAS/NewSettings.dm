@@ -82,7 +82,7 @@ var/global/ZAS_Settings/zas_settings = new
 	valtype=ZAS_TYPE_NUMERIC
 
 /datum/ZAS_Setting/airflow_dense_pressure
-	value = 40
+	value = 30
 	name = "Airflow - Dense Movement Threshold %"
 	desc = "Percent of 1 Atm. at which items with canisters and closets will move."
 	valtype=ZAS_TYPE_NUMERIC
@@ -94,7 +94,7 @@ var/global/ZAS_Settings/zas_settings = new
 	valtype=ZAS_TYPE_NUMERIC
 
 /datum/ZAS_Setting/airflow_stun_cooldown
-	value = 15
+	value = 10
 	name = "Aiflow Stunning - Cooldown"
 	desc = "How long, in tenths of a second, to wait before stunning them again."
 	valtype=ZAS_TYPE_NUMERIC
@@ -106,25 +106,25 @@ var/global/ZAS_Settings/zas_settings = new
 	valtype=ZAS_TYPE_NUMERIC
 
 /datum/ZAS_Setting/airflow_damage
-	value = 2
+	value = 5
 	name = "Airflow Impact - Damage"
 	desc = "Damage from airflow impacts."
 	valtype=ZAS_TYPE_NUMERIC
 
 /datum/ZAS_Setting/airflow_speed_decay
-	value = 0.7
+	value = 0.6
 	name = "Airflow Speed Decay"
 	desc = "How rapidly the speed gained from airflow decays."
 	valtype=ZAS_TYPE_NUMERIC
 
 /datum/ZAS_Setting/airflow_delay
-	value = 25
+	value = 15
 	name = "Airflow Retrigger Delay"
 	desc = "Time in deciseconds before things can be moved by airflow again."
 	valtype=ZAS_TYPE_NUMERIC
 
 /datum/ZAS_Setting/airflow_mob_slowdown
-	value = 3
+	value = 4
 	name = "Airflow Slowdown"
 	desc = "Time in tenths of a second to add as a delay to each movement by a mob if they are fighting the pull of the airflow."
 	valtype=ZAS_TYPE_NUMERIC
@@ -190,7 +190,7 @@ var/global/ZAS_Settings/zas_settings = new
 	name = "Genetic Corruption Chance"
 	desc = "Chance of genetic corruption as well as toxic damage, X in 10,000."
 	value = 100
-	valtype=ZAS_TYPE_BOOLEAN
+	valtype=ZAS_TYPE_NUMERIC
 
 /datum/ZAS_Setting/SKIN_BURNS
 	name = "Skin Burns"
@@ -207,7 +207,7 @@ var/global/ZAS_Settings/zas_settings = new
 /datum/ZAS_Setting/CONTAMINATION_LOSS
 	name = "Contamination Loss"
 	desc = "How much toxin damage is dealt from contaminated clothing"
-	value = 0.02 //Per tick?  ASK ARYN
+	value = 0.04 //Per tick?  ASK ARYN
 	valtype=ZAS_TYPE_NUMERIC
 
 /datum/ZAS_Setting/PLASMA_HALLUCINATION

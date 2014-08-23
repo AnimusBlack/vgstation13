@@ -576,6 +576,9 @@ Pressure: [env.return_pressure()]"}
 		"emergency rescue team",
 		"nanotrasen representative",
 		"nanotrasen officer",
+		"inspector",
+		"agent 1",
+		"agent 2",
 		"nanotrasen captain"
 		)
 	var/dostrip = input("Do you want to strip [M] before equipping them? (0=no, 1=yes)", "STRIPTEASE") as null|anything in list(0,1)
@@ -798,19 +801,19 @@ Pressure: [env.return_pressure()]"}
 			M.equip_syndicate_commando()
 
 		if("nanotrasen representative")
-			M.equip_if_possible(new /obj/item/clothing/under/rank/centcom/representative(M), slot_w_uniform)
-			M.equip_if_possible(new /obj/item/clothing/shoes/centcom(M), slot_shoes)
-			M.equip_if_possible(new /obj/item/clothing/gloves/white(M), slot_gloves)
-			M.equip_if_possible(new /obj/item/device/radio/headset/heads/hop(M), slot_ears)
+			M.equip_to_slot_or_del(new /obj/item/clothing/under/rank/centcom/representative(M), slot_w_uniform)
+			M.equip_to_slot_or_del(new /obj/item/clothing/shoes/centcom(M), slot_shoes)
+			M.equip_to_slot_or_del(new /obj/item/clothing/gloves/white(M), slot_gloves)
+			M.equip_to_slot_or_del(new /obj/item/device/radio/headset/heads/hop(M), slot_ears)
 
 			var/obj/item/device/pda/heads/pda = new(M)
 			pda.owner = M.real_name
 			pda.ownjob = "NanoTrasen Navy Representative"
 			pda.name = "PDA-[M.real_name] ([pda.ownjob])"
 
-			M.equip_if_possible(pda, slot_r_store)
-			M.equip_if_possible(new /obj/item/clothing/glasses/sunglasses(M), slot_l_store)
-			M.equip_if_possible(new /obj/item/weapon/clipboard(M), slot_belt)
+			M.equip_to_slot_or_del(pda, slot_r_store)
+			M.equip_to_slot_or_del(new /obj/item/clothing/glasses/sunglasses(M), slot_l_store)
+			M.equip_to_slot_or_del(new /obj/item/weapon/clipboard(M), slot_belt)
 
 			var/obj/item/weapon/card/id/W = new(M)
 			W.name = "[M.real_name]'s ID Card"
@@ -820,23 +823,23 @@ Pressure: [env.return_pressure()]"}
 			W.access += list("VIP Guest","Custodian","Thunderdome Overseer","Intel Officer","Medical Officer","Death Commando","Research Officer")
 			W.assignment = "NanoTrasen Navy Representative"
 			W.registered_name = M.real_name
-			M.equip_if_possible(W, slot_wear_id)
+			M.equip_to_slot_or_del(W, slot_wear_id)
 
 		if("nanotrasen officer")
-			M.equip_if_possible(new /obj/item/clothing/under/rank/centcom/officer(M), slot_w_uniform)
-			M.equip_if_possible(new /obj/item/clothing/shoes/centcom(M), slot_shoes)
-			M.equip_if_possible(new /obj/item/clothing/gloves/white(M), slot_gloves)
-			M.equip_if_possible(new /obj/item/device/radio/headset/heads/captain(M), slot_ears)
-			M.equip_if_possible(new /obj/item/clothing/head/beret/centcom/officer(M), slot_head)
+			M.equip_to_slot_or_del(new /obj/item/clothing/under/rank/centcom/officer(M), slot_w_uniform)
+			M.equip_to_slot_or_del(new /obj/item/clothing/shoes/centcom(M), slot_shoes)
+			M.equip_to_slot_or_del(new /obj/item/clothing/gloves/white(M), slot_gloves)
+			M.equip_to_slot_or_del(new /obj/item/device/radio/headset/heads/captain(M), slot_ears)
+			M.equip_to_slot_or_del(new /obj/item/clothing/head/beret/centcom/officer(M), slot_head)
 
 			var/obj/item/device/pda/heads/pda = new(M)
 			pda.owner = M.real_name
 			pda.ownjob = "NanoTrasen Navy Officer"
 			pda.name = "PDA-[M.real_name] ([pda.ownjob])"
 
-			M.equip_if_possible(pda, slot_r_store)
-			M.equip_if_possible(new /obj/item/clothing/glasses/sunglasses(M), slot_l_store)
-			M.equip_if_possible(new /obj/item/weapon/gun/energy(M), slot_belt)
+			M.equip_to_slot_or_del(pda, slot_r_store)
+			M.equip_to_slot_or_del(new /obj/item/clothing/glasses/sunglasses(M), slot_l_store)
+			M.equip_to_slot_or_del(new /obj/item/weapon/gun/energy(M), slot_belt)
 
 			var/obj/item/weapon/card/id/centcom/W = new(M)
 			W.name = "[M.real_name]'s ID Card"
@@ -844,24 +847,24 @@ Pressure: [env.return_pressure()]"}
 			W.access += get_all_centcom_access()
 			W.assignment = "NanoTrasen Navy Officer"
 			W.registered_name = M.real_name
-			M.equip_if_possible(W, slot_wear_id)
+			M.equip_to_slot_or_del(W, slot_wear_id)
 
 
 		if("nanotrasen captain")
-			M.equip_if_possible(new /obj/item/clothing/under/rank/centcom/captain(M), slot_w_uniform)
-			M.equip_if_possible(new /obj/item/clothing/shoes/centcom(M), slot_shoes)
-			M.equip_if_possible(new /obj/item/clothing/gloves/white(M), slot_gloves)
-			M.equip_if_possible(new /obj/item/device/radio/headset/heads/captain(M), slot_ears)
-			M.equip_if_possible(new /obj/item/clothing/head/beret/centcom/captain(M), slot_head)
+			M.equip_to_slot_or_del(new /obj/item/clothing/under/rank/centcom/captain(M), slot_w_uniform)
+			M.equip_to_slot_or_del(new /obj/item/clothing/shoes/centcom(M), slot_shoes)
+			M.equip_to_slot_or_del(new /obj/item/clothing/gloves/white(M), slot_gloves)
+			M.equip_to_slot_or_del(new /obj/item/device/radio/headset/heads/captain(M), slot_ears)
+			M.equip_to_slot_or_del(new /obj/item/clothing/head/beret/centcom/captain(M), slot_head)
 
 			var/obj/item/device/pda/heads/pda = new(M)
 			pda.owner = M.real_name
 			pda.ownjob = "NanoTrasen Navy Captain"
 			pda.name = "PDA-[M.real_name] ([pda.ownjob])"
 
-			M.equip_if_possible(pda, slot_r_store)
-			M.equip_if_possible(new /obj/item/clothing/glasses/sunglasses(M), slot_l_store)
-			M.equip_if_possible(new /obj/item/weapon/gun/energy(M), slot_belt)
+			M.equip_to_slot_or_del(pda, slot_r_store)
+			M.equip_to_slot_or_del(new /obj/item/clothing/glasses/sunglasses(M), slot_l_store)
+			M.equip_to_slot_or_del(new /obj/item/weapon/gun/energy(M), slot_belt)
 
 			var/obj/item/weapon/card/id/centcom/W = new(M)
 			W.name = "[M.real_name]'s ID Card"
@@ -869,7 +872,7 @@ Pressure: [env.return_pressure()]"}
 			W.access += get_all_centcom_access()
 			W.assignment = "NanoTrasen Navy Captain"
 			W.registered_name = M.real_name
-			M.equip_if_possible(W, slot_wear_id)
+			M.equip_to_slot_or_del(W, slot_wear_id)
 
 		if("emergency rescue team")
 			M.equip_to_slot_or_del(new /obj/item/clothing/under/rank/centcom_officer(M), slot_w_uniform)
@@ -946,6 +949,76 @@ Pressure: [env.return_pressure()]"}
 			M.equip_to_slot_or_del(new /obj/item/weapon/staff(M), slot_l_hand)
 			M.equip_to_slot_or_del(new /obj/item/weapon/storage/backpack(M), slot_back)
 			M.equip_to_slot_or_del(new /obj/item/weapon/storage/box(M), slot_in_backpack)
+
+		if("inspector")
+			M.equip_to_slot_or_del(new /obj/item/clothing/under/syndicate/combat(M), slot_w_uniform)
+			M.equip_to_slot_or_del(new /obj/item/clothing/suit/space/inspector(M), slot_wear_suit)
+			M.equip_to_slot_or_del(new /obj/item/clothing/shoes/combat(M), slot_shoes)
+			M.equip_to_slot_or_del(new /obj/item/clothing/gloves/combat(M), slot_gloves)
+			M.equip_to_slot_or_del(new /obj/item/device/radio/headset/heads/centcomm(M), slot_ears)
+			M.equip_to_slot_or_del(new /obj/item/clothing/glasses/sunglasses(M), slot_glasses)
+			M.equip_to_slot_or_del(new /obj/item/clothing/mask/gas/plaguedoctor(M), slot_wear_mask)
+			M.equip_to_slot_or_del(new /obj/item/clothing/head/helmet/inspector(M), slot_head)
+			M.equip_to_slot_or_del(new /obj/item/weapon/storage/belt/security/fvll(M), slot_belt)
+			M.equip_to_slot_or_del(new /obj/item/weapon/reagent_containers/spray/pepperelited(M), slot_r_store)
+			M.equip_to_slot_or_del(new /obj/item/weapon/grenade/flashbang/clusterbang(M), slot_l_store)
+			M.equip_to_slot_or_del(new /obj/item/weapon/storage/backpack/holding/inspector(M), slot_back)
+
+			var/obj/item/weapon/card/id/W = new(M)
+			W.name = "[M.real_name]'s ID Card"
+			W.icon_state = "centcom"
+			W.access = get_all_accesses()
+			W.access += get_all_centcom_access()
+			W.assignment = "Inspector"
+			W.registered_name = M.real_name
+			M.equip_to_slot_or_del(W, slot_wear_id)
+
+		if("agent 1")
+			M.equip_to_slot_or_del(new /obj/item/clothing/under/syndicate/combat(M), slot_w_uniform)
+			M.equip_to_slot_or_del(new /obj/item/clothing/suit/space/bodyguard(M), slot_wear_suit)
+			M.equip_to_slot_or_del(new /obj/item/clothing/shoes/combat(M), slot_shoes)
+			M.equip_to_slot_or_del(new /obj/item/clothing/gloves/combat(M), slot_gloves)
+			M.equip_to_slot_or_del(new /obj/item/device/radio/headset/heads/centcomm(M), slot_ears)
+			M.equip_to_slot_or_del(new /obj/item/clothing/glasses/thermal/monocle(M), slot_glasses)
+			M.equip_to_slot_or_del(new /obj/item/clothing/mask/gas/swat(M), slot_wear_mask)
+			M.equip_to_slot_or_del(new /obj/item/clothing/head/helmet/space/bodyguard(M), slot_head)
+			M.equip_to_slot_or_del(new /obj/item/weapon/storage/belt/utility/fvll(M), slot_belt)
+			M.equip_to_slot_or_del(new /obj/item/weapon/reagent_containers/spray/pepperelited(M), slot_r_store)
+			M.equip_to_slot_or_del(new /obj/item/weapon/grenade/flashbang/clusterbang(M), slot_l_store)
+			M.equip_to_slot_or_del(new /obj/item/weapon/storage/backpack/holding/agent1(M), slot_back)
+
+			var/obj/item/weapon/card/id/W = new(M)
+			W.name = "[M.real_name]'s ID Card"
+			W.icon_state = "centcom"
+			W.access = get_all_accesses()
+			W.access += get_all_centcom_access()
+			W.assignment = "Inspection Bodyguard"
+			W.registered_name = M.real_name
+			M.equip_to_slot_or_del(W, slot_wear_id)
+
+		if("agent 2")
+			M.equip_to_slot_or_del(new /obj/item/clothing/under/syndicate/combat(M), slot_w_uniform)
+			M.equip_to_slot_or_del(new /obj/item/clothing/suit/space/bodyguard(M), slot_wear_suit)
+			M.equip_to_slot_or_del(new /obj/item/clothing/shoes/combat(M), slot_shoes)
+			M.equip_to_slot_or_del(new /obj/item/clothing/gloves/combat(M), slot_gloves)
+			M.equip_to_slot_or_del(new /obj/item/device/radio/headset/heads/centcomm(M), slot_ears)
+			M.equip_to_slot_or_del(new /obj/item/clothing/glasses/sunglasses(M), slot_glasses)
+			M.equip_to_slot_or_del(new /obj/item/clothing/mask/gas/swat(M), slot_wear_mask)
+			M.equip_to_slot_or_del(new /obj/item/clothing/head/helmet/space/bodyguard(M), slot_head)
+			M.equip_to_slot_or_del(new /obj/item/weapon/storage/belt/security/fvll(M), slot_belt)
+			M.equip_to_slot_or_del(new /obj/item/weapon/melee/gibstick(M), slot_r_store)
+			M.equip_to_slot_or_del(new /obj/item/weapon/grenade/flashbang/clusterbang(M), slot_l_store)
+			M.equip_to_slot_or_del(new /obj/item/weapon/storage/backpack/holding/agent2(M), slot_back)
+
+			var/obj/item/weapon/card/id/W = new(M)
+			W.name = "[M.real_name]'s ID Card"
+			W.icon_state = "centcom"
+			W.access = get_all_accesses()
+			W.access += get_all_centcom_access()
+			W.assignment = "Inspection Bodyguard"
+			W.registered_name = M.real_name
+			M.equip_to_slot_or_del(W, slot_wear_id)
+
 		if("soviet admiral")
 			M.equip_to_slot_or_del(new /obj/item/clothing/head/hgpiratecap(M), slot_head)
 			M.equip_to_slot_or_del(new /obj/item/clothing/shoes/combat(M), slot_shoes)
