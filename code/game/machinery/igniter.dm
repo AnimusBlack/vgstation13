@@ -86,6 +86,7 @@
 	var/disable = 0
 	var/last_spark = 0
 	var/base_state = "migniter"
+	autoignition_temperature = 0
 	anchored = 1
 
 	ghost_read = 0 // Deactivate ghost touching.

@@ -33,6 +33,7 @@
 	var/locked = 0
 	var/lights = 1 // bolt lights show by default
 	var/datum/wires/airlock/wires = null
+	autoignition_temperature = 1073
 	secondsElectrified = 0 //How many seconds remain until the door is no longer electrified. -1 if it is permanently electrified until someone fixes it.
 	var/aiDisabledIdScanner = 0
 	var/aiHacking = 0
@@ -162,6 +163,7 @@
 	name = "Airlock"
 	icon = 'icons/obj/doors/doorresearch.dmi'
 	assembly_type = /obj/structure/door_assembly/door_assembly_research
+	autoignition_temperature = 30000
 
 /obj/machinery/door/airlock/glass_research
 	name = "Maintenance Hatch"
@@ -170,6 +172,7 @@
 	assembly_type = /obj/structure/door_assembly/door_assembly_research
 	glass = 1
 	heat_proof = 1
+	autoignition_temperature = 30000
 
 /obj/machinery/door/airlock/glass_mining
 	name = "Maintenance Hatch"

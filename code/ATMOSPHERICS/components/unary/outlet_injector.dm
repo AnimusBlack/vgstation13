@@ -2,6 +2,7 @@
 	icon = 'icons/obj/atmospherics/outlet_injector.dmi'
 	icon_state = "off"
 	use_power = 1
+	autoignition_temperature = 0
 
 	name = "Air Injector"
 	desc = "Has a valve and pump attached to it"
