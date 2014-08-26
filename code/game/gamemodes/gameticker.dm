@@ -41,17 +41,10 @@ var/global/datum/controller/gameticker/ticker
 
 /datum/controller/gameticker/proc/pregame()
 	login_music = pick(\
-	'sound/music/space.ogg',\
-	'sound/music/traitor.ogg',\
 	'sound/music/space_oddity.ogg',\
 	'sound/music/title1.ogg',\
 	'sound/music/title2.ogg',\
-	'sound/music/clown.ogg',\
-	'sound/music/robocop.ogg',\
 	'sound/music/gaytony.ogg',\
-	'sound/music/rocketman.ogg',\
-	'sound/music/2525.ogg',\
-	'sound/music/moonbaseoddity.ogg',\
 	'sound/music/whatisthissong.ogg')
 	do
 		pregame_timeleft = 300

@@ -635,6 +635,7 @@ datum
 					if(M.canmove && !M.restrained())
 						if(prob(10)) step(M, pick(cardinal))
 				if(prob(7)) M.emote(pick("twitch","drool","moan","giggle"))
+				if(prob(1)) M << "\blue You feel so goooooood..."
 				holder.remove_reagent(src.id, 0.5 * REAGENTS_METABOLISM)
 				return
 
@@ -1996,6 +1997,7 @@ datum
 
 			on_mob_life(var/mob/living/M)
 				if(!M) M = holder.my_atom
+				if(prob(1)) M << "\red You scared.. They trying to take you.. <B>YOU SO FUCKING SCARED!!!</B>"
 				M.hallucination += 10
 				..()
 				return
@@ -3339,11 +3341,11 @@ datum
 			color = "#404030" // rgb: 64, 64, 48
 			var/dizzy_adj = 7
 			var/slurr_adj = 7
-			var/confused_adj = 4
-			var/slur_start = 60			//amount absorbed after which mob starts slurring
-			var/confused_start = 130	//amount absorbed after which mob starts confusing directions
-			var/blur_start = 160	//amount absorbed after which mob starts getting blurred vision
-			var/pass_out = 200	//amount absorbed after which mob starts passing out
+			var/confused_adj = 5
+			var/slur_start = 40			//amount absorbed after which mob starts slurring
+			var/confused_start = 70	//amount absorbed after which mob starts confusing directions
+			var/blur_start = 110	//amount absorbed after which mob starts getting blurred vision
+			var/pass_out = 140	//amount absorbed after which mob starts passing out
 
 			on_mob_life(var/mob/living/M as mob)
 				// Sobering multiplier.
