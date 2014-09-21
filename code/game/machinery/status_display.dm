@@ -18,6 +18,7 @@
 	anchored = 1
 	density = 0
 	use_power = 1
+	layer = 3.3
 	idle_power_usage = 10
 	var/mode = 1	// 0 = Blank
 					// 1 = Shuttle timer
