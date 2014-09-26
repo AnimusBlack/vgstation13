@@ -6,9 +6,9 @@ var/list/admin_verbs_default = list(
 	/client/proc/hide_verbs,			/*hides all our adminverbs*/
 	/client/proc/hide_most_verbs,		/*hides all our hideable adminverbs*/
 	/client/proc/debug_variables,		/*allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify*/
-	/client/proc/check_antagonists,		/*shows all antags*/
-	/datum/admins/proc/checkCID,
-	/datum/admins/proc/checkCKEY
+	/client/proc/check_antagonists		/*shows all antags*/
+//	/datum/admins/proc/checkCID         /*Not works at our, so i turned it off - Loly */
+//	/datum/admins/proc/checkCKEY        /* [2] */
 //	/client/proc/deadchat				/*toggles deadchat on/off*/
 	)
 var/list/admin_verbs_admin = list(
@@ -125,8 +125,8 @@ var/list/admin_verbs_server = list(
 	/client/proc/cmd_debug_del_all,
 	/datum/admins/proc/adrev,
 	/datum/admins/proc/adspawn,
-	/mob/verb/nanomapgen_DumpImageAll,
-	/mob/verb/nanomapgen_DumpImage,
+	/datum/admins/verb/nanomapgen_DumpImageAll,
+	/datum/admins/verb/nanomapgen_DumpImage,
 	/datum/admins/proc/adjump,
 	/datum/admins/proc/toggle_aliens,
 	/datum/admins/proc/toggle_space_ninja,
@@ -150,8 +150,8 @@ var/list/admin_verbs_debug = list(
 	/client/proc/restart_controller,
 	/client/proc/enable_debug_verbs,
 	/client/proc/callproc,
-	/client/verb/gc_dump_hdl,
-	/mob/verb/check_mob_list,
+	/datum/admins/verb/gc_dump_hdl,
+	/datum/admins/verb/check_mob_list,
 	/client/proc/toggledebuglogs,
 	/client/proc/qdel_toggle,              // /vg/
 	/client/proc/cmd_admin_dump_instances, // /vg/
@@ -199,8 +199,6 @@ var/list/admin_verbs_hideable = list(
 	/client/proc/check_words,
 	/client/proc/play_local_sound,
 	/client/proc/play_sound,
-	/client/verb/gc_dump_hdl,
-	/mob/verb/check_mob_list,
 	/client/proc/object_talk,
 	/client/proc/cmd_admin_dress,
 	/client/proc/cmd_admin_gib_self,
@@ -228,6 +226,10 @@ var/list/admin_verbs_hideable = list(
 	/datum/admins/proc/adrev,
 	/datum/admins/proc/adspawn,
 	/datum/admins/proc/adjump,
+	/datum/admins/verb/gc_dump_hdl,
+	/datum/admins/verb/check_mob_list,
+	/datum/admins/verb/nanomapgen_DumpImageAll,
+	/datum/admins/verb/nanomapgen_DumpImage,
 	/client/proc/restart_controller,
 	/client/proc/cmd_admin_list_open_jobs,
 	/client/proc/callproc,

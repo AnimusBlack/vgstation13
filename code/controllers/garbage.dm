@@ -6,11 +6,16 @@
 var/list/gc_hard_del_types = new
 var/datum/garbage_collector/garbageCollector
 
-/client/verb/gc_dump_hdl()
+/datum/admins/verb/gc_dump_hdl()
 	set name = "(GC) Hard Del List"
 	set desc = "List types that are hard del()'d by the GC."
 	set category = "Debug"
 
+	if (!istype(src,/datum/admins))
+		src = usr.client.holder
+	if (!istype(src,/datum/admins))
+		usr << "Error: you are not an admin!"
+		return
 	for(var/A in gc_hard_del_types)
 		usr << A
 

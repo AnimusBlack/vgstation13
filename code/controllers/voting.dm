@@ -248,7 +248,7 @@ var/global/datum/controller/vote/vote = new()
 		else
 			. += "<h2>Start a vote:</h2><hr><ul><li>"
 			//restart
-			if(trialmin || config.allow_vote_restart)
+			if(istype(usr.client.holder,/datum/admins) || trialmin || config.allow_vote_restart)
 				. += "<a href='?src=\ref[src];vote=restart'>Restart</a>"
 			else
 				. += "<font color='grey'>Restart (Disallowed)</font>"
