@@ -1,4 +1,4 @@
-/datum/job/rd
+/*/datum/job/rd
 	title = "Research Director"
 	flag = RD
 	department_flag = MEDSCI
@@ -35,7 +35,7 @@
 		else
 			H.equip_or_collect(new H.species.survival_gear(H.back), slot_in_backpack)
 		return 1
-
+*/
 
 
 /datum/job/scientist
@@ -43,13 +43,13 @@
 	flag = SCIENTIST
 	department_flag = MEDSCI
 	faction = "Station"
-	total_positions = 5
-	spawn_positions = 3
-	supervisors = "the research director"
+	total_positions = 4
+	spawn_positions = 4
+	supervisors = "the head of personnel"
 	selection_color = "#ffeeff"
 	idtype = /obj/item/weapon/card/id/research
 	access = list(access_robotics, access_tox, access_tox_storage, access_research, access_xenobiology)
-	minimal_access = list(access_tox, access_tox_storage, access_research, access_xenobiology)
+	minimal_access = list(access_tox, access_tox_storage, access_research, access_xenobiology, access_robotics)
 	alt_titles = list("Xenoarcheologist", "Anomalist", "Plasma Researcher", "Xenobiologist")
 
 	pdaslot=slot_belt
@@ -69,7 +69,7 @@
 		return 1
 
 
-
+/*
 /datum/job/roboticist
 	title = "Roboticist"
 	flag = ROBOTICIST
@@ -103,3 +103,4 @@
 		else
 			H.equip_or_collect(new H.species.survival_gear(H.back), slot_in_backpack)
 		return 1
+*/

@@ -1,4 +1,4 @@
-/datum/job/cmo
+/*/datum/job/cmo
 	title = "Chief Medical Officer"
 	flag = CMO
 	department_flag = MEDSCI
@@ -39,7 +39,7 @@
 		else
 			H.equip_or_collect(new H.species.survival_gear(H.back), slot_in_backpack)
 		return 1
-
+*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /datum/job/doctor
@@ -47,14 +47,14 @@
 	flag = DOCTOR
 	department_flag = MEDSCI
 	faction = "Station"
-	total_positions = 5
-	spawn_positions = 3
-	supervisors = "the chief medical officer"
+	total_positions = 4
+	spawn_positions = 4
+	supervisors = "the head of personnel"
 	selection_color = "#ffeef0"
 	idtype = /obj/item/weapon/card/id/medical
 	access = list(access_medical, access_morgue, access_surgery, access_chemistry, access_virology, access_genetics)
-	minimal_access = list(access_medical, access_morgue, access_surgery, access_virology)
-	alt_titles = list("Surgeon","Emergency Physician","Nurse","Virologist")
+	minimal_access = list(access_medical, access_morgue, access_surgery)
+	alt_titles = list("Surgeon","Emergency Physician","Nurse")
 
 	pdaslot=slot_belt
 	pdatype=/obj/item/device/pda/medical
@@ -75,10 +75,10 @@
 					H.equip_or_collect(new /obj/item/clothing/under/rank/medical/blue(H), slot_w_uniform)
 					H.equip_or_collect(new /obj/item/clothing/suit/storage/labcoat(H), slot_wear_suit)
 					H.equip_or_collect(new /obj/item/clothing/head/surgery/blue(H), slot_head)
-				if("Virologist")
+/*				if("Virologist")
 					H.equip_or_collect(new /obj/item/clothing/suit/storage/labcoat/virologist(H), slot_wear_suit)
 					H.equip_or_collect(new /obj/item/clothing/under/rank/virologist(H), slot_w_uniform)
-					H.equip_or_collect(new /obj/item/clothing/mask/surgical(H), slot_wear_mask)
+					H.equip_or_collect(new /obj/item/clothing/mask/surgical(H), slot_wear_mask)*/
 				if("Medical Doctor")
 					H.equip_or_collect(new /obj/item/clothing/under/rank/medical(H), slot_w_uniform)
 					H.equip_or_collect(new /obj/item/clothing/suit/storage/labcoat(H), slot_wear_suit)
@@ -113,9 +113,9 @@
 	flag = CHEMIST
 	department_flag = MEDSCI
 	faction = "Station"
-	total_positions = 2
-	spawn_positions = 2
-	supervisors = "the chief medical officer"
+	total_positions = 1
+	spawn_positions = 1
+	supervisors = "the head of personnel"
 	selection_color = "#ffeef0"
 	idtype = /obj/item/weapon/card/id/medical
 	access = list(access_medical, access_morgue, access_surgery, access_chemistry, access_virology, access_genetics)
@@ -138,7 +138,7 @@
 			H.equip_or_collect(new H.species.survival_gear(H.back), slot_in_backpack)
 		return 1
 
-/datum/job/geneticist
+/*/datum/job/geneticist
 	title = "Geneticist"
 	flag = GENETICIST
 	department_flag = MEDSCI
@@ -167,7 +167,7 @@
 		else
 			H.equip_or_collect(new H.species.survival_gear(H.back), slot_in_backpack)
 		return 1
-
+*/
 /obj/item/weapon/paper/oncpamphlet
 	name = "oncology pamphlet"
 	icon_state = "pamphlet"
