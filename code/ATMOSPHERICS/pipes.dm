@@ -12,6 +12,7 @@
 // Insulated pipes
 #define IPIPE_COLOR_RED   PIPE_COLOR_RED
 #define IPIPE_COLOR_BLUE  "#4285F4"
+#define IPIPE_COLOR_YELLOW "#FFA800"
 
 /obj/machinery/atmospherics/pipe
 	var/datum/gas_mixture/air_temporary //used when reconstructing a pipeline that broke
@@ -340,9 +341,11 @@
 	maximum_pressure = 1000*ONE_ATMOSPHERE
 	fatigue_pressure = 900*ONE_ATMOSPHERE
 	alert_pressure = 900*ONE_ATMOSPHERE
+	autoignition_temperature = 0
 	available_colors = list(
 		"red"=IPIPE_COLOR_RED,
-		"blue"=IPIPE_COLOR_BLUE
+		"blue"=IPIPE_COLOR_BLUE,
+		"yellow"=IPIPE_COLOR_YELLOW
 	)
 	_color = "red"
 /obj/machinery/atmospherics/pipe/simple/insulated/visible
@@ -850,9 +853,11 @@
 	icon_state = "manifold"
 	alert_pressure = 900*ONE_ATMOSPHERE
 	level = 2
+	autoignition_temperature = 0
 	available_colors = list(
 		"red"=IPIPE_COLOR_RED,
-		"blue"=IPIPE_COLOR_BLUE
+		"blue"=IPIPE_COLOR_BLUE,
+		"yellow"=IPIPE_COLOR_YELLOW
 	)
 /obj/machinery/atmospherics/pipe/manifold/scrubbers/visible
 	level = 2
@@ -1086,9 +1091,11 @@
 	alert_pressure = 900*ONE_ATMOSPHERE
 	color=IPIPE_COLOR_RED
 	level = 2
+	autoignition_temperature = 0
 	available_colors = list(
 		"red"=IPIPE_COLOR_RED,
-		"blue"=IPIPE_COLOR_BLUE
+		"blue"=IPIPE_COLOR_BLUE,
+		"yellow"=IPIPE_COLOR_YELLOW
 	)
 /obj/machinery/atmospherics/pipe/manifold4w/scrubbers/visible
 	level = 2

@@ -18,7 +18,7 @@
 
 /obj/machinery/atmospherics/binary/circulator/New()
 	..()
-	desc = initial(desc) + "  Its outlet port is to the [dir2text(dir)]."
+	desc = initial(desc) + " Its outlet port is to the [dir2text(dir)]."
 
 /obj/machinery/atmospherics/binary/circulator/proc/return_transfer_air()
 	var/datum/gas_mixture/removed

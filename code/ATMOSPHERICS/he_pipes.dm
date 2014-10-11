@@ -3,6 +3,7 @@
 	icon = 'icons/obj/pipes/heat.dmi'
 	icon_state = "intact"
 	level = 2
+	autoignition_temperature = 0
 	var/initialize_directions_he
 
 	minimum_temperature_difference = 20

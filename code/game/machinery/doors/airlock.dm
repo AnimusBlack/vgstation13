@@ -48,6 +48,7 @@
 	var/obj/item/weapon/circuitboard/airlock/electronics = null
 	var/hasShocked = 0 //Prevents multiple shocks from happening
 	autoclose = 1
+	layer = 3
 
 /obj/machinery/door/airlock/Destroy()
 	if(wires)
@@ -120,6 +121,27 @@
 	icon = 'icons/obj/doors/Doorhatchmaint2.dmi'
 	opacity = 1
 	assembly_type = /obj/structure/door_assembly/door_assembly_mhatch
+
+/obj/machinery/door/airlock/shuttle
+	name = "Shuttle Airlock"
+	icon = 'icons/obj/doors/doorshuttle.dmi'
+	assembly_type = /obj/structure/door_assembly/door_assembly_shuttle
+	var/dark_side = "" // this is for emergency shuttle ~Loly
+
+/*proc/check_side()
+	for(var/obj/machinery/door/airlock/shuttle/D in world)
+		var/area/A = get_area(D)
+		if (D.dark_side == "left")
+			if(A.name == "Emergency Shuttle Station" || A.name == "Emergency Shuttle Transit")
+				D.locked = 1
+			else if(A.name == "Emergency Shuttle Centcom")
+				D.locked = 0
+
+		if (D.dark_side == "right")
+			if(A.name == "Emergency Shuttle Centcom" || A.name == "Emergency Shuttle Transit")
+				D.locked = 1
+			else if(A.name == "Emergency Shuttle Station")
+				D.locked = 0 */
 
 /obj/machinery/door/airlock/glass_command
 	name = "Maintenance Hatch"

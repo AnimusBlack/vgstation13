@@ -138,6 +138,7 @@
 	oxygen = 0
 	nitrogen = 0.001
 	temperature = TCMB
+	autoignition_temperature = 0
 
 /turf/simulated/floor/plating
 	name = "plating"
