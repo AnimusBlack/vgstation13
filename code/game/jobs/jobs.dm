@@ -52,65 +52,65 @@ var/list/assistant_occupations = list(
 var/list/command_positions = list(
 	"Captain",
 	"Head of Personnel",
-	"Head of Security",
-	"Chief Engineer",
-	"Research Director",
-	"Chief Medical Officer"
+//	"Head of Security",
+//	"Chief Engineer",
+//	"Research Director",
+//	"Chief Medical Officer"
 )
 
 
 var/list/engineering_positions = list(
-	"Chief Engineer",
+	//"Chief Engineer",
 	"Station Engineer",
-	"Atmospheric Technician",
+	//"Atmospheric Technician",
 )
 
 
 var/list/medical_positions = list(
-	"Chief Medical Officer",
+//	"Chief Medical Officer",
 	"Medical Doctor",
-	"Geneticist",
+//	"Geneticist",
 //	"Psychiatrist",
-	"Paramedic",
+//	"Paramedic",
 	"Chemist"
 )
 
 
 var/list/science_positions = list(
-	"Research Director",
+//	"Research Director",
 	"Scientist",
-	"Geneticist",	//Part of both medical and science
-	"Roboticist"
+//	"Geneticist",	//Part of both medical and science
+//	"Roboticist"
 )
 
 //BS12 EDIT
 var/list/civilian_positions = list(
 	"Head of Personnel",
 	"Bartender",
-	"Botanist",
-	"Chef",
+//	"Botanist",
+//	"Chef",
 	"Janitor",
-	"Librarian",
-	"Quartermaster",
+//	"Librarian",
+//	"Quartermaster",
 	"Cargo Technician",
-	"Shaft Miner",
-	"Lawyer",
-	"Chaplain",
+//	"Shaft Miner",
+//	"Lawyer",
+//	"Chaplain",
 	"Assistant"
 )
 
 
 var/list/security_positions = list(
-	"Head of Security",
-	"Warden",
+//	"Head of Security",
+//	"Warden",
 	"Detective",
 	"Security Officer"
 )
 
 
 var/list/nonhuman_positions = list(
-	"AI",
-	"Cyborg",
+//	"AI",
+//	"Cyborg",
 	"pAI",
 	"Mobile MMI"
 )
