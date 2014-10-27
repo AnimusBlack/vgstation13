@@ -8,6 +8,7 @@
 	desc = "This is rubbish."
 	w_type=NOT_RECYCLABLE
 	autoignition_temperature = AUTOIGNITION_PAPER
+	fire_fuel = 1
 	bustanuts
 		name = "Busta-Nuts"
 		icon_state = "busta_nut"
@@ -32,6 +33,12 @@
 	syndi_cakes
 		name = "Syndi cakes"
 		icon_state = "syndi_cakes"
+	discountchocolate
+		name = "Discount Dan's Chocolate Bar"
+		icon_state = "danbar"
+	danitos
+		name = "Danitos"
+		icon_state = "danitos"
 	waffles
 		name = "Waffles"
 		icon_state = "waffles"

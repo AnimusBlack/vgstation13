@@ -382,6 +382,60 @@ proc/process_ghost_teleport_locs()
 	name = "\improper hyperspace"
 	icon_state = "shuttle"
 
+// Taxi Shuttle
+
+/area/shuttle/taxi_a
+	requires_power = 0
+
+/area/shuttle/taxi_a/medcal_silicon_station
+	name = "\improper Medical and Silicon Station"
+	icon_state = "bluenew"
+
+/area/shuttle/taxi_a/engineering_cargo_station
+	name = "\improper Engineering and Cargo Station"
+	icon_state = "bluenew"
+
+/area/shuttle/taxi_a/security_science_station
+	name = "\improper Security and Science Station"
+	icon_state = "bluenew"
+
+/area/shuttle/taxi_a/abandoned_station
+	name = "\improper Abandoned Station"
+	icon_state = "bluenew"
+
+/area/shuttle/taxi_a/transit
+	name = "\improper hyperspace"
+	icon_state = "bluenew"
+
+// B
+
+/area/shuttle/taxi_b
+	requires_power = 0
+
+/area/shuttle/taxi_b/medcal_silicon_station
+	name = "\improper Medical and Silicon Station"
+	icon_state = "dk_yellow"
+
+/area/shuttle/taxi_b/engineering_cargo_station
+	name = "\improper Engineering and Cargo Station"
+	icon_state = "dk_yellow"
+
+/area/shuttle/taxi_b/security_science_station
+	name = "\improper Security and Science Station"
+	icon_state = "dk_yellow"
+
+/area/shuttle/taxi_b/abandoned_station
+	name = "\improper Abandoned Station"
+	icon_state = "dk_yellow"
+
+/area/shuttle/taxi_b/transit
+	name = "\improper hyperspace"
+	icon_state = "dk_yellow"
+
+// End Taxi Shuttle
+
+
+
 /area/airtunnel1/      // referenced in airtunnel.dm:759
 
 /area/dummy/           // Referenced in engine.dm:261
@@ -1018,20 +1072,24 @@ proc/process_ghost_teleport_locs()
 
 	engine
 		name = "Engineering"
-		icon_state = "engine_smes"
+		icon_state = "engine"
+
+	engine_storage
+		name = "Engineering Secure Storage"
+		icon_state = "engine_storage"
 
 	break_room
 		name = "\improper Engineering Foyer"
 		icon_state = "engine_lobby"
 
 	ce
-		name = "\improper Chief Engineer's office"
-		icon_state = "engine_control"
+		name = "\improper Chief Engineer's Office"
+		icon_state = "head_quarters"
 		jammed=1
 
 	burn_chamber
 		name = "Burn Chamber"
-		icon_state = "engine_control"
+		icon_state = "thermo_engine"
 
 	atmos
 		name = "Atmospherics"
@@ -1043,7 +1101,11 @@ proc/process_ghost_teleport_locs()
 
 	supermatter_room
 		name = "Supermatter Room"
-		icon_state = "engine_control"
+		icon_state = "supermatter"
+
+	antimatter_room
+		name = "Antimatter Engine Room"
+		icon_state = "antimatter"
 
 	engineering_auxiliary
 		name = "Auxiliary Engineering"
@@ -1095,6 +1157,10 @@ proc/process_ghost_teleport_locs()
 /area/maintenance/fstarboardsolar
 	name = "Fore Starboard Solar Maintenance"
 	icon_state = "SolarcontrolA"
+
+/area/maintenance/virology_maint
+	name = "Virology Maintenance"
+	icon_state = "asmaint"
 
 /area/assembly/showroom
 	name = "\improper Robotics Showroom"
@@ -1178,10 +1244,6 @@ proc/process_ghost_teleport_locs()
 	name = "Virology Break Room"
 	icon_state = "virology"
 
-/area/medical/virology_maint
-	name = "Virology Maintenance"
-	icon_state = "asmaint"
-
 /area/medical/morgue
 	name = "\improper Morgue"
 	icon_state = "morgue"
@@ -1197,6 +1259,10 @@ proc/process_ghost_teleport_locs()
 /area/medical/cryo
 	name = "Cryogenics"
 	icon_state = "cryo"
+
+/area/medical/storage
+	name = "\improper Medbay Storage"
+	icon_state = "med_storage"
 
 /area/medical/exam_room
 	name = "\improper Exam Room"
@@ -1245,6 +1311,10 @@ proc/process_ghost_teleport_locs()
 	name = "\improper Brig Medbay"
 	icon_state = "sec_medbay"
 
+/area/security/toilet
+	name = "\improper Brig Toilets"
+	icon_state = "toilet"
+
 /area/security/rec_room
 	name = "\improper Brig Recording Room"
 	icon_state = "rec"
@@ -1273,9 +1343,9 @@ proc/process_ghost_teleport_locs()
 	icon_state = "Warden"
 	jammed=1
 
-/area/security/armoury
-	name = "\improper Armory"
-	icon_state = "Warden"
+/area/security/armory
+	name = "\improper Secure Armory"
+	icon_state = "Armory"
 	jammed=1
 
 /area/security/hos
@@ -1348,21 +1418,25 @@ proc/process_ghost_teleport_locs()
 
 /area/supply/sorting
 	name = "\improper Delivery Office"
-	icon_state = "quartstorage"
+	icon_state = "cargo_delivery"
 
 ////////////WORK IN PROGRESS//////////
 
+/area/supply/lobby
+	name ="\improper Cargo Lobby"
+	icon_state = "cargo_lobby"
+
 /area/supply/office
 	name = "\improper Cargo Office"
-	icon_state = "quartoffice"
+	icon_state = "cargo_office"
 
 /area/supply/storage
 	name = "\improper Cargo Bay"
-	icon_state = "quartstorage"
+	icon_state = "cargo_bay"
 
 /area/supply/qm
 	name = "\improper Quartermaster's Office"
-	icon_state = "quart"
+	icon_state = "cargo_quart"
 	jammed=1
 
 /area/supply/miningdock
@@ -1451,6 +1525,10 @@ proc/process_ghost_teleport_locs()
 /area/science/test_area
 	name = "\improper Toxins Test Area"
 	icon_state = "toxtest"
+
+/area/science/shuttlebay
+	name = "\improper Research Shuttle Bay"
+	icon_state = "toxshuttle"
 
 /area/science/mixing
 	name = "\improper Toxins Mixing Room"
@@ -2073,8 +2151,8 @@ var/list/the_station_areas = list (
 
 
 
-/area/beach
-	name = "Keelin's private beach"
+/area/beach/
+	name = "The metaclub's private beach"
 	icon_state = "null"
 	luminosity = 1
 	lighting_use_dynamic = 0
@@ -2113,7 +2191,7 @@ var/list/the_station_areas = list (
 		var/sound/S = null
 		var/sound_delay = 0
 		if(prob(25))
-			S = sound(file=pick('sound/ambience/seag1.ogg','sound/ambience/seag2.ogg','sound/ambience/seag3.ogg'), volume=100)
+			S = sound(file=pick('sound/ambience/seag1.ogg','sound/ambience/seag2.ogg','sound/ambience/seag3.ogg'), volume=50)
 			sound_delay = rand(0, 50)
 
 		for(var/mob/living/carbon/human/H in src)

@@ -95,6 +95,27 @@
 		M = user
 	return eyestab(M,user)
 
+/obj/item/weapon/screwdriver/attackby(var/obj/O)
+	if(istype(O, /obj/item/weapon/cable_coil))
+		var/obj/item/weapon/cable_coil/C = O
+		var/mob/M = usr
+		if(ishuman(M) && !M.restrained() && !M.stat && !M.paralysis && ! M.stunned)
+			if(!istype(M.loc,/turf)) return
+			if(C.amount < 10)
+				usr << "\red You need at least 10 lengths to make a bolas wire!"
+				return
+			var/obj/item/weapon/legcuffs/bolas/cable/B = new /obj/item/weapon/legcuffs/bolas/cable(usr.loc)
+			qdel(src)
+			B.icon_state = "cbolas_[C._color]"
+			B.cable_color = C._color
+			B.screw_state = item_state
+			B.screw_istate = icon_state
+			M << "\blue You wind some cable around the screwdriver handle to make a bolas wire."
+			C.use(10)
+		else
+			usr << "\blue You cannot do that."
+	else
+		..()
 /*
  * Wirecutters
  */
@@ -254,7 +275,7 @@
 		if(M.l_hand == src || M.r_hand == src)
 			location = get_turf(M)
 	if (istype(location, /turf))
-		location.hotspot_expose(700, 5)
+		location.hotspot_expose(700, 5,surfaces=istype(loc,/turf))
 
 
 /obj/item/weapon/weldingtool/afterattack(obj/O as obj, mob/user as mob, proximity)
@@ -275,7 +296,7 @@
 		remove_fuel(1)
 		var/turf/location = get_turf(user)
 		if (istype(location, /turf))
-			location.hotspot_expose(700, 50, 1)
+			location.hotspot_expose(700, 50, 1,surfaces=1)
 			if(isliving(O))
 				var/mob/living/L = O
 				L.IgniteMob()
@@ -373,7 +394,11 @@
 	var/safety = user:eyecheck()
 	if(istype(user, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = user
-		var/datum/organ/internal/eyes/E = H.internal_organs["eyes"]
+		var/datum/organ/internal/eyes/E = H.internal_organs_by_name["eyes"]
+		if(!E)
+			return
+		if(H.species.flags & IS_SYNTHETIC)
+			return
 		switch(safety)
 			if(1)
 				usr << "\red Your eyes sting a little."

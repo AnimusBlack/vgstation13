@@ -1,6 +1,6 @@
 /obj/machinery/transformer
 	name = "Automatic Robotic Factory 5000"
-	desc = "A large metallic machine with an entrance and an exit. A sign on the side reads, 'human goes in, robot comes out'. human must be lying down and alive. Has to cooldown between each use."
+	desc = "A large metallic machine with an entrance and an exit. A sign on the side reads 'human goes in, robot comes out'. Human must be lying down and alive. Has to cooldown between each use."
 	icon = 'icons/obj/recycling.dmi'
 	icon_state = "separator-AO1"
 	layer = MOB_LAYER+1 // Overhead
@@ -64,7 +64,7 @@
 		return
 
 	playsound(get_turf(src), 'sound/items/Welder.ogg', 50, 1)
-	H.emote("scream") // It is painful
+	H.emote("scream",,, 1) // It is painful
 	H.adjustBruteLoss(max(0, 80 - H.getBruteLoss())) // Hurt the human, don't try to kill them though.
 	H.handle_regular_hud_updates() // Make sure they see the pain.
 

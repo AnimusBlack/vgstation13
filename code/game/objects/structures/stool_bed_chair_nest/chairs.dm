@@ -93,6 +93,7 @@
 // Chair types
 /obj/structure/stool/bed/chair/wood
 	autoignition_temperature = AUTOIGNITION_WOOD
+	fire_fuel = 3
 	// TODO:  Special ash subtype that looks like charred chair legs
 
 /obj/structure/stool/bed/chair/wood/normal
@@ -104,6 +105,9 @@
 	icon_state = "wooden_chair_wings"
 	name = "wooden chair"
 	desc = "Old is never too old to not be in fashion."
+
+/obj/structure/stool/bed/chair/wood/wings/cultify()
+	return
 
 /obj/structure/stool/bed/chair/wood/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/wrench))

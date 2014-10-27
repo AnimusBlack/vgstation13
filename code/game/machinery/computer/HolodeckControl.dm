@@ -173,6 +173,7 @@
 
 
 /obj/machinery/computer/HolodeckControl/attackby(var/obj/item/weapon/D as obj, var/mob/user as mob)
+	..() //does the same thing, keep an eye on this
 //Warning, uncommenting this can have concequences. For example, deconstructing the computer may cause holographic eswords to never derez
 
 /*		if(istype(D, /obj/item/weapon/screwdriver))
@@ -203,14 +204,15 @@
 					del(src)
 
 */
-	if(istype(D, /obj/item/weapon/card/emag) && !emagged)
-		playsound(get_turf(src), 'sound/effects/sparks4.ogg', 75, 1)
-		emagged = 1
-		user << "\blue You vastly increase projector power and override the safety and security protocols."
-		user << "Warning.  Automatic shutoff and derezing protocols have been corrupted.  Please call Nanotrasen maintenance and do not use the simulator."
-		log_game("[key_name(usr)] emagged the Holodeck Control Computer")
-	src.updateUsrDialog()
 	return
+
+/obj/machinery/computer/HolodeckControl/emag(mob/user as mob)
+	playsound(get_turf(src), 'sound/effects/sparks4.ogg', 75, 1)
+	emagged = 1
+	user << "\blue You vastly increase projector power and override the safety and security protocols."
+	user << "Warning.  Automatic shutoff and derezing protocols have been corrupted.  Please call Nanotrasen maintenance and do not use the simulator."
+	log_game("[key_name(usr)] emagged the Holodeck Control Computer")
+	src.updateUsrDialog()
 
 /obj/machinery/computer/HolodeckControl/New()
 	..()
@@ -267,7 +269,7 @@
 					s.set_up(2, 1, T)
 					s.start()
 				T.ex_act(3)
-				T.hotspot_expose(1000,500,1)
+				T.hotspot_expose(1000,500,1,surfaces=1)
 
 
 		for(var/item in holographic_items)
@@ -316,7 +318,7 @@
 						s.start()
 						if(T)
 							T.temperature = 5000
-							T.hotspot_expose(50000,50000,1)
+							T.hotspot_expose(50000,50000,1,surfaces=1)
 
 		active = 1
 	else
@@ -365,7 +367,7 @@
 					s.start()
 					if(T)
 						T.temperature = 5000
-						T.hotspot_expose(50000,50000,1)
+						T.hotspot_expose(50000,50000,1,surfaces=1)
 			if(L.name=="Holocarp Spawn")
 				new /mob/living/simple_animal/hostile/carp/holocarp(L.loc)
 

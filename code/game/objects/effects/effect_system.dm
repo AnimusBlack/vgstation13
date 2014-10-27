@@ -676,6 +676,10 @@ steam.start() -- spawns the effect
 	animate_movement = 0
 	var/metal = 0
 
+/obj/effect/effect/foam/fire
+	name = "fire supression foam"
+	icon_state = "mfoam"
+
 /obj/effect/effect/foam/New(loc, var/ismetal=0)
 	. = ..(loc)
 	icon_state = "[ismetal ? "m":""]foam"
@@ -696,14 +700,42 @@ steam.start() -- spawns the effect
 		sleep(5)
 		qdel(src)
 
+/obj/effect/effect/foam/fire/New(loc, datum/reagents/R)
+	reagents = R
+	reagents.my_atom = src
+	var/ccolor = mix_color_from_reagents(reagents.reagent_list)
+	if(ccolor)
+		icon += ccolor
+	//playsound(src, 'sound/effects/bubbles2.ogg', 80, 1, -3)
+	if(reagents.has_reagent("water"))
+		var/turf/simulated/T = get_turf(src)
+		if(istype(T))
+			var/datum/gas_mixture/lowertemp = T.remove_air( T:air:total_moles() )
+			lowertemp.temperature = max( min(lowertemp.temperature-500,lowertemp.temperature / 2) ,0)
+			lowertemp.react()
+			T.assume_air(lowertemp)
+	spawn(3)
+		process()
+	spawn(120)
+		processing_objects.Remove(src)
+		sleep(30)
+		flick("[icon_state]-disolve", src)
+		sleep(5)
+		qdel(src)
+
+/obj/effect/effect/foam/fire/process()
+	if(--amount < 0)
+		return
+
 // on delete, transfer any reagents to the floor
 /obj/effect/effect/foam/Destroy()
-	if(!metal && reagents)
+	if(!metal && reagents && !istype(src, /obj/effect/effect/foam/fire))
 		for(var/atom/A in oview(0,src))
 			if(A == src)
 				continue
 			reagents.reaction(A, 1, 1)
 	..()
+
 
 /obj/effect/effect/foam/process()
 	if(--amount < 0)
@@ -744,6 +776,11 @@ steam.start() -- spawns the effect
 
 /obj/effect/effect/foam/Crossed(var/atom/movable/AM)
 	if(metal)
+		return
+	if(istype(src, /obj/effect/effect/foam/fire))
+		if(isliving(AM))
+			var/mob/living/M = AM
+			reagents.reaction(M)
 		return
 
 	if (istype(AM, /mob/living/carbon))

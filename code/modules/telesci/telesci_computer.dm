@@ -23,6 +23,8 @@
 	var/teleport_cell_usage=1000 // 100% of a standard cell
 	processing=1
 
+	l_color = "#0000FF"
+
 /obj/machinery/computer/telescience/New()
 	..()
 	cell=new/obj/item/weapon/cell()
@@ -48,6 +50,9 @@
 	if(stat & BROKEN)
 		return
 
+	if(..())
+		return
+
 	if(istype(W, /obj/item/weapon/cell) && anchored)
 		if(cell)
 			user << "\red There is already a cell in \the [name]."
@@ -65,6 +70,7 @@
 			cell = W
 			user.visible_message("[user] inserts a cell into the [src].", "You insert a cell into the [src].")
 		update_icon()
+
 /obj/machinery/computer/telescience/update_icon()
 	if(stat & BROKEN)
 		icon_state = "teleportb"

@@ -209,6 +209,7 @@
 	icon_state = "pirate"
 	item_state = "pirate"
 	_color = "pirate"
+	species_fit = list("Vox")
 
 /obj/item/clothing/under/soviet
 	name = "soviet uniform"
@@ -387,6 +388,7 @@
 	icon_state = "spants"
 	_color = "simonpants"
 	item_state = "spants"
+	species_fit = list("Vox")
 
 /obj/item/clothing/under/batmansuit
 	name = "batsuit"
@@ -396,17 +398,29 @@
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
 
 /obj/item/clothing/under/officeruniform
-	name = "Officer's Uniform"
-	desc = "Bestraft die Juden für ihre Verbrechen."
+	name = "officer's uniform"
+	desc = "Bestraft die Juden fur ihre Verbrechen."
 	icon_state = "officeruniform"
-	_color = "officeruniform"
 	item_state = "officeruniform"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	_color = "officeruniform"
 
 /obj/item/clothing/under/soldieruniform
-	name = "Soldier's Uniform"
-	desc = "Bestraft die Verbündeten für ihren Widerstand."
+	name = "soldier's uniform"
+	desc = "Bestraft die Verbundeten fur ihren Widerstand."
 	icon_state = "soldieruniform"
-	_color = "soldieruniform"
 	item_state = "soldieruniform"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	_color = "soldieruniform"
+
+/obj/item/clothing/under/squatter_outfit
+	name = "slav squatter tracksuit"
+	desc = "Cyka blyat."
+	icon_state = "squatteroutfit"
+	item_state = "squatteroutfit"
+	_color = "squatteroutfit"
+
+/obj/item/clothing/under/russobluecamooutfit
+	name = "russian blue camo"
+	desc = "Drop and give me dvadtsat!"
+	icon_state = "russobluecamo"
+	item_state = "russobluecamo"
+	_color = "russobluecamo"

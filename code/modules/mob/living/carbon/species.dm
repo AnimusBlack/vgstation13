@@ -2,11 +2,32 @@
 	Datum-based species. Should make for much cleaner and easier to maintain mutantrace code.
 */
 
+// Global Lists ////////////////////////////////////////////////
+
+var/global/list/all_species = list()
+var/global/list/all_languages = list()
+var/global/list/whitelisted_species = list("Human")
+
+/proc/buildSpeciesLists()
+	var/datum/language/L
+	var/datum/species/S
+	for(. in (typesof(/datum/language)-/datum/language))
+		L = new .
+		all_languages[L.name] = L
+	for(. in (typesof(/datum/species)-/datum/species))
+		S = new .
+		all_species[S.name] = S
+		if(S.flags & WHITELISTED) whitelisted_species += S.name
+	return
+
+////////////////////////////////////////////////////////////////
+
 /datum/species
 	var/name                     // Species name.
 
 	var/icobase = 'icons/mob/human_races/r_human.dmi'    // Normal icon set.
 	var/deform = 'icons/mob/human_races/r_def_human.dmi' // Mutated icon set.
+	var/override_icon = null                             // DMI for overriding the icon.  states: [lowertext(species.name)]_[gender][fat?"_fat":""]
 	var/eyes = "eyes_s"                                  // Icon for eyes.
 
 	var/primitive                // Lesser form, if any (ie. monkey for humans)
@@ -14,6 +35,8 @@
 	var/language                 // Default racial language, if any.
 	var/attack_verb = "punch"    // Empty hand hurt intent verb.
 	var/punch_damage = 0		 // Extra empty hand attack damage.
+	var/punch_throw_range = 0
+	var/punch_throw_speed = 1
 	var/mutantrace               // Safeguard due to old code.
 
 	var/breath_type = "oxygen"   // Non-oxygen gas breathed, if any.
@@ -27,7 +50,11 @@
 	var/heat_level_2 = 400  // Heat damage level 2 above this point.
 	var/heat_level_3 = 1000 // Heat damage level 2 above this point.
 
+	var/fireloss_mult = 1
+
 	var/darksight = 2
+	var/throw_mult = 1 // Default mob throw_mult.
+
 	var/hazard_high_pressure = HAZARD_HIGH_PRESSURE   // Dangerously high pressure.
 	var/warning_high_pressure = WARNING_HIGH_PRESSURE // High pressure warning.
 	var/warning_low_pressure = WARNING_LOW_PRESSURE   // Low pressure warning.
@@ -36,6 +63,11 @@
 	// This shit is apparently not even wired up.
 	var/brute_resist    // Physical damage reduction.
 	var/burn_resist     // Burn damage reduction.
+
+	var/brute_mod 		// brute multiplier
+	var/burn_mod		// burn multiplier
+
+	var/body_temperature = 310.15
 
 	// For grays
 	var/max_hurt_damage = 5 // Max melee damage dealt + 5 if hulk
@@ -47,9 +79,9 @@
 
 	var/list/abilities = list()	// For species-derived or admin-given powers
 
-	var/blood_color = "#A10808" // Red.
-	var/flesh_color = "#FFC896" // Pink.
-
+	var/blood_color = "#A10808" //Red.
+	var/flesh_color = "#FFC896" //Pink.
+	var/base_color      //Used when setting species.
 	var/uniform_icons = 'icons/mob/uniform.dmi'
 	var/fat_uniform_icons = 'icons/mob/uniform_fat.dmi'
 	var/gloves_icons    = 'icons/mob/hands.dmi'
@@ -62,7 +94,23 @@
 	var/wear_mask_icons = 'icons/mob/mask.dmi'
 	var/back_icons      = 'icons/mob/back.dmi'
 
+
+	//Used in icon caching.
+	var/race_key = 0
+	var/icon/icon_template
+
+	var/list/has_organ = list(
+		"heart" =    /datum/organ/internal/heart,
+		"lungs" =    /datum/organ/internal/lungs,
+		"liver" =    /datum/organ/internal/liver,
+		"kidneys" =  /datum/organ/internal/kidney,
+		"brain" =    /datum/organ/internal/brain,
+		"appendix" = /datum/organ/internal/appendix,
+		"eyes" =     /datum/organ/internal/eyes
+		)
+
 /datum/species/proc/create_organs(var/mob/living/carbon/human/H) //Handles creation of mob organs.
+
 	//This is a basic humanoid limb setup.
 	H.organs = list()
 	H.organs_by_name["chest"] = new/datum/organ/external/chest()
@@ -78,12 +126,9 @@
 	H.organs_by_name["r_foot"] = new/datum/organ/external/r_foot(H.organs_by_name["r_leg"])
 
 	H.internal_organs = list()
-	H.internal_organs_by_name["heart"] = new/datum/organ/internal/heart(H)
-	H.internal_organs_by_name["lungs"] = new/datum/organ/internal/lungs(H)
-	H.internal_organs_by_name["liver"] = new/datum/organ/internal/liver(H)
-	H.internal_organs_by_name["kidney"] = new/datum/organ/internal/kidney(H)
-	H.internal_organs_by_name["brain"] = new/datum/organ/internal/brain(H)
-	H.internal_organs_by_name["eyes"] = new/datum/organ/internal/eyes(H)
+	for(var/organ in has_organ)
+		var/organ_type = has_organ[organ]
+		H.internal_organs_by_name[organ] = new organ_type(H)
 
 	for(var/name in H.organs_by_name)
 		H.organs += H.organs_by_name[name]
@@ -91,15 +136,14 @@
 	for(var/datum/organ/external/O in H.organs)
 		O.owner = H
 
-	/*
 	if(flags & IS_SYNTHETIC)
 		for(var/datum/organ/external/E in H.organs)
 			if(E.status & ORGAN_CUT_AWAY || E.status & ORGAN_DESTROYED) continue
 			E.status |= ORGAN_ROBOT
 		for(var/datum/organ/internal/I in H.internal_organs)
 			I.mechanize()
-	*/
 
+/datum/species/proc/handle_post_spawn(var/mob/living/carbon/human/H) //Handles anything not already covered by basic species assignment.
 	return
 
 /datum/species/proc/handle_breath(var/datum/gas_mixture/breath, var/mob/living/carbon/human/H)
@@ -253,9 +297,6 @@
 					H.fire_alert = max(H.fire_alert, 2)
 	return 1
 
-/datum/species/proc/handle_post_spawn(var/mob/living/carbon/C) //Handles anything not already covered by basic species assignment.
-	return
-
 // Used for species-specific names (Vox, etc)
 /datum/species/proc/makeName(var/gender,var/mob/living/carbon/C=null)
 	if(gender==FEMALE)	return capitalize(pick(first_names_female)) + " " + capitalize(pick(last_names))
@@ -280,6 +321,15 @@
 
 /datum/species/human
 	name = "Human"
+	language = "Sol Common"
+	primitive = /mob/living/carbon/monkey
+
+	flags = HAS_SKIN_TONE | HAS_LIPS | HAS_UNDERWEAR | CAN_BE_FAT
+
+/datum/species/manifested
+	name = "Manifested"
+	icobase = 'icons/mob/human_races/r_manifested.dmi'
+	deform = 'icons/mob/human_races/r_def_manifested.dmi'
 	language = "Sol Common"
 	primitive = /mob/living/carbon/monkey
 
@@ -416,6 +466,30 @@
 	default_mutations=list(M_REMOTE_TALK)
 	default_block_names=list("REMOTETALK")
 
+/datum/species/muton // /vg/
+	name = "Muton"
+	icobase = 'icons/mob/human_races/r_muton.dmi'
+	deform = 'icons/mob/human_races/r_def_muton.dmi'
+	language = "Muton"
+	attack_verb = "punch"
+	darksight = 1
+	eyes = "eyes_s"
+
+	max_hurt_damage = 10
+
+	primitive = /mob/living/carbon/monkey // TODO
+
+	flags = HAS_LIPS
+
+	// Both must be set or it's only a 45% chance of manifesting.
+	default_mutations=list(M_STRONG | M_RUN | M_LOUD)
+	default_block_names=list("STRONGBLOCK","LOUDBLOCK","INCREASERUNBLOCK")
+
+	equip(var/mob/living/carbon/human/H)
+		// Unequip existing suits and hats.
+		H.u_equip(H.wear_suit)
+		H.u_equip(H.head)
+
 /datum/species/skrell
 	name = "Skrell"
 	icobase = 'icons/mob/human_races/r_skrell.dmi'
@@ -432,6 +506,8 @@
 	icobase = 'icons/mob/human_races/r_vox.dmi'
 	deform = 'icons/mob/human_races/r_def_vox.dmi'
 	language = "Vox-pidgin"
+
+	survival_gear = /obj/item/weapon/storage/box/survival/vox
 
 	warning_low_pressure = 50
 	hazard_low_pressure = 0

@@ -37,6 +37,7 @@
 	icon_state = "pirate"
 	item_state = "pirate"
 	flags = FPRINT | TABLEPASS
+	species_fit = list("Vox")
 
 
 /obj/item/clothing/suit/hgpirate
@@ -46,6 +47,7 @@
 	item_state = "hgpirate"
 	flags = FPRINT | TABLEPASS
 	flags_inv = HIDEJUMPSUIT
+	species_fit = list("Vox")
 
 
 /obj/item/clothing/suit/cyborg_suit
@@ -355,6 +357,7 @@
 	desc = "Now you too can pierce the heavens"
 	icon_state = "simonjacket"
 	item_state = "simonjacket"
+	species_fit = list("Vox")
 
 /obj/item/clothing/suit/kaminacape
 	name = "Kamina's Cape"
@@ -382,3 +385,10 @@
 	desc = "Ein Mantel gemacht, um die Verbündeten zu zerstören."
 	icon_state = "soldiersuit"
 	item_state = "soldiersuit"
+
+/obj/item/clothing/suit/russofurcoat
+	name = "russian fur coat"
+	desc = "Let the land do the fighting for you."
+	icon_state = "russofurcoat"
+	item_state = "russofurcoat"
+	allowed = list(/obj/item/weapon/gun)

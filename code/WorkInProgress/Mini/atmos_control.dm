@@ -23,6 +23,7 @@
 	var/overridden = 0 //not set yet, can't think of a good way to do it
 	req_one_access = list(access_ce)
 
+	l_color = "#7BF9FF"
 
 /obj/machinery/computer/atmoscontrol/xeno
 	name = "\improper Xenobiology Atmospherics Computer"
@@ -87,7 +88,7 @@
 		data["alarm"] = "\ref[current]"
 
 	var/list/alarms=list()
-	for(var/obj/machinery/alarm/alarm in (machines)) // removing sortAtom because nano updates it just enough for the lag to happen
+	for(var/obj/machinery/alarm/alarm in sortNames(machines)) // removing sortAtom because nano updates it just enough for the lag to happen
 		if(!is_in_filter(alarm.areaMaster.type))
 			continue // NO ACCESS 4 U
 		var/turf/pos = get_turf(alarm)

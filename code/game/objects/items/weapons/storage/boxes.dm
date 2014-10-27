@@ -27,6 +27,7 @@
 	foldable = /obj/item/stack/sheet/cardboard	//BubbleWrap
 
 	autoignition_temperature = 522 // Kelvin
+	fire_fuel = 2
 
 /obj/item/weapon/storage/box/large
 	name = "large box"
@@ -40,6 +41,7 @@
 	max_combined_w_class = 42 // 21*2
 
 	autoignition_temperature = 530 // Kelvin
+	fire_fuel = 3
 
 /obj/item/weapon/storage/box/surveillance
 	name = "\improper DromedaryCo packet"
@@ -87,6 +89,8 @@
 /obj/item/weapon/storage/box/gloves
 	name = "box of latex gloves"
 	desc = "Contains white gloves."
+	icon_state = "latex"
+
 	New()
 		..()
 		new /obj/item/clothing/gloves/latex(src)
@@ -244,6 +248,21 @@
 		new /obj/item/weapon/implantcase/chem(src)
 		new /obj/item/weapon/implanter(src)
 		new /obj/item/weapon/implantpad(src)
+
+/obj/item/weapon/storage/box/bolas
+	name = "bolas box"
+	desc = "Box of bolases. Make sure to take them out before throwing them."
+	icon_state = "bolas"
+
+	New()
+		..()
+		new /obj/item/weapon/legcuffs/bolas(src)
+		new /obj/item/weapon/legcuffs/bolas(src)
+		new /obj/item/weapon/legcuffs/bolas(src)
+		new /obj/item/weapon/legcuffs/bolas(src)
+		new /obj/item/weapon/legcuffs/bolas(src)
+		new /obj/item/weapon/legcuffs/bolas(src)
+		new /obj/item/weapon/legcuffs/bolas(src)
 
 
 /obj/item/weapon/storage/box/rxglasses

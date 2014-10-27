@@ -110,6 +110,9 @@
 
 
 	attack_hand(var/mob/user as mob)
+		if(istype(user,/mob/dead))
+			usr << "<span class='rose'>Your ghostly hand goes right through!</span>"
+			return
 		if(src.stat & NOPOWER)
 			usr << "The upload computer has no power!"
 			return
@@ -133,6 +136,8 @@
 	icon_state = "command"
 	circuit = "/obj/item/weapon/circuitboard/borgupload"
 	var/mob/living/silicon/robot/current = null
+
+	l_color = "#FFFFFF"
 
 	proc/announce_law_changes()
 		current << "These are your laws now:"
@@ -221,6 +226,9 @@
 
 
 	attack_hand(var/mob/user as mob)
+		if(istype(user,/mob/dead))
+			usr << "<span class='rose'>Your ghostly hand goes right through!</span>"
+			return
 		if(src.stat & NOPOWER)
 			usr << "The upload computer has no power!"
 			return
