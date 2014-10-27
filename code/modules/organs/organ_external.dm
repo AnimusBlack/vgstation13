@@ -433,7 +433,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 			// let the GC handle the deletion of the wound
 
 		// Internal wounds get worse over time. Low temperatures (cryo) stop them.
-		if(W.internal && !W.is_treated() && owner.bodytemperature >= 170)
+		if(W.internal && !W.is_treated() && owner.bodytemperature >= 170 && !(owner.species && owner.species.flags & NO_BLOOD))
 			if(!owner.reagents.has_reagent("bicaridine"))	//bicard stops internal wounds from growing bigger with time, and also stop bleeding
 				W.open_wound(0.1 * wound_update_accuracy)
 				owner.vessel.remove_reagent("blood",0.05 * W.damage * wound_update_accuracy)
@@ -810,8 +810,8 @@ Note that amputating the affected organ does in fact remove the infection from t
 		baseicon=owner.deform_icon
 	else if (status & ORGAN_PEG)
 		baseicon='icons/mob/human_races/o_peg.dmi'
-//	else if (status & ORGAN_ROBOT)
-//		baseicon='icons/mob/human_races/o_robot.dmi'
+	else if (status & ORGAN_ROBOT)
+		baseicon='icons/mob/human_races/o_robot.dmi'
 	return new /icon(baseicon, icon_state)
 
 
@@ -1045,17 +1045,10 @@ obj/item/weapon/organ/New(loc, mob/living/carbon/human/H)
 			else
 				base.Blend(rgb(-H.s_tone,  -H.s_tone,  -H.s_tone), ICON_SUBTRACT)
 
-<<<<<<< HEAD
-	if(base)
-		//Changing limb's skin color to match owner
-		if(!H.species || H.species.flags & HAS_SKIN_COLOR)
-			base.Blend(rgb(H.r_skin, H.g_skin, H.b_skin), ICON_ADD)
-=======
 /*	if(base)
 		//Changing limb's skin color to match owner
 		if(!H.species || H.species.flags & HAS_SKIN_COLOR)
 			base.Blend(rgb(H.r_skin, H.g_skin, H.b_skin), ICON_ADD)*/
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 
 	icon = base
 	dir = SOUTH
@@ -1068,33 +1061,29 @@ obj/item/weapon/organ/New(loc, mob/living/carbon/human/H)
 
 obj/item/weapon/organ/l_arm
 	name = "left arm"
-	icon_state = "l_arm_m"
+	icon_state = "l_arm"
 obj/item/weapon/organ/l_foot
 	name = "left foot"
-	icon_state = "l_foot_m"
+	icon_state = "l_foot"
 obj/item/weapon/organ/l_hand
 	name = "left hand"
-	icon_state = "l_hand_m"
+	icon_state = "l_hand"
 obj/item/weapon/organ/l_leg
 	name = "left leg"
-	icon_state = "l_leg_m"
+	icon_state = "l_leg"
 obj/item/weapon/organ/r_arm
 	name = "right arm"
-	icon_state = "r_arm_m"
+	icon_state = "r_arm"
 obj/item/weapon/organ/r_foot
 	name = "right foot"
-	icon_state = "r_foot_m"
+	icon_state = "r_foot"
 obj/item/weapon/organ/r_hand
 	name = "right hand"
-	icon_state = "r_hand_m"
+	icon_state = "r_hand"
 obj/item/weapon/organ/r_leg
 	name = "right leg"
-<<<<<<< HEAD
-	icon_state = "r_leg_m"
-=======
 	icon_state = "r_leg"
 
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 obj/item/weapon/organ/head
 	name = "head"
 	icon_state = "head_m"

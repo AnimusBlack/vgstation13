@@ -112,13 +112,9 @@
 	selection_color = "#ffeeee"
 	idtype = /obj/item/weapon/card/id/security
 
-<<<<<<< HEAD
-	access = list(access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court, access_engine)
-	minimal_access = list(access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court)
-=======
 	access = list(access_weapons, access_security, access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court)
 	minimal_access = list(access_weapons, access_security, access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court)
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
+
 	alt_titles = list("Forensic Technician")
 
 	minimal_player_age = 7
@@ -180,13 +176,10 @@
 	selection_color = "#ffeeee"
 	alt_titles = list("Security Cadet","Security Corporal","Security Sergeant","Security Master Sergeant")
 	idtype = /obj/item/weapon/card/id/security
-<<<<<<< HEAD
-	access = list(access_security, access_sec_doors, access_brig, access_court)
-	minimal_access = list(access_security, access_sec_doors, access_brig, access_court)
-=======
+
 	access = list(access_weapons, access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels, access_morgue)
 	minimal_access = list(access_weapons, access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels)
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
+
 	minimal_player_age = 7
 
 	pdaslot=slot_belt

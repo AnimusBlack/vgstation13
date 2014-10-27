@@ -89,20 +89,6 @@
 	return copytext((sanitize(strip_html_simple(t))),1,limit)
 
 
-<<<<<<< HEAD
-//Returns null if there is any bad text in the string
-/proc/reject_bad_text(var/text, var/max_length=512)
-	if(length(text) > max_length)	return			//message too long
-	var/non_whitespace = 0
-	for(var/i=1, i<=length(text), i++)
-		switch(text2ascii(text,i))
-			if(62,60,92,47)	return			//rejects the text if it contains these bad characters: <, >, \ or /
-			if(127 to 255)	return			//rejects weird letters like
-			if(0 to 31)		return			//more weird stuff
-			if(32)			continue		//whitespace
-			else			non_whitespace = 1
-	if(non_whitespace)		return text		//only accepts the text if it has some non-spaces
-=======
 /*
  * returns null if there is any bad text in the string
  */
@@ -119,7 +105,7 @@
 			if(62, 60, 92, 47)
 				return // rejects the text if it contains these bad characters: <, >, \ or /
 			if(127 to 255)
-				return // rejects weird letters like ï¿½
+				return // rejects weird letters like ?
 			if(0 to 31)
 				return // more weird stuff
 			if(32)
@@ -129,7 +115,6 @@
 
 	if(non_whitespace)
 		return text // only accepts the text if it has some non-spaces
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 
 // Used to get a sanitized input.
 /proc/stripped_input(var/mob/user, var/message = "", var/title = "", var/default = "", var/max_length=MAX_MESSAGE_LEN)
@@ -254,7 +239,6 @@ proc/checkhtml(var/t)
 /*
  * Text modification
  */
-
 /proc/replacetext(text, find, replacement)
 	var/find_len = length(find)
 	if(find_len < 1)	return text
@@ -404,7 +388,7 @@ proc/checkhtml(var/t)
 	return count
 
 proc/rhtml_encode(var/msg)
-	var/list/c = text2list(msg, "ÿ")
+	var/list/c = text2list(msg, "?")
 	if(c.len == 1)
 		c = text2list(msg, "&#255;")
 		if(c.len == 1)
@@ -419,7 +403,7 @@ proc/rhtml_encode(var/msg)
 	return out
 
 /proc/rhtml_decode(var/msg)
-	var/list/c = text2list(msg, "ÿ")
+	var/list/c = text2list(msg, "?")
 	if(c.len == 1)
 		c = text2list(msg, "&#255;")
 		if(c.len == 1)

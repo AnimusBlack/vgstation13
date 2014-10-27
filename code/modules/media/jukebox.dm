@@ -1,54 +1,89 @@
-./sound/turntable/test
-	file = 'TestLoop1.ogg'
-	falloff = 2
-	repeat = 1
+/*******************************
+ * Largely a rewrite of the Jukebox from D2K5
+ *
+ * By N3X15
+ *******************************/
 
-/mob/var/music = 0
+#define JUKEMODE_SHUFFLE     1 // Default
+#define JUKEMODE_REPEAT_SONG 2
+#define JUKEMODE_PLAY_ONCE   3 // Play, then stop.
+#define JUKEMODE_COUNT       3
 
-/obj/machinery/party/turntable
+#define JUKEBOX_SCREEN_MAIN     1 // Default
+#define JUKEBOX_SCREEN_PAYMENT  2
+#define JUKEBOX_SCREEN_SETTINGS 3
+
+#define JUKEBOX_RELOAD_COOLDOWN 600 // 60s
+
+// Represents a record returned.
+/datum/song_info
+	var/title  = ""
+	var/artist = ""
+	var/album  = ""
+
+	var/url    = ""
+	var/length = 0 // decaseconds
+
+	var/emagged = 0
+
+	New(var/list/json)
+		title  = json["title"]
+		artist = json["artist"]
+		album  = json["album"]
+
+		url    = json["url"]
+
+		length = text2num(json["length"])
+
+	proc/display()
+		var/str="\"[title]\""
+		if(artist!="")
+			str += ", by [artist]"
+		if(album!="")
+			str += ", from '[album]'"
+		return str
+
+	proc/displaytitle()
+		if(artist==""&&title=="")
+			return "\[NO TAGS\]"
+		var/str=""
+		if(artist!="")
+			str += artist+" - "
+		if(title!="")
+			str += "\"[title]\""
+		else
+			str += "Untitled"
+		// Only show album if we have to.
+		if(album!="" && artist == "")
+			str += " ([album])"
+		return str
+
+
+var/global/loopModeNames=list(
+	JUKEMODE_SHUFFLE = "Shuffle",
+	JUKEMODE_REPEAT_SONG = "Single",
+	JUKEMODE_PLAY_ONCE= "Once",
+)
+/obj/machinery/media/jukebox
 	name = "Jukebox"
-	desc = "A jukebox is a partially automated music-playing device, usually a coin-operated machine, that will play a patron's selection from self-contained media."
-	icon = 'ss13_dark_alpha7_old.dmi'
-	icon_state = "Jukeboxalt"
-	var/playing = 0
-	anchored = 1
+	desc = "A bastion of goodwill, peace, and hope."
+	icon = 'icons/obj/jukebox.dmi'
+	icon_state = "jukebox2"
 	density = 1
-	var/list/songs = list ("Jawa Bar"='Cantina.ogg',
-		"Lonely Assistant Blues"='AGrainOfSandInSandwich.ogg',
-		"Chinatown"='chinatown.ogg',
-		"Wade In The Water"='WadeInTheWater.ogg',
-		"Blue Theme"='BlueTheme.ogg',
-		"Beyond The Sea"='BeyondTheSea.ogg',
-		"The Assassination of Jesse James"='TheAssassinationOfJesseJames.ogg',
-		"Everyone Has Their Vices"='EveryoneHasTheirVices.ogg',
-		"The Way You Look Tonight"='TheWayYouLookTonight.ogg',
-		"They Were All Dead"='TheyWereAllDead.ogg',
-		"Onizukas Blues"='OnizukasBlues.ogg',
-		"Ragtime Piano"='TheEntertainer.ogg',
-		"It Had To Be You"='ItHadToBeYou.ogg',
-		"Janitorial Blues"='KyouWaYuuhiYarou.ogg',
-		"Lujon"='Lujon.ogg',
-		"Another Day's Work"='AnotherDaysWork.ogg',
-		"Razor Walker"='RazorWalker.ogg',
-		"Mute Beat"='MuteBeat.ogg',
-		"Groovy Times"='GroovyTime.ogg',
-		"Under My Skin"='IveGotYouUnderMySkin.ogg',
-		"That`s All"='ThatsAll.ogg',
-		"The Folks On The Hill"='TheFolksWhoLiveOnTheHill.ogg')
 
-
-/obj/machinery/party/mixer
-	name = "mixer"
-	desc = "A mixing board for mixing music"
-	icon = 'ss13_dark_alpha7_old.dmi'
-	icon_state = "mixer"
-	density = 0
 	anchored = 1
+	luminosity = 4 // Why was this 16
 
+	playing=0
 
-<<<<<<< HEAD
-/obj/machinery/party/turntable/New()
-=======
+	var/loop_mode = JUKEMODE_SHUFFLE
+
+	// Server-side playlist IDs this jukebox can play.
+	var/list/playlists=list() // ID = Label
+
+	// Playlist to load at startup.
+	var/playlist_id = ""
+
 	var/list/playlist
 	var/current_song  = 0 // 0, or whatever song is currently playing.
 	var/next_song     = 0 // 0, or a song someone has purchased.  Played after current song completes.
@@ -84,69 +119,147 @@
 	return
 
 /obj/machinery/media/jukebox/power_change()
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 	..()
-	sleep(2)
-	new /sound/turntable/test(src)
-	return
+	if(emagged && !(stat & (NOPOWER|BROKEN)))
+		playing = 1
+	update_icon()
 
-/obj/machinery/party/turntable/attack_paw(user as mob)
-	return src.attack_hand(user)
-
-/obj/machinery/party/turntable/attack_hand(mob/living/user as mob)
-	if (..())
+/obj/machinery/media/jukebox/update_icon()
+	overlays = 0
+	if(stat & (NOPOWER|BROKEN) || !anchored)
+		if(stat & BROKEN)
+			icon_state = "[state_base]-broken"
+		else
+			icon_state = "[state_base]-nopower"
+		stop_playing()
 		return
-	usr.set_machine(src)
-	src.add_fingerprint(usr)
+	icon_state = state_base
+	if(playing)
+		if(emagged)
+			overlays += "[state_base]-emagged"
+		else
+			overlays += "[state_base]-running"
 
-	var/t = "<body background=turntable.png ><br><br><br><br><br><br><br><br><br><br><br><br><div align='center'>"
-	t += "<A href='?src=\ref[src];off=1'><font color='maroon'>T</font><font color='geen'>urn</font> <font color='red'>Off</font></A>"
-	t += "<table border='0' height='25' width='300'><tr>"
+/obj/machinery/media/jukebox/proc/check_reload()
+	return world.time > last_reload + JUKEBOX_RELOAD_COOLDOWN
 
-	for (var/i = 1, i<=(songs.len), i++)
-		var/check = i%2
-		t += "<td><A href='?src=\ref[src];on=[i]'><font color='maroon'>[copytext(songs[i],1,2)]</font><font color='purple'>[copytext(songs[i],2)]</font></A></td>"
-		if(!check) t += "</tr><tr>"
+/obj/machinery/media/jukebox/attack_hand(var/mob/user)
+	if(stat & NOPOWER)
+		usr << "\red You don't see anything to mess with."
+		return
+	if(stat & BROKEN && playlist!=null)
+		user.visible_message("\red <b>[user.name] smacks the side of \the [src.name].</b>","\red You hammer the side of \the [src.name].")
+		stat &= ~BROKEN
+		playlist=null
+		playing=emagged
+		update_icon()
+		return
 
-	t += "</tr></table></div></body>"
-	user << browse(t, "window=turntable;size=500x636;can_resize=0")
-	onclose(user, "urntable")
-	return
+	var/t = "<div class=\"navbar\">"
+	t += "<a href=\"?src=\ref[src];screen=[JUKEBOX_SCREEN_MAIN]\">Main</a>"
+	if(allowed(user))
+		t += " | <a href=\"?src=\ref[src];screen=[JUKEBOX_SCREEN_SETTINGS]\">Settings</a>"
+	t += "</div>"
+	switch(screen)
+		if(JUKEBOX_SCREEN_MAIN)     t += ScreenMain(user)
+		if(JUKEBOX_SCREEN_PAYMENT)  t += ScreenPayment(user)
+		if(JUKEBOX_SCREEN_SETTINGS) t += ScreenSettings(user)
 
-<<<<<<< HEAD
-/obj/machinery/party/turntable/Topic(href, href_list)
-	..()
-	if( href_list["on"])
-		if(src.playing == 0)
-			//world << "Should be working..."
-			var/sound/S
-			S = sound(songs[songs[text2num(href_list["on"])]])
-			S.repeat = 1
-			S.channel = 10
-			S.falloff = 2
-			S.wait = 1
-			S.environment = 0
+	user.set_machine(src)
+	var/datum/browser/popup = new (user,"jukebox",name,420,700)
+	popup.set_content(t)
+	popup.set_title_image(user.browse_rsc_icon(icon, icon_state))
+	popup.open()
 
-			var/area/A = src.loc.loc:master
+/obj/machinery/media/jukebox/proc/ScreenMain(var/mob/user)
+	var/t = "<h1>Jukebox Interface</h1>"
+	t += "<b>Power:</b> <a href='?src=\ref[src];power=1'>[playing?"On":"Off"]</a><br />"
+	t += "<b>Play Mode:</b> <a href='?src=\ref[src];mode=1'>[loopModeNames[loop_mode]]</a><br />"
+	if(playlist == null)
+		t += "\[DOWNLOADING PLAYLIST, PLEASE WAIT\]"
+	else
+		if(req_access.len == 0 || allowed(user))
+			if(check_reload())
+				t += "<b>Playlist:</b> "
+				for(var/plid in playlists)
+					t += "<a href='?src=\ref[src];playlist=[plid]'>[playlists[plid]]</a>"
+			else
+				t += "<i>Please wait before changing playlists.</i>"
+		else
+			t += "<i>You cannot change the playlist.</i>"
+		t += "<br />"
+		if(current_song)
+			var/datum/song_info/song=playlist[current_song]
+			t += "<b>Current song:</b> [song.artist] - [song.title]<br />"
+		if(next_song)
+			var/datum/song_info/song=playlist[next_song]
+			t += "<b>Up next:</b> [song.artist] - [song.title]<br />"
+		t += "<table class='prettytable'><tr><th colspan='2'>Artist - Title</th><th>Album</th></tr>"
+		var/i
+		var/can_change=!next_song
+		if(change_access.len > 0) // Permissions
+			if(can_access(user.GetAccess(),req_access=change_access))
+				can_change = 1
 
-			for(var/area/RA in A.related)
-				for(var/obj/machinery/party/lasermachine/L in RA)
-					L.turnon()
-			playing = 1
-			while(playing == 1)
-				for(var/mob/M in world)
-					var/area/location = get_area(M)
-					if((location in A.related) && M.music == 0)
-						//world << "Found the song..."
-						M << S
-						M.music = 1
-					else if(!(location in A.related) && M.music == 1)
-						var/sound/Soff = sound(null)
-						Soff.channel = 10
-						M << Soff
-						M.music = 0
-				sleep(10)
-=======
+		for(i = 1,i <= playlist.len,i++)
+			var/datum/song_info/song=playlist[i]
+			t += "<tr><th>#[i]</th><td>"
+			if(can_change) t += "<A href='?src=\ref[src];song=[i]' class='nobg'>"
+			t += song.displaytitle()
+			if(can_change) t += "</A>"
+			t += "</td><td>[song.album]</td></tr>"
+		t += "</table>"
+	return t
+
+/obj/machinery/media/jukebox/proc/ScreenPayment(var/mob/user)
+	var/t = "<h1>Pay for Song</h1>"
+	var/datum/song_info/song=playlist[selected_song]
+	t += {"
+	<center>
+		<p>You've selected <b>[song.displaytitle()]</b>.</p>
+		<p><b>Swipe ID card</b> or <b>insert cash</b> to play this song next! ($[num2septext(change_cost)])</p>
+		\[ <a href='?src=\ref[src];cancelbuy=1'>Cancel</a> \]
+	</center>"}
+	return t
+
+/obj/machinery/media/jukebox/proc/ScreenSettings(var/mob/user)
+	var/dat={"<h1>Settings</h1>
+		<form action="?src=\ref[src]" method="get">
+		<input type="hidden" name="src" value="\ref[src]" />
+		<fieldset>
+			<legend>Banking</legend>
+			<div>
+				<b>Payable Account:</b> <input type="textbox" name="payableto" value="[linked_account.account_number]" />
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>Pricing</legend>
+			<div>
+				<b>Change Song:</b> $<input type="textbox" name="set_change_cost" value="[change_cost]" />
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>Access</legend>
+			<p>Permissions required to change song:</p>
+			<div>
+				<input type="radio" name="lock" id="lock_none" value=""[change_access == list() ? " checked='selected'":""] /> <label for="lock_none">None</label>
+			</div>
+			<div>
+				<input type="radio" name="lock" id="lock_bar" value="[access_bar]"[change_access == list(access_bar) ? " checked='selected'":""] /> <label for="lock_bar">Bar</label>
+			</div>
+			<div>
+				<input type="radio" name="lock" id="lock_head" value="[access_heads]"[change_access == list(access_heads) ? " checked='selected'":""] /> <label for="lock_head">Any Head</label>
+			</div>
+			<div>
+				<input type="radio" name="lock" id="lock_cap" value="[access_captain]"[change_access == list(access_captain) ? " checked='selected'":""] /> <label for="lock_cap">Captain</label>
+			</div>
+		</fieldset>
+		<input type="submit" name="act" value="Save Settings" />
+		</form>"}
+	return dat
+
+
+
 /obj/machinery/media/jukebox/attackby(obj/item/W, mob/user)
 	if(istype(W, /obj/item/device/multitool))
 		update_multitool_menu(user)
@@ -180,41 +293,24 @@
 			return
 		if(!linked_account)
 			visible_message("\red The machine buzzes, and flashes \"NO LINKED ACCOUNT\" on the screen.","You hear a buzz.")
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 			return
+		var/obj/item/weapon/spacecash/C=W
+		credits_held += C.worth*C.amount
+		if(credits_held >= credits_needed)
+			visible_message("\blue The machine beeps happily.","You hear a beep.")
+			credits_held -= credits_needed
+			credits_needed=0
+			screen=JUKEBOX_SCREEN_MAIN
+			if(credits_held)
+				var/obj/item/weapon/storage/box/B = new(loc)
+				dispense_cash(credits_held,B)
+				B.name="change"
+				B.desc="A box of change."
+			credits_held=0
 
-	if( href_list["off"] )
-		if(src.playing == 1)
-			var/sound/S = sound(null)
-			S.channel = 10
-			S.wait = 1
-			for(var/mob/M in world)
-				M << S
-				M.music = 0
-			playing = 0
-			var/area/A = src.loc.loc:master
-			for(var/area/RA in A.related)
-				for(var/obj/machinery/party/lasermachine/L in RA)
-					L.turnoff()
+			successful_purchase()
+		attack_hand(user)
 
-
-/obj/machinery/party/lasermachine
-	name = "laser machine"
-	desc = "A laser machine that shoots lasers."
-	icon = 'ss13_dark_alpha7_old.dmi'
-	icon_state = "lasermachine"
-	anchored = 1
-	var/mirrored = 0
-
-<<<<<<< HEAD
-/obj/effects/laser
-	name = "laser"
-	desc = "A laser..."
-	icon = 'ss13_dark_alpha7_old.dmi'
-	icon_state = "laserred1"
-	anchored = 1
-	layer = 4
-=======
 /obj/machinery/media/jukebox/emag(mob/user)
 	current_song = 0
 	if(!emagged)
@@ -240,114 +336,32 @@
 		next_song = selected_song
 		selected_song = 0
 		screen = JUKEBOX_SCREEN_MAIN
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 
-/obj/item/lasermachine/New()
+/obj/machinery/media/jukebox/Topic(href, href_list)
+	if(isobserver(usr) && !isAdminGhost(usr))
+		usr << "\red You can't push buttons when your fingers go right through them, dummy."
+		return
 	..()
+	if(emagged)
+		usr << "\red You touch the bluescreened menu. Nothing happens. You feel dumber."
+		return
 
-/obj/machinery/party/lasermachine/proc/turnon()
-	var/wall = 0
-	var/cycle = 1
-	var/area/A = get_area(src)
-	var/X = 1
-	var/Y = 0
-	if(mirrored == 0)
-		while(wall == 0)
-			if(cycle == 1)
-				var/obj/effects/laser/F = new/obj/effects/laser(src)
-				F.x = src.x+X
-				F.y = src.y+Y
-				F.z = src.z
-				F.icon_state = "laserred1"
-				var/area/AA = get_area(F)
-				var/turf/T = get_turf(F)
-				if(T.density == 1 || AA.name != A.name)
-					del(F)
-					return
-				cycle++
-				if(cycle > 3)
-					cycle = 1
-				X++
-			if(cycle == 2)
-				var/obj/effects/laser/F = new/obj/effects/laser(src)
-				F.x = src.x+X
-				F.y = src.y+Y
-				F.z = src.z
-				F.icon_state = "laserred2"
-				var/area/AA = get_area(F)
-				var/turf/T = get_turf(F)
-				if(T.density == 1 || AA.name != A.name)
-					del(F)
-					return
-				cycle++
-				if(cycle > 3)
-					cycle = 1
-				Y++
-			if(cycle == 3)
-				var/obj/effects/laser/F = new/obj/effects/laser(src)
-				F.x = src.x+X
-				F.y = src.y+Y
-				F.z = src.z
-				F.icon_state = "laserred3"
-				var/area/AA = get_area(F)
-				var/turf/T = get_turf(F)
-				if(T.density == 1 || AA.name != A.name)
-					del(F)
-					return
-				cycle++
-				if(cycle > 3)
-					cycle = 1
-				X++
-	if(mirrored == 1)
-		while(wall == 0)
-			if(cycle == 1)
-				var/obj/effects/laser/F = new/obj/effects/laser(src)
-				F.x = src.x+X
-				F.y = src.y-Y
-				F.z = src.z
-				F.icon_state = "laserred1m"
-				var/area/AA = get_area(F)
-				var/turf/T = get_turf(F)
-				if(T.density == 1 || AA.name != A.name)
-					del(F)
-					return
-				cycle++
-				if(cycle > 3)
-					cycle = 1
-				Y++
-			if(cycle == 2)
-				var/obj/effects/laser/F = new/obj/effects/laser(src)
-				F.x = src.x+X
-				F.y = src.y-Y
-				F.z = src.z
-				F.icon_state = "laserred2m"
-				var/area/AA = get_area(F)
-				var/turf/T = get_turf(F)
-				if(T.density == 1 || AA.name != A.name)
-					del(F)
-					return
-				cycle++
-				if(cycle > 3)
-					cycle = 1
-				X++
-			if(cycle == 3)
-				var/obj/effects/laser/F = new/obj/effects/laser(src)
-				F.x = src.x+X
-				F.y = src.y-Y
-				F.z = src.z
-				F.icon_state = "laserred3m"
-				var/area/AA = get_area(F)
-				var/turf/T = get_turf(F)
-				if(T.density == 1 || AA.name != A.name)
-					del(F)
-					return
-				cycle++
-				if(cycle > 3)
-					cycle = 1
-				X++
+	if (href_list["power"])
+		playing=!playing
+		update_music()
+		update_icon()
 
-<<<<<<< HEAD
-=======
+	if("screen" in href_list)
+		screen=text2num(href_list["screen"])
+
+	if("act" in href_list)
+		switch(href_list["act"])
+			if("Save Settings")
+				var/datum/money_account/new_linked_account = get_money_account(text2num(href_list["payableto"]),z)
+				if(!new_linked_account)
+					usr << "\red Unable to link new account. Aborting."
+					return
+
 				change_cost = max(0,text2num(href_list["set_change_cost"]))
 				linked_account = new_linked_account
 				if("lock" in href_list && href_list["lock"] != "")
@@ -505,63 +519,57 @@
 		"rock" = "Rock",
 		"muzak" = "Muzak"
 	)
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 
-/obj/machinery/party/lasermachine/proc/turnoff()
-	var/area/A = src.loc.loc
-	for(var/area/RA in A.related)
-		for(var/obj/effects/laser/F in RA)
-			del(F)
+// So I don't have to do all this shit manually every time someone sacrifices pun-pun.
+// Also for debugging.
+/obj/machinery/media/jukebox/superjuke
+	name = "Super Juke"
+	desc = "The ultimate jukebox. Your brain begins to liquify from simply looking at it."
+
+	state_base = "superjuke"
+	change_cost = 0
+
+	playlist_id="bar"
+	// Must be defined on your server.
+	playlists=list(
+		"bar"  = "Bar Mix",
+		"jazz" = "Jazz",
+		"rock" = "Rock",
+		"muzak" = "Muzak",
+
+		"emagged" = "Syndie Mix",
+		"shuttle" = "Shuttle",
+		"endgame" = "Apocalypse"
+	)
+
+/obj/machinery/media/jukebox/superjuke/attackby(obj/item/W, mob/user)
+	// NO FUN ALLOWED.  Emag list is included, anyway.
+	if(istype(W, /obj/item/weapon/card/emag))
+		user << "\red Your [W] refuses to touch \the [src]!"
+		return
+	..()
+
+/obj/machinery/media/jukebox/superjuke/shuttle
+	playlist_id="shuttle"
+	id_tag="Shuttle" // For autolink
 
 
-/obj/machinery/party/gramophone
-	name = "Gramophone"
-	desc = "Old-time styley."
-	icon = 'icons/obj/musician.dmi'
-	icon_state = "gramophone"
-	var/playing = 0
-	anchored = 1
-	density = 1
+/obj/machinery/media/jukebox/superjuke/thematic
+	playlist_id="endgame"
 
-/obj/machinery/party/gramophone/attack_paw(user as mob)
-	return src.attack_hand(user)
-
-/obj/machinery/party/gramophone/attack_hand(mob/living/user as mob)
-
-	if (src.playing == 0)
-
-		var/sound/S
-		S = sound(pick('Taintedlove.ogg','Soviet.ogg'))
-		S.repeat = 1
-		S.channel = 10
-		S.falloff = 2
-		S.wait = 1
-		S.environment = 0
-		var/area/A = src.loc.loc:master
-
-		for(var/area/RA in A.related)
-			playing = 1
-			while(playing == 1)
-				for(var/mob/M in world)
-					if((M.loc.loc in A.related) && M.music == 0)
-						M << S
-						M.music = 1
-					else if(!(M.loc.loc in A.related) && M.music == 1)
-						var/sound/Soff = sound(null)
-						Soff.channel = 10
-						M << Soff
-						M.music = 0
-				sleep(10)
-			return
-
+/obj/machinery/media/jukebox/superjuke/thematic/update_music()
+	if(current_song && playing)
+		var/datum/song_info/song = playlist[current_song]
+		media_url = song.url
+		last_song = current_song
+		media_start_time = world.time
+		visible_message("<span class='notice'>\icon[src] \The [src] begins to play [song.display()].</span>","<em>You hear music.</em>")
+		//visible_message("<span class='notice'>\icon[src] \The [src] warbles: [song.length/10]s @ [song.url]</notice>")
 	else
-		(src.playing) = 0
-		var/sound/S = sound(null)
-		S.channel = 10
-		S.wait = 1
-		for(var/mob/M in world)
-			M << S
-			M.music = 0
-		playing = 0
-		var/area/A = src.loc.loc:master
-		for(var/area/RA in A.related)
+		media_url=""
+		media_start_time = 0
+
+	// Send update to clients.
+	for(var/mob/M in mob_list)
+		if(M && M.client)
+			M.force_music(media_url,media_start_time,volume)

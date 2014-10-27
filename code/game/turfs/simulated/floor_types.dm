@@ -121,35 +121,15 @@
 	l_color = "#3e0000"
 
 
-// /turf/simulated/floor/engine/n20
-//	New()
-//		..()
-//		// EXACTLY the same code as fucking roomfillers.  If this doesn't work, something's fucked.
-//		var/datum/gas/sleeping_agent/trace_gas = new
-//		air.trace_gases += trace_gas
-//		trace_gas.moles = 9*4000
-//		air.update_values()
-
 /turf/simulated/floor/engine/n20
 	New()
 		..()
-<<<<<<< HEAD
-		var/datum/gas_mixture/adding = new
-		var/datum/gas/sleeping_agent/trace_gas = new
-
-		trace_gas.moles = 2000
-		adding.trace_gases += trace_gas
-		adding.temperature = T20C
-
-		assume_air(adding)
-=======
 		if(src.air)
 			// EXACTLY the same code as fucking roomfillers.  If this doesn't work, something's fucked.
 			var/datum/gas/sleeping_agent/trace_gas = new
 			air.trace_gases += trace_gas
 			trace_gas.moles = 9*4000
 			air.update_values()
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 
 /turf/simulated/floor/engine/vacuum
 	name = "vacuum floor"
@@ -157,7 +137,6 @@
 	oxygen = 0
 	nitrogen = 0.001
 	temperature = TCMB
-	autoignition_temperature = 0
 
 /turf/simulated/floor/plating
 	name = "plating"
@@ -307,7 +286,6 @@
 	name = "snow"
 	icon = 'icons/turf/snow.dmi'
 	icon_state = "snow"
-	temperature = 230
 
 /turf/simulated/floor/plating/snow/concrete
 	name = "concrete"

@@ -1650,58 +1650,6 @@ mob/living/carbon/human/yank_out_object()
 	else
 		usr << "\blue [self ? "Your" : "[src]'s"] pulse is [src.get_pulse(GETPULSE_HAND)]."
 
-<<<<<<< HEAD
-/mob/living/carbon/human/proc/set_species(var/new_species, var/force_organs, var/default_colour)
-
-	if(!dna)
-		if(!new_species)
-			new_species = "Human"
-	else
-		if(!new_species)
-			new_species = dna.species
-		else
-			dna.species = new_species
-
-	if(species && (species.name && species.name == new_species))
-		return
-
-	if(species && species.language)
-		remove_language(species.language)
-
-	if(species && species.abilities)
-		verbs -= species.abilities
-
-	species = all_species[new_species]
-
-	if(species.abilities)
-		verbs |= species.abilities
-
-	if(force_organs || !organs || !organs.len)
-		species.create_organs(src)
-
-	if(species.language)
-		add_language(species.language)
-
-	if(species.base_color && default_colour)
-		//Apply colour.
-		r_skin = hex2num(copytext(species.base_color,2,4))
-		g_skin = hex2num(copytext(species.base_color,4,6))
-		b_skin = hex2num(copytext(species.base_color,6,8))
-	else
-		r_skin = 0
-		g_skin = 0
-		b_skin = 0
-
-	species.handle_post_spawn(src)
-
-	spawn(0)
-		update_icons()
-
-	if(species)
-		return 1
-	else
-		return 0
-=======
 /mob/living/carbon/human/proc/set_species(var/new_species_name, var/force_organs, var/default_colour)
 
 	if(new_species_name)
@@ -1725,7 +1673,6 @@ mob/living/carbon/human/yank_out_object()
 	spawn()	src.update_icons()
 	src.species.handle_post_spawn(src)
 	return 1
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 
 /mob/living/carbon/human/proc/bloody_doodle()
 	set category = "IC"

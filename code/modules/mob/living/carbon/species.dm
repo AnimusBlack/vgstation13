@@ -92,7 +92,6 @@ var/global/list/whitelisted_species = list("Human")
 	var/belt_icons      = 'icons/mob/belt.dmi'
 	var/wear_suit_icons = 'icons/mob/suit.dmi'
 	var/wear_mask_icons = 'icons/mob/mask.dmi'
-	var/base_color
 	var/back_icons      = 'icons/mob/back.dmi'
 
 
@@ -345,7 +344,6 @@ var/global/list/whitelisted_species = list("Human")
 	attack_verb = "scratch"
 	punch_damage = 5
 	primitive = /mob/living/carbon/monkey/unathi
-	base_color = "#066000"
 	darksight = 3
 
 	cold_level_1 = 280 //Default 260 - Lower is better
@@ -356,7 +354,7 @@ var/global/list/whitelisted_species = list("Human")
 	heat_level_2 = 480 //Default 400
 	heat_level_3 = 1100 //Default 1000
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL | HAS_SKIN_COLOR
+	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL
 
 	flesh_color = "#34AF10"
 
@@ -372,7 +370,7 @@ var/global/list/whitelisted_species = list("Human")
 	language = "Clatter"
 	attack_verb = "punch"
 
-	flags = HAS_LIPS | /*HAS_TAIL | NO_EAT |*/ NO_BREATHE /*| NON_GENDERED*/ | NO_BLOOD
+	flags = IS_WHITELISTED | HAS_LIPS | /*HAS_TAIL | NO_EAT |*/ NO_BREATHE /*| NON_GENDERED*/ | NO_BLOOD
 
 	default_mutations=list(SKELETON)
 
@@ -390,7 +388,6 @@ var/global/list/whitelisted_species = list("Human")
 	tail = "tajtail"
 	attack_verb = "scratch"
 	punch_damage = 5
-	base_color = "#000000"
 	darksight = 8
 
 	cold_level_1 = 200 //Default 260
@@ -403,7 +400,7 @@ var/global/list/whitelisted_species = list("Human")
 
 	primitive = /mob/living/carbon/monkey/tajara
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL | HAS_SKIN_COLOR
+	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL
 
 	flesh_color = "#AFA59E"
 
@@ -419,7 +416,7 @@ var/global/list/whitelisted_species = list("Human")
 			"silly rabbit",
 			"sandwich", // won't work too well with plurals OH WELL
 			"recolor",
-			"party foxy"
+			"party pooper"
 		)
 	)
 	filter.addWordReplacement("me","meow")
@@ -436,14 +433,14 @@ var/global/list/whitelisted_species = list("Human")
 		message = ""
 		if(prob(50))
 			message = pick(
-				"MEOW!",
-				"Purr. Purr.",
-				"Raaaawr!",
+				"GOD, PLEASE",
+				"NO, GOD",
+				"AGGGGGGGH",
 			)+" "
 		message += pick(
-			"Meowl!",
-			"Surrrf",
-			"Mooowrl",
+			"KILL ME",
+			"END MY SUFFERING",
+			"I CAN'T DO THIS ANYMORE",
 		)
 		return message
 	if(copytext(message, 1, 2) != "*")
@@ -463,15 +460,11 @@ var/global/list/whitelisted_species = list("Human")
 
 	primitive = /mob/living/carbon/monkey // TODO
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | CAN_BE_FAT
+	flags = WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | CAN_BE_FAT
 
 	// Both must be set or it's only a 45% chance of manifesting.
 	default_mutations=list(M_REMOTE_TALK)
 	default_block_names=list("REMOTETALK")
-
-	equip(var/mob/living/carbon/human/H)
-		H.gender = "male"
-		H.prev_gender = "male"
 
 /datum/species/muton // /vg/
 	name = "Muton"
@@ -504,7 +497,7 @@ var/global/list/whitelisted_species = list("Human")
 	language = "Skrellian"
 	primitive = /mob/living/carbon/monkey/skrell
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_SKIN_COLOR
+	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR
 
 	flesh_color = "#8CD7A3"
 
@@ -526,7 +519,7 @@ var/global/list/whitelisted_species = list("Human")
 	eyes = "vox_eyes_s"
 	breath_type = "nitrogen"
 
-	flags = IS_WHITELISTED | NO_SCAN | NO_BLOOD
+	flags = WHITELISTED | NO_SCAN | NO_BLOOD
 
 	blood_color = "#2299FC"
 	flesh_color = "#808D11"
@@ -609,34 +602,7 @@ var/global/list/whitelisted_species = list("Human")
 	heat_level_2 = 3000
 	heat_level_3 = 4000
 
-	flags = NO_BREATHE | REQUIRE_LIGHT | NO_SCAN | IS_PLANT | RAD_ABSORB | NO_BLOOD | IS_SLOW | NO_PAIN
+	flags = IS_WHITELISTED | NO_BREATHE | REQUIRE_LIGHT | NO_SCAN | IS_PLANT | RAD_ABSORB | NO_BLOOD | IS_SLOW | NO_PAIN
 
 	blood_color = "#004400"
 	flesh_color = "#907E4A"
-
-/datum/species/ipc
-	name = "IPC"
-	icobase = 'icons/mob/human_races/r_machine.dmi'
-	deform = 'icons/mob/human_races/r_machine.dmi'
-	language = "Sol Common"
-	attack_verb = "bumps"
-	punch_damage = 3
-	primitive = /mob/living/carbon/monkey/
-	darksight = 3
-
-	cold_level_1 = 220 //Default 260 - Lower is better
-	cold_level_2 = 180 //Default 200
-	cold_level_3 = 100 //Default 120
-
-	heat_level_1 = 560 //Default 360 - Higher is better
-	heat_level_2 = 680 //Default 400
-	heat_level_3 = 1100 //Default 1000
-
-	flags = IS_WHITELISTED | NO_BREATHE | NO_BLOOD | NO_PAIN
-
-	blood_color = "#000000"
-	flesh_color = "#333333"
-
-	equip(var/mob/living/carbon/human/H)
-		H.gender = "male"
-		H.prev_gender = "male"

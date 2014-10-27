@@ -6,9 +6,9 @@ var/list/admin_verbs_default = list(
 	/client/proc/hide_verbs,			/*hides all our adminverbs*/
 	/client/proc/hide_most_verbs,		/*hides all our hideable adminverbs*/
 	/client/proc/debug_variables,		/*allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify*/
-	/client/proc/check_antagonists		/*shows all antags*/
-//	/datum/admins/proc/checkCID         /*Not works at our, so i turned it off - Loly */
-//	/datum/admins/proc/checkCKEY        /* [2] */
+	/client/proc/check_antagonists,		/*shows all antags*/
+//	/datum/admins/proc/checkCID,
+//	/datum/admins/proc/checkCKEY
 //	/client/proc/deadchat				/*toggles deadchat on/off*/
 	)
 var/list/admin_verbs_admin = list(
@@ -126,8 +126,6 @@ var/list/admin_verbs_server = list(
 	/client/proc/cmd_debug_del_all,
 	/datum/admins/proc/adrev,
 	/datum/admins/proc/adspawn,
-	/datum/admins/verb/nanomapgen_DumpImageAll,
-	/datum/admins/verb/nanomapgen_DumpImage,
 	/datum/admins/proc/adjump,
 	/datum/admins/proc/toggle_aliens,
 	/datum/admins/proc/toggle_space_ninja,
@@ -151,8 +149,6 @@ var/list/admin_verbs_debug = list(
 	/client/proc/restart_controller,
 	/client/proc/enable_debug_verbs,
 	/client/proc/callproc,
-	/datum/admins/verb/gc_dump_hdl,
-	/datum/admins/verb/check_mob_list,
 	/client/proc/toggledebuglogs,
 	/client/proc/qdel_toggle,              // /vg/
 	/client/proc/cmd_admin_dump_instances, // /vg/
@@ -227,10 +223,6 @@ var/list/admin_verbs_hideable = list(
 	/datum/admins/proc/adrev,
 	/datum/admins/proc/adspawn,
 	/datum/admins/proc/adjump,
-	/datum/admins/verb/gc_dump_hdl,
-	/datum/admins/verb/check_mob_list,
-	/datum/admins/verb/nanomapgen_DumpImageAll,
-	/datum/admins/verb/nanomapgen_DumpImage,
 	/client/proc/restart_controller,
 	/client/proc/cmd_admin_list_open_jobs,
 	/client/proc/callproc,
@@ -509,7 +501,8 @@ var/list/admin_verbs_mod = list(
 	if(++D.warns >= MAX_WARNS)					//uh ohhhh...you'reee iiiiin trouuuubble O:)
 		var/bantime = AUTOBANTIME//= (++D.warnbans * AUTOBANTIME)
 		D.warns = 0
-		for(var/i = 1; i < 3; i++)
+		++D.warnbans
+		for(var/i = 1; i < D.warnbans; i++)
 			bantime *= 2
 		ban_unban_log_save("[ckey] warned [warned_ckey], resulting in a [bantime] minute autoban.")
 		if(C)
@@ -525,14 +518,8 @@ var/list/admin_verbs_mod = list(
 	else
 		if(C)
 			C << "<font color='red'><BIG><B>You have been formally warned by an administrator.</B></BIG><br>Further warnings will result in an autoban.</font>"
-			message_admins("[key_name_admin(src)] has warned [key_name_admin(C)]. They have [MAX_WARNS-D.warns] strikes remaining. And have been warn banned.")
+			message_admins("[key_name_admin(src)] has warned [key_name_admin(C)]. They have [MAX_WARNS-D.warns] strikes remaining. And have been warn banned [D.warnbans] [D.warnbans == 1 ? "time" : "times"]")
 		else
-<<<<<<< HEAD
-			message_admins("[key_name_admin(src)] has warned [warned_ckey] (DC). They have [MAX_WARNS-D.warns] strikes remaining. And have been warn banned.")
-		D.save_preferences()
-	feedback_add_details("admin_verb","WARN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
-=======
 			message_admins("[key_name_admin(src)] has warned [warned_ckey] (DC). They have [MAX_WARNS-D.warns] strikes remaining. And have been warn banned [D.warnbans] [D.warnbans == 1 ? "time" : "times"]")
 		D.save_preferences_sqlite(C, C.ckey)
 	feedback_add_details("admin_verb","WARN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
@@ -570,7 +557,6 @@ var/list/admin_verbs_mod = list(
 
 #undef MAX_WARNS
 #undef AUTOBANTIME
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 
 /client/proc/drop_bomb() // Some admin dickery that can probably be done better -- TLE
 	set category = "Special Verbs"
@@ -629,7 +615,7 @@ var/list/admin_verbs_mod = list(
 		if(!message)
 			return
 		for (var/mob/V in hearers(O))
-			V.show_message(sanitize_uni(html_decode(message)), 2)
+			V.show_message(message, 2)
 		log_admin("[key_name(usr)] made [O] at [O.x], [O.y], [O.z]. make a sound")
 		message_admins("\blue [key_name_admin(usr)] made [O] at [O.x], [O.y], [O.z]. make a sound", 1)
 		feedback_add_details("admin_verb","MS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
@@ -737,12 +723,6 @@ var/list/admin_verbs_mod = list(
 		M.r_eyes = hex2num(copytext(new_eyes, 2, 4))
 		M.g_eyes = hex2num(copytext(new_eyes, 4, 6))
 		M.b_eyes = hex2num(copytext(new_eyes, 6, 8))
-
-	var/new_skin = input("Please select body color. This is for Tajaran, Unathi, and Skrell only!", "Character Generation") as color
-	if(new_skin)
-		M.r_skin = hex2num(copytext(new_skin, 2, 4))
-		M.g_skin = hex2num(copytext(new_skin, 4, 6))
-		M.b_skin = hex2num(copytext(new_skin, 6, 8))
 
 	var/new_tone = input("Please select skin tone level: 1-220 (1=albino, 35=caucasian, 150=black, 220='very' black)", "Character Generation")  as text
 

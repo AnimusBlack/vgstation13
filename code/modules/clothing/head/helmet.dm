@@ -82,11 +82,3 @@
 	item_state = "hopcap"
 	icon_state = "hopcap"
 	flags_inv = 0
-
-/obj/item/clothing/head/helmet/inspector
-	name = "Inspector's Cap"
-	desc = "You are in charge. Definitely."
-	armor = list(melee = 60, bullet = 0, laser = 40, energy = 40, bomb = 5, bio = 10, rad = 10)
-	icon_state = "officercap"
-	item_state = "officercap"
-	flags_inv = 0

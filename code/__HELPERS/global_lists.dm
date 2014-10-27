@@ -48,23 +48,6 @@ var/global/list/sec_hud_users = list() //list of all entities using a security H
 		surgery_steps += S
 	sort_surgeries()
 
-<<<<<<< HEAD
-	//Languages and species.
-	paths = typesof(/datum/language)-/datum/language
-	for(var/T in paths)
-		var/datum/language/L = new T
-		all_languages[L.name] = L
-
-	paths = typesof(/datum/species)-/datum/species
-	for(var/T in paths)
-		var/datum/species/S = new T
-		all_species[S.name] = S
-
-		if(S.flags & IS_WHITELISTED)
-			whitelisted_species += S.name
-
-=======
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 /* // Uncomment to debug chemical reaction list.
 /client/verb/debug_chemical_list()
 

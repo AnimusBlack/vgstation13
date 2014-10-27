@@ -161,13 +161,9 @@
 	supervisors = "the head of personnel"
 	selection_color = "#dddddd"
 	idtype = /obj/item/weapon/card/id/supply
-<<<<<<< HEAD
-	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mint, access_mining, access_mining_station)
-	minimal_access = list(access_maint_tunnels, access_cargo, access_cargo_bot, access_mining, access_mint, access_mining_station, access_mailsorting)
-=======
+
 	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mint, access_mining, access_mining_station, access_taxi)
-	minimal_access = list(access_maint_tunnels, access_cargo, access_cargo_bot, access_mailsorting, access_taxi)
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
+	minimal_access = list(access_maint_tunnels, access_cargo, access_cargo_bot, access_mining, access_mint, access_mining_station, access_mailsorting, access_taxi)
 
 	pdaslot=slot_belt
 	pdatype=/obj/item/device/pda/cargo

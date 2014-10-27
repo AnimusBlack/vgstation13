@@ -181,8 +181,6 @@
 		prefs.UI_style_color = UI_style_color_new
 		prefs.save_preferences_sqlite(src, ckey)
 		usr << "UI was saved"
-<<<<<<< HEAD
-=======
 
 /client/verb/toggle_media()
 	set name = "Hear/Silence Streaming"
@@ -196,4 +194,3 @@
 		media.update_music()
 	else
 		media.stop_music()
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11

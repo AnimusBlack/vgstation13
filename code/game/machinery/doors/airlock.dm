@@ -33,7 +33,6 @@
 	var/locked = 0
 	var/lights = 1 // bolt lights show by default
 	var/datum/wires/airlock/wires = null
-	autoignition_temperature = 1073
 	secondsElectrified = 0 //How many seconds remain until the door is no longer electrified. -1 if it is permanently electrified until someone fixes it.
 	var/aiDisabledIdScanner = 0
 	var/aiHacking = 0
@@ -48,11 +47,7 @@
 	var/obj/item/weapon/circuitboard/airlock/electronics = null
 	var/hasShocked = 0 //Prevents multiple shocks from happening
 	autoclose = 1
-<<<<<<< HEAD
-	layer = 3
-=======
 	var/busy = 0
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 
 /obj/machinery/door/airlock/Destroy()
 	if(wires)
@@ -130,26 +125,10 @@
 	opacity = 1
 	assembly_type = /obj/structure/door_assembly/door_assembly_mhatch
 
-/obj/machinery/door/airlock/shuttle
+obj/machinery/door/airlock/shuttle
 	name = "Shuttle Airlock"
 	icon = 'icons/obj/doors/doorshuttle.dmi'
 	assembly_type = /obj/structure/door_assembly/door_assembly_shuttle
-	var/dark_side = "" // this is for emergency shuttle ~Loly
-
-/*proc/check_side()
-	for(var/obj/machinery/door/airlock/shuttle/D in world)
-		var/area/A = get_area(D)
-		if (D.dark_side == "left")
-			if(A.name == "Emergency Shuttle Station" || A.name == "Emergency Shuttle Transit")
-				D.locked = 1
-			else if(A.name == "Emergency Shuttle Centcom")
-				D.locked = 0
-
-		if (D.dark_side == "right")
-			if(A.name == "Emergency Shuttle Centcom" || A.name == "Emergency Shuttle Transit")
-				D.locked = 1
-			else if(A.name == "Emergency Shuttle Station")
-				D.locked = 0 */
 
 /obj/machinery/door/airlock/glass_command
 	name = "Maintenance Hatch"
@@ -193,7 +172,6 @@
 	name = "Airlock"
 	icon = 'icons/obj/doors/doorresearch.dmi'
 	assembly_type = /obj/structure/door_assembly/door_assembly_research
-	autoignition_temperature = 30000
 
 /obj/machinery/door/airlock/glass_research
 	name = "Maintenance Hatch"
@@ -202,7 +180,6 @@
 	assembly_type = /obj/structure/door_assembly/door_assembly_research
 	glass = 1
 	heat_proof = 1
-	autoignition_temperature = 30000
 
 /obj/machinery/door/airlock/glass_mining
 	name = "Maintenance Hatch"

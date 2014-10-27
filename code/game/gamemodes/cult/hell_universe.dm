@@ -38,10 +38,6 @@ In short:
 
 // Apply changes when entering state
 /datum/universal_state/hell/OnEnter()
-<<<<<<< HEAD
-	world << "/datum/universal_state/hell/OnEnter()"
-=======
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 	/*
 	if(emergency_shuttle.direction==2)
 		captain_announce("The emergency shuttle has returned due to bluespace distortion.")
@@ -103,10 +99,7 @@ In short:
 	for(var/mob/living/simple_animal/M in world)
 		if(M && !M.client)
 			M.stat = DEAD
-<<<<<<< HEAD
-=======
 
 	runedec += 9000	//basically removing the rune cap
 
 	ticker.StartThematic("endgame")
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11

@@ -119,7 +119,7 @@
 		else
 			H.equip_or_collect(new H.species.survival_gear(H.back), slot_in_backpack)
 		return 1
-<<<<<<< HEAD
+
 */
-=======
->>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
+
+
