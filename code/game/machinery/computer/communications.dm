@@ -193,10 +193,10 @@ var/shuttle_call/shuttle_calls[0]
 			setMenuState(usr,COMM_SCREEN_STAT)
 
 		if("setmsg1")
-			stat_msg1 = input("Line 1", "Enter Message Text", stat_msg1) as text|null
+			stat_msg1 = reject_bad_text(trim(copytext(sanitize(input("Line 1", "Enter Message Text", stat_msg1) as text|null), 1, 40)), 40)
 			setMenuState(usr,COMM_SCREEN_STAT)
 		if("setmsg2")
-			stat_msg2 = input("Line 2", "Enter Message Text", stat_msg2) as text|null
+			stat_msg2 = reject_bad_text(trim(copytext(sanitize(input("Line 2", "Enter Message Text", stat_msg2) as text|null), 1, 40)), 40)
 			setMenuState(usr,COMM_SCREEN_STAT)
 
 		// OMG CENTCOMM LETTERHEAD
@@ -241,11 +241,9 @@ var/shuttle_call/shuttle_calls[0]
 
 	return 1
 
-/obj/machinery/computer/communications/attackby(var/obj/I as obj, var/mob/user as mob)
-	if(istype(I,/obj/item/weapon/card/emag/))
-		src.emagged = 1
-		user << "You scramble the communication routing circuits!"
-	..()
+/obj/machinery/computer/communcations/emag(mob/user as mob)
+	src.emagged = 1
+	user << "You scramble the communication routing circuits!"
 
 /obj/machinery/computer/communications/attack_ai(var/mob/user as mob)
 	src.add_hiddenprint(user)

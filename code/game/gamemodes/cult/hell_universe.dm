@@ -24,17 +24,24 @@ In short:
 	*/
 
 /datum/universal_state/hell/DecayTurf(var/turf/T)
-	if(istype(T,/turf/simulated/wall) && !istype(T,/turf/simulated/wall/cult))
-		T.ChangeTurf(/turf/simulated/wall/cult)
-		return
-	if(istype(T,/turf/simulated/floor) && !istype(T,/turf/simulated/floor/engine/cult))
-		T.ChangeTurf(/turf/simulated/floor/engine/cult)
-		return
+	T.cultify()
+	for(var/obj/machinery/light/L in T.contents)
+		new /obj/structure/cult/pylon(L.loc)
+		qdel(L)
+	return
 
+
+/datum/universal_state/hell/OnTurfChange(var/turf/T)
+	var/turf/space/spess = T
+	if(istype(spess))
+		spess.overlays += "hell01"
 
 // Apply changes when entering state
 /datum/universal_state/hell/OnEnter()
+<<<<<<< HEAD
 	world << "/datum/universal_state/hell/OnEnter()"
+=======
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 	/*
 	if(emergency_shuttle.direction==2)
 		captain_announce("The emergency shuttle has returned due to bluespace distortion.")
@@ -58,6 +65,7 @@ In short:
 		A.party    = null
 		A.radalert = 0
 
+/*
 		// Slap random alerts on shit
 		if(prob(25))
 			switch(rand(1,4))
@@ -69,12 +77,16 @@ In short:
 					A.radalert=1
 				if(4)
 					A.party=1
+*/
 
 		A.updateicon()
 
+	for(var/turf/space/spess in world)
+		spess.overlays += "hell01"
+
 	for(var/turf/T in world)
 		if(istype(T,/turf/simulated/floor) && prob(1))
-			new /obj/effect/gateway/active(T)
+			new /obj/effect/gateway/active/cult(T)
 
 	for (var/obj/machinery/firealarm/alm in world)
 		if (!(alm.stat & BROKEN))
@@ -91,3 +103,10 @@ In short:
 	for(var/mob/living/simple_animal/M in world)
 		if(M && !M.client)
 			M.stat = DEAD
+<<<<<<< HEAD
+=======
+
+	runedec += 9000	//basically removing the rune cap
+
+	ticker.StartThematic("endgame")
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11

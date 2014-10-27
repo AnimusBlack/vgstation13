@@ -20,17 +20,23 @@ var/global/list/special_roles = list( //keep synced with the defines BE_* in set
 	"vampire" = IS_MODE_COMPILED("vampire")			 // 13
 )
 
-var/const/MAX_SAVE_SLOTS = 10
+var/const/MAX_SAVE_SLOTS = 8
 
 //used for alternate_option
 #define GET_RANDOM_JOB 0
 #define BE_ASSISTANT 1
 #define RETURN_TO_LOBBY 2
+#define POLLED_LIMIT	300
 
 datum/preferences
 	//doohickeys for savefiles
+	var/database/db = ("players2.sqlite")
 	var/path
 	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
+	var/slot = 1
+	var/list/slot_names = new
+	var/lastPolled = 0
+
 	var/savefile_version = 0
 
 	//non-preference stuff
@@ -47,6 +53,7 @@ datum/preferences
 	var/toggles = TOGGLES_DEFAULT
 	var/UI_style_color = "#ffffff"
 	var/UI_style_alpha = 255
+	var/special_popup = 0
 
 	//character preferences
 	var/real_name						//our character's name
@@ -125,16 +132,18 @@ datum/preferences
 	b_type = pick(4;"O-", 36;"O+", 3;"A-", 28;"A+", 1;"B-", 20;"B+", 1;"AB-", 5;"AB+")
 	if(istype(C))
 		if(!IsGuestKey(C.key))
-			load_path(C.ckey)
-			if(load_preferences())
-				if(load_character())
+			var/load_pref = load_preferences_sqlite(C.ckey)
+			if(load_pref)
+				if(load_save_sqlite(C.ckey, src, default_slot))
 					return
-	gender = pick(MALE, FEMALE)
+	randomize_appearance_for()
 	real_name = random_name(gender)
+	save_character_sqlite(src, C.ckey, default_slot)
 
 	gear = list()
 
 /datum/preferences
+<<<<<<< HEAD
 	proc/ZeroSkills(var/forced = 0)
 		for(var/V in SKILLS) for(var/datum/skill/S in SKILLS[V])
 			if(!skills.Find(S.ID) || forced)
@@ -221,14 +230,19 @@ datum/preferences
 		user << browse(null, "window=preferences")
 		user << browse(HTML, "window=show_skills;size=600x800")
 		return
+=======
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 
 	proc/ShowChoices(mob/user)
 		if(!user || !user.client)	return
 		update_preview_icon()
-		user << browse_rsc(preview_icon_front, "previewicon.png")
-		user << browse_rsc(preview_icon_side, "previewicon2.png")
+		var/preview_front = fcopy_rsc(preview_icon_front)
+		var/preview_side = fcopy_rsc(preview_icon_side)
+		user << browse_rsc(preview_front, "previewicon.png")
+		user << browse_rsc(preview_side, "previewicon2.png")
 		var/dat = "<html><body><center>"
 
+<<<<<<< HEAD
 		if(path)
 			dat += "<center>"
 			dat += "Slot <b>[slot_name]</b> - "
@@ -237,6 +251,18 @@ datum/preferences
 			dat += "<a href=\"byond://?src=\ref[user];preference=reload\">Reload slot</a>"
 			dat += "</center>"
 
+=======
+		if(!IsGuestKey(user.key))
+			// AUTOFIXED BY fix_string_idiocy.py
+			// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:220: dat += "<center>"
+			dat += {"<center>
+				Slot <b>[slot_name]</b> -
+				<a href=\"byond://?src=\ref[user];preference=open_load_dialog\">Load slot</a> -
+				<a href=\"byond://?src=\ref[user];preference=save\">Save slot</a> -
+				<a href=\"byond://?src=\ref[user];preference=reload\">Reload slot</a>
+				</center>"}
+			// END AUTOFIX
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 		else
 			dat += "Please create an account to save your preferences."
 
@@ -263,6 +289,38 @@ datum/preferences
 		dat += "<b>Ghost sight:</b> <a href='?_src_=prefs;preference=ghost_sight'><b>[(toggles & CHAT_GHOSTSIGHT) ? "All Emotes" : "Nearest Creatures"]</b></a><br>"
 		dat += "<b>Ghost radio:</b> <a href='?_src_=prefs;preference=ghost_radio'><b>[(toggles & CHAT_GHOSTRADIO) ? "All Chatter" : "Nearest Speakers"]</b></a><br>"
 
+<<<<<<< HEAD
+=======
+		// AUTOFIXED BY fix_string_idiocy.py
+		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:230: dat += "</center><hr><table><tr><td width='340px' height='320px'>"
+		dat += {"</center><hr><table><tr><td width='340px' height='320px'>
+			<b>Name:</b> "}
+		// END AUTOFIX
+		if(appearance_isbanned(user))
+			dat += "<b>You are banned from using custom names and appearances. You can continue to adjust your characters, but you will be randomised once you join the game.</b><br>"
+
+		// AUTOFIXED BY fix_string_idiocy.py
+		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:234: dat += "<a href='?_src_=prefs;preference=name;task=input'><b>[real_name]</b></a><br>"
+		dat += {"<a href='?_src_=prefs;preference=name;task=input'><b>[real_name]</b></a><br>
+			(<a href='?_src_=prefs;preference=name;task=random'>Random Name</A>)
+			(<a href='?_src_=prefs;preference=name'>Always Random Name: [be_random_name ? "Yes" : "No"]</a>)
+			<br>
+			<b>Gender:</b> <a href='?_src_=prefs;preference=gender'><b>[gender == MALE ? "Male" : "Female"]</b></a><br>
+			<b>Age:</b> <a href='?_src_=prefs;preference=age;task=input'>[age]</a>
+			<br>
+			<b>UI Style:</b> <a href='?_src_=prefs;preference=ui'><b>[UI_style]</b></a><br>
+			<b>Custom UI</b>(recommended for White UI):<br>
+			-Color: <a href='?_src_=prefs;preference=UIcolor'><b>[UI_style_color]</b></a> <table style='display:inline;' bgcolor='[UI_style_color]'><tr><td>__</td></tr></table><br>
+			-Alpha(transparency): <a href='?_src_=prefs;preference=UIalpha'><b>[UI_style_alpha]</b></a><br>
+			<b>Play admin midis:</b> <a href='?_src_=prefs;preference=hear_midis'><b>[(toggles & SOUND_MIDI) ? "Yes" : "No"]</b></a><br>
+			<b>Play lobby music:</b> <a href='?_src_=prefs;preference=lobby_music'><b>[(toggles & SOUND_LOBBY) ? "Yes" : "No"]</b></a><br>
+			<b>Randomized Character Slot:</b> <a href='?_src_=prefs;preference=randomslot'><b>[randomslot ? "Yes" : "No"]</b></a><br>
+			<b>Ghost ears:</b> <a href='?_src_=prefs;preference=ghost_ears'><b>[(toggles & CHAT_GHOSTEARS) ? "Nearest Creatures" : "All Speech"]</b></a><br>
+			<b>Ghost sight:</b> <a href='?_src_=prefs;preference=ghost_sight'><b>[(toggles & CHAT_GHOSTSIGHT) ? "Nearest Creatures" : "All Emotes"]</b></a><br>
+			<b>Ghost radio:</b> <a href='?_src_=prefs;preference=ghost_radio'><b>[(toggles & CHAT_GHOSTRADIO) ? "Nearest Speakers" : "All Chatter"]</b></a><br>
+			<b>Special Windows:</b><a href='?_src_=prefs;preference=special_popup'><b>[special_popup ? "Yes" : "No"]</b></a><br>"}
+		// END AUTOFIX
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 		if(config.allow_Metadata)
 			dat += "<b>OOC Notes:</b> <a href='?_src_=prefs;preference=metadata;task=input'> Edit </a><br>"
 
@@ -367,6 +425,7 @@ datum/preferences
 		else
 			dat += "Underwear: <a href ='?_src_=prefs;preference=underwear;task=input'><b>[underwear_f[underwear]]</b></a><br>"
 
+<<<<<<< HEAD
 		dat += "Backpack Type:<br><a href ='?_src_=prefs;preference=bag;task=input'><b>[backbaglist[backbag]]</b></a><br>"
 
 		dat += "Nanotrasen Relation:<br><a href ='?_src_=prefs;preference=nt_relation;task=input'><b>[nanotrasen_relation]</b></a><br>"
@@ -375,6 +434,15 @@ datum/preferences
 
 		dat += "</td><td width='300px' height='300px'>"
 
+=======
+		// AUTOFIXED BY fix_string_idiocy.py
+		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:312: dat += "Backpack Type:<br><a href ='?_src_=prefs;preference=bag;task=input'><b>[backbaglist[backbag]]</b></a><br>"
+		dat += {"Backpack Type:<br><a href ='?_src_=prefs;preference=bag;task=input'><b>[backbaglist[backbag]]</b></a><br>
+			Nanotrasen Relation:<br><a href ='?_src_=prefs;preference=nt_relation;task=input'><b>[nanotrasen_relation]</b></a><br>
+			</td><td><b>Preview</b><br><img src=previewicon.png height=64 width=64><img src=previewicon2.png height=64 width=64></td></tr></table>
+			</td><td width='300px' height='300px'>"}
+		// END AUTOFIX
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 		if(jobban_isbanned(user, "Records"))
 			dat += "<b>You are banned from using character records.</b><br>"
 		else
@@ -382,11 +450,20 @@ datum/preferences
 
 		dat += "<b><a href=\"byond://?src=\ref[user];preference=antagoptions;active=0\">Set Antag Options</b></a><br>"
 
+<<<<<<< HEAD
 		dat += "\t<a href=\"byond://?src=\ref[user];preference=skills\"><b>Set Skills</b> (<i>[GetSkillClass(used_skillpoints)][used_skillpoints > 0 ? " [used_skillpoints]" : "0"])</i></a><br>"
 
 		dat += "<a href='byond://?src=\ref[user];preference=flavor_text;task=input'><b>Set Flavor Text</b></a><br>"
 		if(lentext(flavor_text) <= 40)
 			if(!lentext(flavor_text))
+=======
+		// AUTOFIXED BY fix_string_idiocy.py
+		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:325: dat += "\t<a href=\"byond://?src=\ref[user];preference=skills\"><b>Set Skills</b> (<i>[GetSkillClass(used_skillpoints)][used_skillpoints > 0 ? " [used_skillpoints]" : "0"])</i></a><br>"
+		dat += {"<a href='byond://?src=\ref[user];preference=flavor_text;task=input'><b>Set Flavor Text</b></a><br>"}
+		// END AUTOFIX
+		if(length(flavor_text) <= 40)
+			if(!length(flavor_text))
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 				dat += "\[...\]"
 			else
 				dat += "[flavor_text]"
@@ -556,21 +633,31 @@ datum/preferences
 
 		HTML += "<a href=\"byond://?src=\ref[user];preference=records;task=med_record\">Medical Records</a><br>"
 
+<<<<<<< HEAD
 		if(lentext(med_record) <= 40)
+=======
+		// AUTOFIXED BY fix_string_idiocy.py
+		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:492: HTML += "<tt><center>"
+		HTML += {"<tt><center>
+			<b>Set Character Records</b><br>
+			<a href=\"byond://?src=\ref[user];preference=records;task=med_record\">Medical Records</a><br>"}
+		// END AUTOFIX
+		if(length(med_record) <= 40)
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 			HTML += "[med_record]"
 		else
 			HTML += "[copytext(med_record, 1, 37)]..."
 
 		HTML += "<br><br><a href=\"byond://?src=\ref[user];preference=records;task=gen_record\">Employment Records</a><br>"
 
-		if(lentext(gen_record) <= 40)
+		if(length(gen_record) <= 40)
 			HTML += "[gen_record]"
 		else
 			HTML += "[copytext(gen_record, 1, 37)]..."
 
 		HTML += "<br><br><a href=\"byond://?src=\ref[user];preference=records;task=sec_record\">Security Records</a><br>"
 
-		if(lentext(sec_record) <= 40)
+		if(length(sec_record) <= 40)
 			HTML += "[sec_record]<br>"
 		else
 			HTML += "[copytext(sec_record, 1, 37)]...<br>"
@@ -768,6 +855,7 @@ datum/preferences
 				else
 					SetChoices(user)
 			return 1
+<<<<<<< HEAD
 		else if(href_list["preference"] == "skills")
 			if(href_list["cancel"])
 				user << browse(null, "window=show_skills")
@@ -801,6 +889,25 @@ datum/preferences
 				SetSkills(user)
 			else
 				SetSkills(user)
+=======
+		else if(href_list["preference"] == "disabilities")
+
+			switch(href_list["task"])
+				if("close")
+					user << browse(null, "window=disabil")
+					ShowChoices(user)
+				if("reset")
+					disabilities=0
+					SetDisabilities(user)
+				if("input")
+					var/dflag=text2num(href_list["disability"])
+					if(dflag >= 0)
+						if(!(dflag==DISABILITY_FLAG_FAT && species!="Human"))
+							disabilities ^= text2num(href_list["disability"]) //MAGIC
+					SetDisabilities(user)
+				else
+					SetDisabilities(user)
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 			return 1
 
 		else if(href_list["preference"] == "records")
@@ -1275,6 +1382,15 @@ datum/preferences
 					if("name")
 						be_random_name = !be_random_name
 
+<<<<<<< HEAD
+=======
+					if("special_popup")
+						special_popup = !special_popup
+
+					if("randomslot")
+						randomslot = !randomslot
+
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 					if("hear_midis")
 						toggles ^= SOUND_MIDI
 
@@ -1295,12 +1411,17 @@ datum/preferences
 						toggles ^= CHAT_GHOSTRADIO
 
 					if("save")
-						save_preferences()
-						save_character()
+						if(world.timeofday >= (lastPolled + POLLED_LIMIT))
+							save_preferences_sqlite(user, user.ckey)
+							save_character_sqlite(user.ckey, user, default_slot)
+							lastPolled = world.timeofday
+						else
+							user << "You need to wait [round((((lastPolled + POLLED_LIMIT) - world.timeofday) / 10))] seconds before you can save again."
+						//random_character_sqlite(user, user.ckey)
 
 					if("reload")
-						load_preferences()
-						load_character()
+						load_preferences_sqlite(user, user.ckey)
+						load_save_sqlite(user.ckey, user, default_slot)
 
 					if("open_load_dialog")
 						if(!IsGuestKey(user.key))
@@ -1310,7 +1431,9 @@ datum/preferences
 						close_load_dialog(user)
 
 					if("changeslot")
-						load_character(text2num(href_list["num"]))
+						var/num = text2num(href_list["num"])
+						load_save_sqlite(user.ckey, user, num)
+						default_slot = num
 						close_load_dialog(user)
 
 		ShowChoices(user)
@@ -1417,6 +1540,7 @@ datum/preferences
 		var/dat = "<body>"
 		dat += "<tt><center>"
 
+<<<<<<< HEAD
 		var/savefile/S = new /savefile(path)
 		if(S)
 			dat += "<b>Select a character slot to load</b><hr>"
@@ -1432,6 +1556,41 @@ datum/preferences
 		dat += "<hr>"
 		dat += "<a href='byond://?src=\ref[user];preference=close_load_dialog'>Close</a><br>"
 		dat += "</center></tt>"
+=======
+		var/database/query/q = new
+		var/list/name_list[MAX_SAVE_SLOTS]
+
+		q.Add("select real_name, player_slot from players where player_ckey=?", user.ckey)
+		if(q.Execute(db))
+			while(q.NextRow())
+				name_list[q.GetColumn(2)] = q.GetColumn(1)
+		else
+			message_admins("Error #: [q.Error()] - [q.ErrorMsg()]")
+			warning("Error #:[q.Error()] - [q.ErrorMsg()]")
+			return 0
+		// AUTOFIXED BY fix_string_idiocy.py
+		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:1283: var/dat = "<body>"
+		var/dat = {"<body><tt><center>"}
+		// END AUTOFIX
+		dat += "<b>Select a character slot to load</b><hr>"
+		var/counter = 1
+		while(counter <= MAX_SAVE_SLOTS)
+			if(counter==default_slot)
+				dat += "<a href='?_src_=prefs;preference=changeslot;num=[counter];'><b>[name_list[counter]]</b></a><br>"
+			else
+				if(!name_list[counter])
+					dat += "<a href='?_src_=prefs;preference=changeslot;num=[counter];'>Character[counter]</a><br>"
+				else
+					dat += "<a href='?_src_=prefs;preference=changeslot;num=[counter];'>[name_list[counter]]</a><br>"
+			counter++
+
+		// AUTOFIXED BY fix_string_idiocy.py
+		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:1228: dat += "<hr>"
+		dat += {"<hr>
+			<a href='byond://?src=\ref[user];preference=close_load_dialog'>Close</a><br>
+			</center></tt>"}
+		// END AUTOFIX
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 		user << browse(dat, "window=saves;size=300x390")
 
 	proc/close_load_dialog(mob/user)

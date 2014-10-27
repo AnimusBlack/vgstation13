@@ -20,13 +20,15 @@
 
 	var/blocks_air = 0
 	var/icon_old = null
-	var/pathweight = 1
 
 	// Bot shit
 	var/targetted_by=null
 
 	// Decal shit.
 	var/list/decals
+
+	// cultification animation
+	var/atom/movable/overlay/c_animation = null
 
 /turf/New()
 	..()
@@ -392,8 +394,7 @@
 /turf/proc/Distance(turf/t)
 	if(get_dist(src,t) == 1)
 		var/cost = (src.x - t.x) * (src.x - t.x) + (src.y - t.y) * (src.y - t.y)
-		cost *= (pathweight+t.pathweight)/2
-		return cost
+		return sqrt(cost)
 	else
 		return get_dist(src,t)
 /turf/proc/AdjacentTurfsSpace()
@@ -403,3 +404,23 @@
 			if(!LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
 				L.Add(t)
 	return L
+
+/turf/proc/cultification()
+	c_animation = new /atom/movable/overlay(src)
+	c_animation.name = "cultification"
+	c_animation.density = 0
+	c_animation.anchored = 1
+	c_animation.icon = 'icons/effects/effects.dmi'
+	c_animation.layer = 3
+	c_animation.master = src
+	if(density)
+		c_animation.icon_state = "cultwall"
+	else
+		c_animation.icon_state = "cultfloor"
+	flick("cultification",c_animation)
+	spawn(10)
+		del(c_animation)
+
+/turf/proc/cultify()
+	ChangeTurf(/turf/space)
+	return

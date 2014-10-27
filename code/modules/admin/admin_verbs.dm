@@ -61,6 +61,7 @@ var/list/admin_verbs_admin = list(
 	/client/proc/cmd_admin_say,			/*admin-only ooc chat*/
 	/datum/admins/proc/PlayerNotes,
 	/client/proc/cmd_mod_say,
+	/client/proc/cmd_mod_window,
 	/datum/admins/proc/show_player_info,
 	/client/proc/free_slot,			/*frees slot for chosen job*/
 	/client/proc/cmd_admin_change_custom_event,
@@ -156,8 +157,8 @@ var/list/admin_verbs_debug = list(
 	/client/proc/qdel_toggle,              // /vg/
 	/client/proc/cmd_admin_dump_instances, // /vg/
 	/client/proc/disable_bloodvirii,       // /vg/
-	/client/proc/fryer_toggle,
-	/client/proc/fryer_nutriment,
+	/client/proc/configFood,
+	/client/proc/debug_reagents,
 #ifdef PROFILE_MACHINES
 	/client/proc/cmd_admin_dump_macprofile,
 #endif
@@ -258,6 +259,7 @@ var/list/admin_verbs_mod = list(
 	/datum/admins/proc/PlayerNotes,
 	/client/proc/admin_ghost,			/*allows us to ghost/reenter body at will*/
 	/client/proc/cmd_mod_say,
+	/client/proc/cmd_mod_window,
 	/datum/admins/proc/show_player_info,
 	/client/proc/player_panel_new,
 	/datum/admins/proc/show_skills
@@ -463,7 +465,7 @@ var/list/admin_verbs_mod = list(
 	var/new_ooccolor = input(src, "Please select your OOC colour.", "OOC colour") as color|null
 	if(new_ooccolor)
 		prefs.ooccolor = new_ooccolor
-		prefs.save_preferences()
+		prefs.save_preferences_sqlite(src, ckey)
 	feedback_add_details("admin_verb","OC") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return
 
@@ -518,17 +520,57 @@ var/list/admin_verbs_mod = list(
 		AddBan(warned_ckey, D.last_id, "Autobanning due to too many formal warnings", ckey, 1, bantime)
 		holder.DB_ban_record(BANTYPE_TEMP, null, bantime, reason, , ,warned_ckey)
 		feedback_inc("ban_warn",1)
-		D.save_preferences()
+		D.save_preferences_sqlite(C, C.ckey)
 		del(C)
 	else
 		if(C)
 			C << "<font color='red'><BIG><B>You have been formally warned by an administrator.</B></BIG><br>Further warnings will result in an autoban.</font>"
 			message_admins("[key_name_admin(src)] has warned [key_name_admin(C)]. They have [MAX_WARNS-D.warns] strikes remaining. And have been warn banned.")
 		else
+<<<<<<< HEAD
 			message_admins("[key_name_admin(src)] has warned [warned_ckey] (DC). They have [MAX_WARNS-D.warns] strikes remaining. And have been warn banned.")
 		D.save_preferences()
 	feedback_add_details("admin_verb","WARN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
+=======
+			message_admins("[key_name_admin(src)] has warned [warned_ckey] (DC). They have [MAX_WARNS-D.warns] strikes remaining. And have been warn banned [D.warnbans] [D.warnbans == 1 ? "time" : "times"]")
+		D.save_preferences_sqlite(C, C.ckey)
+	feedback_add_details("admin_verb","WARN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
+/client/proc/unwarn(warned_ckey)
+	if(!check_rights(R_ADMIN))	return
+
+	if(!warned_ckey || !istext(warned_ckey))	return
+	/*if(warned_ckey in admin_datums)
+		usr << "<font color='red'>Error: warn(): You can't warn admins.</font>"
+		return*/
+
+	var/datum/preferences/D
+	var/client/C = directory[warned_ckey]
+	if(C)	D = C.prefs
+	else	D = preferences_datums[warned_ckey]
+
+	if(!D)
+		src << "<font color='red'>Error: unwarn(): No such ckey found.</font>"
+		return
+
+	if(D.warns == 0)
+		src << "<font color='red'>Error: unwarn(): You can't unwarn someone with 0 warnings, you big dummy.</font>"
+		return
+
+	D.warns-=1
+	var/strikesleft = MAX_WARNS-D.warns
+	if(C)
+		C << "<font color='red'><BIG><B>One of your warnings has been removed.</B></BIG><br>You currently have [strikesleft] strike\s left</font>"
+		message_admins("[key_name_admin(src)] has unwarned [key_name_admin(C)]. They have [strikesleft] strike(s) remaining, and have been warn banned [D.warnbans] [D.warnbans == 1 ? "time" : "times"]")
+	else
+		message_admins("[key_name_admin(src)] has unwarned [warned_ckey] (DC). They have [strikesleft] strike(s) remaining, and have been warn banned [D.warnbans] [D.warnbans == 1 ? "time" : "times"]")
+	D.save_preferences_sqlite(C, C.ckey)
+	feedback_add_details("admin_verb","UNWARN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
+#undef MAX_WARNS
+#undef AUTOBANTIME
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 
 /client/proc/drop_bomb() // Some admin dickery that can probably be done better -- TLE
 	set category = "Special Verbs"
@@ -756,6 +798,7 @@ var/list/admin_verbs_mod = list(
 	set category = "Preferences"
 
 	prefs.toggles ^= CHAT_ATTACKLOGS
+	prefs.save_preferences_sqlite(src, ckey)
 	if (prefs.toggles & CHAT_ATTACKLOGS)
 		usr << "You now will get attack log messages"
 	else
@@ -774,6 +817,7 @@ var/list/admin_verbs_mod = list(
 	set category = "Preferences"
 
 	prefs.toggles ^= CHAT_DEBUGLOGS
+	prefs.save_preferences_sqlite(src, ckey)
 	if (prefs.toggles & CHAT_DEBUGLOGS)
 		usr << "You now will get debug log messages"
 	else

@@ -202,6 +202,10 @@ var/global/datum/controller/occupations/job_master
 		for(var/mob/new_player/player in player_list)
 			if(player.ready && player.mind && !player.mind.assigned_role)
 				unassigned += player
+<<<<<<< HEAD
+=======
+				if(player.client.prefs.randomslot) player.client.prefs.random_character_sqlite(player, player.ckey)
+>>>>>>> 22e12f737f6244af397a4e9c0c10fbaa9b5eab11
 		Debug("DO, Len: [unassigned.len]")
 		if(unassigned.len == 0)	return 0
 

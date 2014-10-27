@@ -10,6 +10,17 @@
 	var/display_color = "blue"
 	var/category = CAT_NORMAL
 
+/* TODO: Add this to deconstruction for vending machines
+/obj/item/compressed_vend
+	name = "compressed sale cartridge"
+	desc = "A compressed matter variant used to load vending machines."
+	icon = 'icons/obj/ammo.dmi'
+	icon_state = "rcd"
+	item_state = "rcdammo"
+	var/list/products
+	var/list/contraband
+	var/list/premium
+*/
 
 /obj/machinery/vending
 	name = "Vendomat"
@@ -52,8 +63,14 @@
 	var/obj/item/weapon/coin/coin
 	var/datum/wires/vending/wires = null
 
+	machine_flags = SCREWTOGGLE | WRENCHMOVE | FIXED2WORK // | CROWDESTROY
+
 	var/obj/machinery/account_database/linked_db
 	var/datum/money_account/linked_account
+
+/obj/machinery/vending/cultify()
+	new /obj/structure/cult/forge(loc)
+	..()
 
 /obj/machinery/vending/New()
 	..()
@@ -84,6 +101,11 @@
 		wires.Destroy()
 		wires = null
 
+/*	var/obj/item/compressed_vend/cvc = new(src.loc)
+	cvc.products = products
+	cvc.contraband = contraband
+	cvc.premium = premium
+*/
 	..()
 
 /obj/machinery/vending/proc/reconnect_database()
@@ -139,20 +161,16 @@
 			product_records += R
 //		world << "Added: [R.product_name]] - [R.amount] - [R.product_path]"
 
-/obj/machinery/vending/attackby(obj/item/weapon/W, mob/user)
-	if(istype(W, /obj/item/weapon/card/emag))
+/obj/machinery/vending/emag(mob/user)
+	if(!emagged)
 		emagged = 1
-		user << "You short out the product lock on [src]"
-		return
-	else if(istype(W, /obj/item/weapon/screwdriver))
-		panel_open = !panel_open
-		user << "You [panel_open ? "open" : "close"] the maintenance panel."
-		overlays.Cut()
-		if(panel_open)
-			overlays += image(icon, "[initial(icon_state)]-panel")
-		updateUsrDialog()
-		return
-	else if(istype(W, /obj/item/device/multitool)||istype(W, /obj/item/weapon/wirecutters))
+		user << "You short out the product lock on \the [src]"
+		return 1
+	return -1
+
+/obj/machinery/vending/attackby(obj/item/weapon/W, mob/user)
+	..()
+	if(istype(W, /obj/item/device/multitool)||istype(W, /obj/item/weapon/wirecutters))
 		if(panel_open)
 			attack_hand(user)
 		return
@@ -174,8 +192,6 @@
 				usr << "\icon[src]<span class='warning'>Unable to connect to linked account.</span>"
 		else
 			usr << "\icon[src]<span class='warning'>Unable to connect to accounts database.</span>"*/
-	else
-		..()
 
 //H.wear_id
 /obj/machinery/vending/proc/connect_account(var/obj/item/W)
@@ -276,11 +292,12 @@
 /obj/machinery/vending/attack_hand(mob/user as mob)
 	if(stat & (BROKEN|NOPOWER))
 		return
-	user.set_machine(src)
 
 	if(seconds_electrified != 0)
 		if(shock(user, 100))
 			return
+
+	user.set_machine(src)
 
 	var/vendorname = (src.name)  //import the machine's name
 
@@ -559,21 +576,6 @@
 		throw_item.throw_at(target, 16, 3)
 	src.visible_message("\red <b>[src] launches [throw_item.name] at [target.name]!</b>")
 	return 1
-
-
-/obj/machinery/vending/proc/shock(mob/user, prb)
-	if(stat & (BROKEN|NOPOWER))		// unpowered, no shock
-		return 0
-	if(!prob(prb))
-		return 0
-	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
-	s.set_up(5, 1, src)
-	s.start()
-	if(electrocute_mob(user, get_area(src), src, 0.7))
-		return 1
-	else
-		return 0
-
 /*
  * Vending machine types
  */
@@ -916,7 +918,7 @@
 	vend_reply = "Take care now!"
 	product_ads = "Buy some hats!;A bare head is absoloutly ASKING for a robusting!"
 	product_slogans = "Warning, not all hats are dog/monkey compatable. Apply forcefully with care.;Apply directly to the forehead.;Who doesn't love spending cash on hats?!;From the people that brought you collectable hat crates, Hatlord!"
-	products = list(/obj/item/clothing/head/bowlerhat = 10,/obj/item/clothing/head/beaverhat = 10,/obj/item/clothing/head/boaterhat = 10,/obj/item/clothing/head/fedora = 10,/obj/item/clothing/head/fez = 10)
+	products = list(/obj/item/clothing/head/bowlerhat = 10,/obj/item/clothing/head/beaverhat = 10,/obj/item/clothing/head/boaterhat = 10,/obj/item/clothing/head/fedora = 10,/obj/item/clothing/head/fez = 10,/obj/item/clothing/head/soft/blue = 10,/obj/item/clothing/head/soft/green = 10,/obj/item/clothing/head/soft/grey = 10,/obj/item/clothing/head/soft/orange = 10,/obj/item/clothing/head/soft/purple = 10,/obj/item/clothing/head/soft/red = 10,/obj/item/clothing/head/soft/yellow = 10)
 	contraband = list(/obj/item/clothing/head/bearpelt = 5)
 	premium = list(/obj/item/clothing/head/soft/rainbow = 1)
 
@@ -957,6 +959,44 @@
 	product_slogans = "Das Vierte Reich wird zuruckkehren!;ENTFERNEN JUDEN!;Billiger als die Juden jemals geben!;Rader auf dem adminbus geht rund und rund.;Warten Sie, warum wir wieder hassen Juden?- *BZZT*"
 	products = list(/obj/item/clothing/head/stalhelm = 20, /obj/item/clothing/head/panzer = 20, /obj/item/clothing/suit/soldiercoat = 20, /obj/item/clothing/under/soldieruniform = 20, /obj/item/clothing/shoes/jackboots = 20)
 	contraband = list(/obj/item/clothing/head/naziofficer = 10, /obj/item/clothing/suit/officercoat = 10, /obj/item/clothing/under/officeruniform = 10)
+
+//MOTHERBUSLAND
+/obj/machinery/vending/sovietvend
+	name = "KomradeVendtink"
+	desc = "Rodina-mat' zovyot!"
+	icon_state = "soviet"
+	vend_reply = "The fascist and capitalist svin'ya shall fall komrade!"
+	product_ads = "Quality worth waiting in line for!; Get Hammer and Sickled!; Sosvietsky soyuz above all!; With capitalist pigsky, you would have paid a fortunetink!"
+	product_slogans = "Craftink in Motherland herself!"
+	products = list(/obj/item/clothing/under/soviet = 20, /obj/item/clothing/head/ushanka = 20, /obj/item/clothing/shoes/jackboots = 20, /obj/item/clothing/head/squatter_hat = 20, /obj/item/clothing/under/squatter_outfit = 20, /obj/item/clothing/under/russobluecamooutfit = 20, /obj/item/clothing/head/russobluecamohat = 20)
+	contraband = list(/obj/item/clothing/under/syndicate/tacticool = 4, /obj/item/clothing/mask/balaclava = 4, /obj/item/clothing/suit/russofurcoat = 4, /obj/item/clothing/head/russofurhat = 4)
+
+/*These next machines are the same adminbus machines,
+but have theme fitting contraband hardsuits and weapons.
+Do NOT spawn unless you want all out war, extermination, or murderbone.**/
+
+//NaziVend++
+/obj/machinery/vending/nazivendDANGERMODE
+	name = "Nazivend"
+	desc = "Remember the gorrilions lost."
+	icon_state = "nazi"
+	vend_reply = "SIEG HEIL!"
+	product_ads = "BESTRAFEN die Juden.;BESTRAFEN die Alliierten."
+	product_slogans = "Das Vierte Reich wird zuruckkehren!;ENTFERNEN JUDEN!;Billiger als die Juden jemals geben!;Rader auf dem adminbus geht rund und rund.;Warten Sie, warum wir wieder hassen Juden?- *BZZT*"
+	products = list(/obj/item/clothing/head/stalhelm = 20, /obj/item/clothing/head/panzer = 20, /obj/item/clothing/suit/soldiercoat = 20, /obj/item/clothing/under/soldieruniform = 20, /obj/item/clothing/shoes/jackboots = 20)
+	contraband = list(/obj/item/clothing/head/naziofficer = 10, /obj/item/clothing/suit/officercoat = 10, /obj/item/clothing/under/officeruniform = 10, /obj/item/clothing/head/helmet/space/rig/nazi = 3, /obj/item/clothing/suit/space/rig/nazi = 3, /obj/item/weapon/gun/energy/plasma/MP40k = 4)
+
+//SovietVend++
+/obj/machinery/vending/sovietvendDANGERMODE
+	name = "KomradeVendtink"
+	desc = "Rodina-mat' zovyot!"
+	icon_state = "soviet"
+	vend_reply = "The fascist and captalist svin'ya shall fall komrade!"
+	product_ads = "Quality worth waiting in line for!; Get Hammer and Sickled!; Sosvietsky soyuz above all!; With capitalist pigsky, you would have paid a fortunetink!"
+	product_slogans = "Craftink in Motherland herself!"
+	products = list(/obj/item/clothing/under/soviet = 20, /obj/item/clothing/head/ushanka = 20, /obj/item/clothing/shoes/jackboots = 20, /obj/item/clothing/head/squatter_hat = 20, /obj/item/clothing/under/squatter_outfit = 20, /obj/item/clothing/under/russobluecamooutfit = 20, /obj/item/clothing/head/russobluecamohat = 20)
+	contraband = list(/obj/item/clothing/under/syndicate/tacticool = 4, /obj/item/clothing/mask/balaclava = 4, /obj/item/clothing/suit/russofurcoat = 4, /obj/item/clothing/head/russofurhat = 4, /obj/item/clothing/head/helmet/space/rig/soviet = 3, /obj/item/clothing/suit/space/rig/soviet = 3, /obj/item/weapon/gun/energy/laser/LaserAK = 4)
+
 
 /obj/machinery/vending/discount
 	name = "Discount Dan's"
