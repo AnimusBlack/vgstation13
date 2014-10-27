@@ -83,7 +83,14 @@
 			new /obj/item/weapon/storage/fancy/egg_box(src)
 		return
 
-
+/obj/structure/closet/secure_closet/freezer/morgue
+	name = "Morgue Freezer"
+	icon_state = "fridge1"
+	icon_closed = "fridge"
+	icon_locked = "fridge1"
+	icon_opened = "fridgeopen"
+	icon_broken = "fridgebroken"
+	icon_off = "fridge1"
 
 /obj/structure/closet/secure_closet/freezer/money
 	name = "Freezer"
