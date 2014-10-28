@@ -203,7 +203,7 @@ var/global/datum/controller/occupations/job_master
 			if(player.ready && player.mind && !player.mind.assigned_role)
 				unassigned += player
 
-				if(player.client.prefs.randomslot) player.client.prefs.random_character_sqlite(player, player.ckey)
+				if(player.client.prefs.randomslot) player.client.prefs.random_character()
 
 		Debug("DO, Len: [unassigned.len]")
 		if(unassigned.len == 0)	return 0
