@@ -9,9 +9,6 @@
 	ghostize()
 	..()
 
-/mob/proc/cultify()
-	return
-
 /mob/New()
 	. = ..()
 	mob_list += src
@@ -111,22 +108,6 @@
 
 /mob/proc/Life()
 	return
-
-/mob/proc/see_narsie(var/obj/machinery/singularity/narsie/large/N)
-	if(!narsimage)
-		narsimage = image('icons/obj/narsie.dmi',src.loc,"narsie",9,1)
-	narsimage.pixel_x = 32 * (N.x - src.x) + N.pixel_x
-	narsimage.pixel_y = 32 * (N.y - src.y) + N.pixel_y
-	narsimage.loc = src.loc
-	narsimage.mouse_opacity = 0
-	if(!narglow)
-		narglow = image('icons/obj/narsie.dmi',narsimage.loc,"glow-narsie",LIGHTING_LAYER+2,1)
-	narglow.pixel_x = narsimage.pixel_x
-	narglow.pixel_y = narsimage.pixel_y
-	narglow.loc = narsimage.loc
-	narglow.mouse_opacity = 0
-	src << narsimage
-	src << narglow
 
 /mob/proc/get_item_by_slot(slot_id)
 	switch(slot_id)
@@ -968,7 +949,7 @@ var/list/slot_equipment_priority = list( \
 	if(flavor_text)
 		var/msg = replacetext(flavor_text, "\n", "<br />")
 
-		if(length(msg) <= 32)
+		if(lentext(msg) <= 32)
 			return "<font color='#ffa000'><b>[msg]</b></font>"
 		else
 			return "<font color='#ffa000'><b>[copytext(msg, 1, 32)]...<a href='?src=\ref[src];flavor_text=more'>More</a></b></font>"
@@ -1236,7 +1217,7 @@ var/list/slot_equipment_priority = list( \
 			creatures[name] = O
 
 
-	for(var/mob/M in sortNames(mob_list))
+	for(var/mob/M in sortAtom(mob_list))
 		var/name = M.name
 		if (names.Find(name))
 			namecounts[name]++
@@ -1537,15 +1518,13 @@ note dizziness decrements automatically in the mob's Life() proc.
 		canmove = has_limbs
 
 	if(lying)
-		if(ishuman(src))
-			layer = 3.9
+		layer = 3.9
 		density = 0
 		drop_l_hand()
 		drop_r_hand()
 	else
-		if(ishuman(src))
-			layer = 4
 		density = 1
+		layer = 4
 
 	//Temporarily moved here from the various life() procs
 	//I'm fixing stuff incrementally so this will likely find a better home.
@@ -1563,7 +1542,6 @@ note dizziness decrements automatically in the mob's Life() proc.
 	set hidden = 1
 	if(!canface())	return 0
 	dir = EAST
-	Facing()
 	client.move_delay += movement_delay()
 	return 1
 
@@ -1572,7 +1550,6 @@ note dizziness decrements automatically in the mob's Life() proc.
 	set hidden = 1
 	if(!canface())	return 0
 	dir = WEST
-	Facing()
 	client.move_delay += movement_delay()
 	return 1
 
@@ -1581,7 +1558,6 @@ note dizziness decrements automatically in the mob's Life() proc.
 	set hidden = 1
 	if(!canface())	return 0
 	dir = NORTH
-	Facing()
 	client.move_delay += movement_delay()
 	return 1
 
@@ -1590,17 +1566,8 @@ note dizziness decrements automatically in the mob's Life() proc.
 	set hidden = 1
 	if(!canface())	return 0
 	dir = SOUTH
-	Facing()
 	client.move_delay += movement_delay()
 	return 1
-
-
-/mob/proc/Facing()
-    var/datum/listener
-    for(. in src.callOnFace)
-        listener = locate(.)
-        if(listener) call(listener,src.callOnFace[.])(src)
-        else src.callOnFace -= .
 
 
 /mob/proc/IsAdvancedToolUser()//This might need a rename but it should replace the can this mob use things check
@@ -1685,7 +1652,7 @@ note dizziness decrements automatically in the mob's Life() proc.
 /mob/proc/flash_weak_pain()
 	flick("weak_pain",pain)
 
-mob/proc/yank_out_object()
+mob/verb/yank_out_object()
 	set category = "Object"
 	set name = "Yank out object"
 	set desc = "Remove an embedded item at the cost of bleeding and pain."
@@ -1754,7 +1721,4 @@ mob/proc/yank_out_object()
 
 // Skip over all the complex list checks.
 /mob/proc/hasFullAccess()
-	return 0
-
-mob/proc/assess_threat()
 	return 0

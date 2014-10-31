@@ -22,8 +22,7 @@
 	var/planted = 0 // Is it occupied?
 	var/harvest = 0 //Ready to harvest?
 	var/obj/item/seeds/myseed = null // The currently planted seed
-
-	machine_flags = SCREWTOGGLE | CROWDESTROY | WRENCHMOVE | FIXED2WORK
+	var/opened = 0.0
 
 /obj/machinery/hydroponics/New()
 	. = ..()
@@ -487,9 +486,6 @@ obj/machinery/hydroponics/proc/mutatepest()  // Until someone makes a spaceworm,
 
 obj/machinery/hydroponics/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
-	if(..())
-		return 1
-
 	//Called when mob user "attacks" it with object O
 	if (istype(O, /obj/item/weapon/reagent_containers/glass/bucket))
 		var/b_amount = O.reagents.get_reagent_amount("water")
@@ -807,6 +803,10 @@ obj/machinery/hydroponics/attackby(var/obj/item/O as obj, var/mob/user as mob)
 		playsound(loc, 'sound/effects/spray3.ogg', 50, 1, -6)
 		del(O)
 		updateicon()
+	else if(istype(O, /obj/item/weapon/wrench))
+		playsound(loc, 'sound/items/Ratchet.ogg', 50, 1)
+		anchored = !anchored
+		user << "You [anchored ? "wrench" : "unwrench"] \the [src]."
 	else if(istype(O, /obj/item/weapon/shovel))
 		if(istype(src, /obj/machinery/hydroponics/soil))
 			user << "You clear up the [src]!"
@@ -822,22 +822,33 @@ obj/machinery/hydroponics/attackby(var/obj/item/O as obj, var/mob/user as mob)
 			A.icon = src.icon
 			A.icon_state = src.icon_state
 			A.hydrotray_type = src.type
-			A.component_parts = list()
-			for(var/obj/I in component_parts)
-				I.loc = A
-				component_parts -= I
-				A.component_parts += I
-			for(var/obj/I in contents)
-				I.loc = A
-				contents -= I
 			del(src)
+	else if(istype(O, /obj/item/weapon/screwdriver))
+		if(anchored)
+			user << "You have to unanchor the [src] first!"
+			return
+		if(!opened)
+			src.opened = 1
+			//src.icon_state = "chem_dispenser_t"
+			user << "You open the maintenance hatch of [src]"
+		else
+			src.opened = 0
+			//src.icon_state = "chem_dispenser"
+			user << "You close the maintenance hatch of [src]"
+			return 1
+	else if(opened)
+		if(istype(O, /obj/item/weapon/crowbar))
+			playsound(get_turf(src), 'sound/items/Crowbar.ogg', 50, 1)
+			var/obj/machinery/constructable_frame/machine_frame/M = new /obj/machinery/constructable_frame/machine_frame(src.loc)
+			M.state = 2
+			M.icon_state = "box_1"
+			for(var/obj/I in component_parts)
+				if(I.reliability != 100 && crit_fail)
+					I.crit_fail = 1
+				I.loc = src.loc
+			del(src)
+		return 1
 	return
-
-/obj/machinery/hydroponics/togglePanelOpen(var/obj/toggleitem, mob/user)
-	if(anchored)
-		user <<"<span class='rose'>\The [src] must be unanchored before you can do that!</span>"
-		return
-	..()
 
 
 /obj/machinery/hydroponics/attack_hand(mob/user as mob)

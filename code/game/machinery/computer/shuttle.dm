@@ -9,7 +9,6 @@
 
 	attackby(var/obj/item/weapon/card/W as obj, var/mob/user as mob)
 		if(stat & (BROKEN|NOPOWER))	return
-		..()
 		if ((!( istype(W, /obj/item/weapon/card) ) || !( ticker ) || emergency_shuttle.location != 1 || !( user )))	return
 		if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
 			if (istype(W, /obj/item/device/pda))
@@ -57,18 +56,16 @@
 					world << "\blue <B>All authorizations to shortening time for shuttle launch have been revoked!</B>"
 					src.authorized.len = 0
 					src.authorized = list(  )
-		return
 
-/obj/machinery/computer/shuttle/emag(mob/user as mob)
-	if(!emagged)
-		var/choice = alert(user, "Would you like to launch the shuttle?","Shuttle control", "Launch", "Cancel")
-		if(emergency_shuttle.location == 1)
-			switch(choice)
-				if("Launch")
-					world << "\blue <B>Alert: Shuttle launch time shortened to 10 seconds!</B>"
-					emergency_shuttle.settimeleft( 10 )
-					emagged = 1
-					return 1
-				if("Cancel")
-					return
-	return
+		else if (istype(W, /obj/item/weapon/card/emag) && !emagged)
+			var/choice = alert(user, "Would you like to launch the shuttle?","Shuttle control", "Launch", "Cancel")
+
+			if(!emagged && emergency_shuttle.location == 1 && user.get_active_hand() == W)
+				switch(choice)
+					if("Launch")
+						world << "\blue <B>Alert: Shuttle launch time shortened to 10 seconds!</B>"
+						emergency_shuttle.settimeleft( 10 )
+						emagged = 1
+					if("Cancel")
+						return
+		return

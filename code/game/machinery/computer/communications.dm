@@ -129,7 +129,7 @@ var/shuttle_call/shuttle_calls[0]
 		if("announce")
 			if(src.authenticated==2 && !issilicon(usr))
 				if(message_cooldown)	return
-				var/input = sanitize_uni(stripped_input(usr, "Please choose a message to announce to the station crew.", "What?"))
+				var/input = stripped_input(usr, "Please choose a message to announce to the station crew.", "What?")
 				if(!input || !(usr in view(1,src)))
 					return
 				captain_announce(input)//This should really tell who is, IE HoP, CE, HoS, RD, Captain
@@ -193,10 +193,10 @@ var/shuttle_call/shuttle_calls[0]
 			setMenuState(usr,COMM_SCREEN_STAT)
 
 		if("setmsg1")
-			stat_msg1 = reject_bad_text(trim(copytext(sanitize(input("Line 1", "Enter Message Text", stat_msg1) as text|null), 1, 40)), 40)
+			stat_msg1 = input("Line 1", "Enter Message Text", stat_msg1) as text|null
 			setMenuState(usr,COMM_SCREEN_STAT)
 		if("setmsg2")
-			stat_msg2 = reject_bad_text(trim(copytext(sanitize(input("Line 2", "Enter Message Text", stat_msg2) as text|null), 1, 40)), 40)
+			stat_msg2 = input("Line 2", "Enter Message Text", stat_msg2) as text|null
 			setMenuState(usr,COMM_SCREEN_STAT)
 
 		// OMG CENTCOMM LETTERHEAD
@@ -205,7 +205,7 @@ var/shuttle_call/shuttle_calls[0]
 				if(centcomm_message_cooldown)
 					usr << "\red Arrays recycling.  Please stand by."
 					return
-				var/input = sanitize_uni(stripped_input(usr, "Please choose a message to transmit to Centcomm via quantum entanglement.  Please be aware that this process is very expensive, and abuse will lead to... termination.  Transmission does not guarantee a response. There is a 30 second delay before you may send another message, be clear, full and concise.", "To abort, send an empty message.", ""))
+				var/input = stripped_input(usr, "Please choose a message to transmit to Centcomm via quantum entanglement.  Please be aware that this process is very expensive, and abuse will lead to... termination.  Transmission does not guarantee a response. There is a 30 second delay before you may send another message, be clear, full and concise.", "To abort, send an empty message.", "")
 				if(!input || !(usr in view(1,src)))
 					return
 				Centcomm_announce(input, usr)
@@ -223,7 +223,7 @@ var/shuttle_call/shuttle_calls[0]
 				if(centcomm_message_cooldown)
 					usr << "\red Arrays recycling.  Please stand by."
 					return
-				var/input = sanitize_uni(stripped_input(usr, "Please choose a message to transmit to \[ABNORMAL ROUTING CORDINATES\] via quantum entanglement.  Please be aware that this process is very expensive, and abuse will lead to... termination. Transmission does not guarantee a response. There is a 30 second delay before you may send another message, be clear, full and concise.", "To abort, send an empty message.", ""))
+				var/input = stripped_input(usr, "Please choose a message to transmit to \[ABNORMAL ROUTING CORDINATES\] via quantum entanglement.  Please be aware that this process is very expensive, and abuse will lead to... termination. Transmission does not guarantee a response. There is a 30 second delay before you may send another message, be clear, full and concise.", "To abort, send an empty message.", "")
 				if(!input || !(usr in view(1,src)))
 					return
 				Syndicate_announce(input, usr)
@@ -241,9 +241,11 @@ var/shuttle_call/shuttle_calls[0]
 
 	return 1
 
-/obj/machinery/computer/communcations/emag(mob/user as mob)
-	src.emagged = 1
-	user << "You scramble the communication routing circuits!"
+/obj/machinery/computer/communications/attackby(var/obj/I as obj, var/mob/user as mob)
+	if(istype(I,/obj/item/weapon/card/emag/))
+		src.emagged = 1
+		user << "You scramble the communication routing circuits!"
+	..()
 
 /obj/machinery/computer/communications/attack_ai(var/mob/user as mob)
 	src.add_hiddenprint(user)

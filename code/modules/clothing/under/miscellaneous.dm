@@ -209,7 +209,6 @@
 	icon_state = "pirate"
 	item_state = "pirate"
 	_color = "pirate"
-	species_fit = list("Vox")
 
 /obj/item/clothing/under/soviet
 	name = "soviet uniform"
@@ -388,7 +387,6 @@
 	icon_state = "spants"
 	_color = "simonpants"
 	item_state = "spants"
-	species_fit = list("Vox")
 
 /obj/item/clothing/under/batmansuit
 	name = "batsuit"
@@ -410,17 +408,3 @@
 	icon_state = "soldieruniform"
 	item_state = "soldieruniform"
 	_color = "soldieruniform"
-
-/obj/item/clothing/under/squatter_outfit
-	name = "slav squatter tracksuit"
-	desc = "Cyka blyat."
-	icon_state = "squatteroutfit"
-	item_state = "squatteroutfit"
-	_color = "squatteroutfit"
-
-/obj/item/clothing/under/russobluecamooutfit
-	name = "russian blue camo"
-	desc = "Drop and give me dvadtsat!"
-	icon_state = "russobluecamo"
-	item_state = "russobluecamo"
-	_color = "russobluecamo"

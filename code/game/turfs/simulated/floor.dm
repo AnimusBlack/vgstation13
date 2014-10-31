@@ -586,8 +586,3 @@ turf/simulated/floor/proc/update_icon()
 		if(wet_overlay)
 			overlays -= wet_overlay
 			wet_overlay = null
-
-/turf/simulated/floor/cultify()
-	ChangeTurf(/turf/simulated/floor/engine/cult)
-	cultification()
-	return

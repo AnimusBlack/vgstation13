@@ -29,10 +29,6 @@
 			var/obj/structure/table/T = locate(/obj/structure/table,get_step(src,direction))
 			T.update_icon()
 
-/obj/structure/table/cultify()
-	new /obj/structure/table/woodentable(loc)
-	..()
-
 /obj/structure/table/New()
 	..()
 	for(var/obj/structure/table/T in src.loc)
@@ -527,8 +523,6 @@
 	autoignition_temperature = AUTOIGNITION_WOOD // TODO:  Special ash subtype that looks like charred table legs.
 	fire_fuel = 5
 
-/obj/structure/table/woodentable/cultify()
-	return
 
 /obj/structure/table/woodentable/poker //No specialties, Just a mapping object.
 	name = "gambling table"

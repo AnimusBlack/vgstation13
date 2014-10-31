@@ -16,8 +16,6 @@
 
 	density = 1
 
-	machine_flags = WRENCHMOVE | FIXED2WORK
-
 /obj/machinery/atmospherics/binary/circulator/New()
 	..()
 	desc = initial(desc) + " Its outlet port is to the [dir2text(dir)]."
@@ -72,32 +70,38 @@
 
 	return 1
 
-/obj/machinery/atmospherics/binary/circulator/wrenchAnchor(mob/user)
-	..()
-	if(anchored)
-		if(dir & (NORTH|SOUTH))
-			initialize_directions = NORTH|SOUTH
-		else if(dir & (EAST|WEST))
-			initialize_directions = EAST|WEST
+/obj/machinery/atmospherics/binary/circulator/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	if(istype(W, /obj/item/weapon/wrench))
+		anchored = !anchored
+		user << "\blue You [anchored ? "secure" : "unsecure"] the bolts holding [src] to the floor."
 
-		initialize()
-		build_network()
-		if (node1)
-			node1.initialize()
-			node1.build_network()
-		if (node2)
-			node2.initialize()
-			node2.build_network()
+		if(anchored)
+			if(dir & (NORTH|SOUTH))
+				initialize_directions = NORTH|SOUTH
+			else if(dir & (EAST|WEST))
+				initialize_directions = EAST|WEST
+
+			initialize()
+			build_network()
+			if (node1)
+				node1.initialize()
+				node1.build_network()
+			if (node2)
+				node2.initialize()
+				node2.build_network()
+		else
+			if(node1)
+				node1.disconnect(src)
+				del(network1)
+			if(node2)
+				node2.disconnect(src)
+				del(network2)
+
+			node1 = null
+			node2 = null
+
 	else
-		if(node1)
-			node1.disconnect(src)
-			del(network1)
-		if(node2)
-			node2.disconnect(src)
-			del(network2)
-
-		node1 = null
-		node2 = null
+		..()
 
 /obj/machinery/atmospherics/binary/circulator/verb/rotate_clockwise()
 	set category = "Object"

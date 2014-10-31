@@ -1,6 +1,3 @@
-#define EFFECT_TOUCH 0
-#define EFFECT_AURA 1
-#define EFFECT_PULSE 2
 
 /obj/item/weapon/anobattery
 	name = "Anomaly power battery"
@@ -48,13 +45,11 @@
 		return ..()
 
 /obj/item/weapon/anodevice/attack_self(var/mob/user as mob)
-	if(in_range(src, user))
-		return src.interact(user)
+	return src.interact(user)
 
 /obj/item/weapon/anodevice/interact(var/mob/user)
-
 	user.set_machine(src)
-	var/dat = "<b>Anomalous Materials Energy Utilizer</b><br>"
+	var/dat = "<b>Anomalous Materials Energy Utiliser</b><br>"
 	if(inserted_battery)
 		if(cooldown)
 			dat += "Cooldown in progress, please wait.<br>"
@@ -115,7 +110,7 @@
 			//process the effect
 			inserted_battery.battery_effect.process()
 			//if someone is holding the device, do the effect on them
-			if(inserted_battery.battery_effect.effect == EFFECT_TOUCH && ismob(src.loc))
+			if(inserted_battery.battery_effect.effect == 0 && ismob(src.loc))
 				inserted_battery.battery_effect.DoEffectTouch(src.loc)
 
 			//handle charge
@@ -144,9 +139,6 @@
 
 /obj/item/weapon/anodevice/Topic(href, href_list)
 
-	if ((get_dist(src, usr) > 1))
-		return
-	usr.set_machine(src)
 	if(href_list["neg_changetime_max"])
 		time += -100
 		if(time > inserted_battery.capacity)
@@ -173,7 +165,6 @@
 			time = 0
 	if(href_list["startup"])
 		activated = 1
-		timing = 0
 		if(!inserted_battery.battery_effect.activated)
 			inserted_battery.battery_effect.ToggleActivate(1)
 	if(href_list["shutdown"])
@@ -189,8 +180,7 @@
 	if(href_list["close"])
 		usr << browse(null, "window=anodevice")
 		usr.unset_machine(src)
-		return
-	src.interact(usr)
+
 	..()
 	updateDialog()
 

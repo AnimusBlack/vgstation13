@@ -37,7 +37,6 @@
 	armor = list(melee = 80, bullet = 60, laser = 50,energy = 25, bomb = 50, bio = 10, rad = 0)
 	flags_inv = HIDEEARS|HIDEEYES
 	cold_protection = HEAD
-	species_fit = list("Vox")
 	min_cold_protection_temperature = SPACE_HELMET_MIN_COLD_PROTECITON_TEMPERATURE
 	siemens_coefficient = 0.5
 
@@ -81,4 +80,12 @@
 	armor = list(melee = 25, bullet = 0, laser = 15, energy = 10, bomb = 5, bio = 0, rad = 0)
 	item_state = "hopcap"
 	icon_state = "hopcap"
+	flags_inv = 0
+
+/obj/item/clothing/head/helmet/inspector
+	name = "Inspector's Cap"
+	desc = "You are in charge. Definitely."
+	armor = list(melee = 60, bullet = 0, laser = 40, energy = 40, bomb = 5, bio = 10, rad = 10)
+	icon_state = "officercap"
+	item_state = "officercap"
 	flags_inv = 0

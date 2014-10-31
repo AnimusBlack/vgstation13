@@ -16,7 +16,6 @@
 		src.modules += new /obj/item/device/t_scanner(src)
 		src.modules += new /obj/item/device/analyzer(src)
 		src.modules += new /obj/item/weapon/extinguisher(src) // Aurx sed so
-		src.modules += new /obj/item/weapon/extinguisher/foam(src)
 		src.modules += new /obj/item/weapon/pipe_dispenser(src)
 		src.modules += new /obj/item/weapon/tile_painter(src)
 		src.modules += new /obj/item/blueprints/mommiprints(src)

@@ -61,7 +61,6 @@
 	idtype = /obj/item/weapon/card/id/silver
 	req_admin_notify = 1
 	minimal_player_age = 10
-
 	access = list() 			//See get_access()
 	minimal_access = list() 	//See get_access()
 

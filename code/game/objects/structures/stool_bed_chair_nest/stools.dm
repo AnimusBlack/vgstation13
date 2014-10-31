@@ -22,11 +22,6 @@
 				return
 	return
 
-/obj/structure/stool/cultify()
-	var/obj/structure/stool/bed/chair/wood/wings/I = new /obj/structure/stool/bed/chair/wood/wings(loc)
-	I.dir = dir
-	..()
-
 /obj/structure/stool/blob_act()
 	if(prob(75))
 		new /obj/item/stack/sheet/metal(src.loc)

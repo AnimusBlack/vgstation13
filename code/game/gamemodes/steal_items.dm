@@ -197,8 +197,7 @@
 						continue
 				found_amount += getAmountStolen(I)
 		return found_amount >= required_amount
-
-	return FALSE
+	return 0
 
 /datum/theft_objective/number/proc/getAmountStolen(var/obj/item/I)
 	return I:amount

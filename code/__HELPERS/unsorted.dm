@@ -298,7 +298,7 @@ Turf and target are seperate in case you want to teleport some distance from a t
 		var/pos
 		for(var/datum/objective/objective in O)
 			if(objective.target != mind) continue
-			length = length(oldname)
+			length = lentext(oldname)
 			pos = findtextEx(objective.explanation_text, oldname)
 			objective.explanation_text = copytext(objective.explanation_text, 1, pos)+newname+copytext(objective.explanation_text, pos+length)
 	return 1
@@ -822,7 +822,7 @@ proc/anim(turf/location as turf,target as mob|obj,a_icon,a_icon_state as text,fl
 
 //Returns: all the areas in the world, sorted.
 /proc/return_sorted_areas()
-	return sortNames(return_areas())
+	return sortAtom(return_areas())
 
 //Takes: Area type as text string or as typepath OR an instance of the area.
 //Returns: A list of all areas of that type in the world.
@@ -1500,9 +1500,4 @@ proc/rotate_icon(file, state, step = 1, aa = FALSE)
 /proc/iscatwalk(atom/A)
 	if(istype(A, /turf/simulated/floor/plating/airless/catwalk))
 		return 1
-	return 0
-
-/proc/has_edge(obj/O as obj)
-	if (!O) return 0
-	if(O.edge) return 1
 	return 0

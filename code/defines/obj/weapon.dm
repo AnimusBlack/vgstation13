@@ -186,7 +186,7 @@
 	flags = FPRINT | TABLEPASS | CONDUCT
 	slot_flags = SLOT_BELT
 	throwforce = 2
-	w_class = 2
+	w_class = 3.0
 	w_type = RECYK_METAL
 	origin_tech = "materials=1"
 	attack_verb = list("lashed", "bludgeoned", "whipped")
@@ -514,7 +514,7 @@
 	w_class = 1.0
 	force = 5.0
 	throwforce = 15.0
-	item_state = "shard-glassnew"
+	item_state = "shard-glass"
 	g_amt = 3750
 	w_type = RECYK_GLASS
 	attack_verb = list("stabbed", "slashed", "sliced", "cut")
@@ -633,10 +633,6 @@
 	flags = FPRINT | TABLEPASS| CONDUCT
 	attack_verb = list("slammed", "bashed", "battered", "bludgeoned", "thrashed", "whacked")
 
-/obj/item/weapon/table_parts/cultify()
-	new /obj/item/weapon/table_parts/wood(loc)
-	..()
-
 /obj/item/weapon/table_parts/reinforced
 	name = "reinforced table parts"
 	desc = "Hard table parts. Well...harder..."
@@ -651,9 +647,6 @@
 	desc = "Keep away from fire."
 	icon_state = "wood_tableparts"
 	flags = null
-
-/obj/item/weapon/table_parts/wood/cultify()
-	return
 
 /obj/item/weapon/wire
 	desc = "This is just a simple piece of regular insulated wire."

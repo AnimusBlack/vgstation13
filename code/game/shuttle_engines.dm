@@ -25,10 +25,6 @@
 	name = "heater"
 	icon_state = "heater"
 
-/obj/structure/shuttle/engine/heater/cultify()
-	new /obj/structure/cult/pylon(loc)
-	..()
-
 /obj/structure/shuttle/engine/platform
 	name = "platform"
 	icon_state = "platform"
@@ -37,12 +33,6 @@
 	name = "propulsion"
 	icon_state = "propulsion"
 	opacity = 1
-
-
-/obj/structure/shuttle/engine/propulsion/cultify()
-	var/turf/T = get_turf(src)
-	T.ChangeTurf(/turf/simulated/wall/cult)
-	..()
 
 /obj/structure/shuttle/engine/propulsion/burst
 	name = "burst"

@@ -45,7 +45,7 @@ var/const/AIRLOCK_WIRE_LIGHT = 2048
 		if(A.isElectrified())
 			if(A.shock(L, 100))
 				return 0
-	if(A.panel_open)
+	if(A.p_open)
 		return 1
 	return 0
 

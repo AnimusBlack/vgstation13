@@ -235,7 +235,7 @@ datum/shuttle_controller
 									var/atom/movable/AM=A
 									AM.Move(D)
 								// Remove windows, grills, lattice, etc.
-								if(istype(A,/obj/structure) || istype(A,/obj/machinery))
+								else if(istype(A,/obj/structure) || istype(A,/obj/machinery))
 									del(A)
 								// NOTE: Commenting this out to avoid recreating mass driver glitch
 								/*
@@ -251,10 +251,6 @@ datum/shuttle_controller
 						settimeleft(SHUTTLELEAVETIME)
 						captain_announce("The Emergency Shuttle has docked with the station. You have [round(timeleft()/60,1)] minutes to board the Emergency Shuttle.")
 						world << sound('sound/AI/shuttledock.ogg')
-
-						if(universe.name == "Hell Rising")
-							world << "___________________________________________________________________"
-							world << "<span class='sinister' style='font-size:3'> A vile force of darkness is making its way toward the escape shuttle.</span>"
 
 						return 1
 
