@@ -1,4 +1,4 @@
-/*/datum/job/hos
+/datum/job/hos
 	title = "Head of Security"
 	flag = HOS
 	department_flag = ENGSEC
@@ -97,7 +97,7 @@
 		affected.implants += L
 		L.part = affected
 		return 1
-*/
+
 
 
 /datum/job/detective
@@ -107,12 +107,12 @@
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
-	supervisors = "no one but yourself"
+	supervisors = "the head of security"
 	selection_color = "#ffeeee"
 	idtype = /obj/item/weapon/card/id/security
 
-	access = list(access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court, access_engine)
-	minimal_access = list(access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court)
+	access = list(access_security, access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court)
+	minimal_access = list(access_security, access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court)
 	alt_titles = list("Forensic Technician")
 
 	minimal_player_age = 7
@@ -168,14 +168,14 @@
 	flag = OFFICER
 	department_flag = ENGSEC
 	faction = "Station"
-	total_positions = 4
-	spawn_positions = 4
-	supervisors = "the head of personnel and superior officers"
+	total_positions = 5
+	spawn_positions = 5
+	supervisors = "the head of security and superior officers"
 	selection_color = "#ffeeee"
 	alt_titles = list("Security Cadet","Security Corporal","Security Sergeant","Security Master Sergeant")
 	idtype = /obj/item/weapon/card/id/security
-	access = list(access_security, access_sec_doors, access_brig, access_court)
-	minimal_access = list(access_security, access_sec_doors, access_brig, access_court)
+	access = list(access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels, access_morgue)
+	minimal_access = list(access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels)
 	minimal_player_age = 7
 
 	pdaslot=slot_belt

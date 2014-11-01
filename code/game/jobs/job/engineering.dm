@@ -1,4 +1,4 @@
-/*/datum/job/chief_engineer
+/datum/job/chief_engineer
 	title = "Chief Engineer"
 	flag = CHIEF
 	department_flag = ENGSEC
@@ -41,7 +41,7 @@
 		else
 			H.equip_or_collect(new /obj/item/weapon/storage/box/engineer(H.back), slot_in_backpack)
 		return 1
-*/
+
 
 
 /datum/job/engineer
@@ -49,13 +49,13 @@
 	flag = ENGINEER
 	department_flag = ENGSEC
 	faction = "Station"
-	total_positions = 4
-	spawn_positions = 4
-	supervisors = "the head of personnel"
+	total_positions = 5
+	spawn_positions = 5
+	supervisors = "the chief engineer"
 	selection_color = "#fff5cc"
 	idtype = /obj/item/weapon/card/id/engineering
-	access = list(access_eva, access_engine, access_engine_equip, access_tech_storage, access_maint_tunnels, access_external_airlocks, access_construction, access_atmospherics, access_tcomsat)
-	minimal_access = list(access_engine, access_engine_equip, access_tech_storage, access_maint_tunnels, access_external_airlocks, access_construction, access_tcomsat, access_atmospherics)
+	access = list(access_eva, access_engine, access_engine_equip, access_tech_storage, access_maint_tunnels, access_external_airlocks, access_construction, access_atmospherics)
+	minimal_access = list(access_engine, access_engine_equip, access_tech_storage, access_maint_tunnels, access_external_airlocks, access_construction)
 	alt_titles = list("Maintenance Technician","Engine Technician","Electrician")
 
 	pdaslot=slot_l_store
@@ -82,7 +82,7 @@
 		return 1
 
 
-/*
+
 /datum/job/atmos
 	title = "Atmospheric Technician"
 	flag = ATMOSTECH
@@ -116,4 +116,3 @@
 		else
 			H.equip_or_collect(new /obj/item/weapon/storage/box/engineer(H.back), slot_in_backpack)
 		return 1
-*/

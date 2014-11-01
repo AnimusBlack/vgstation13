@@ -47,7 +47,7 @@
 		return 1
 
 
-/*
+
 /datum/job/chef
 	title = "Chef"
 	flag = CHEF
@@ -110,11 +110,11 @@
 		else
 			H.equip_or_collect(new H.species.survival_gear(H.back), slot_in_backpack)
 		return 1
-*/
+
 
 
 //Cargo
-/*/datum/job/qm
+/datum/job/qm
 	title = "Quartermaster"
 	flag = QUARTERMASTER
 	department_flag = CIVILIAN
@@ -143,7 +143,7 @@
 			H.equip_or_collect(new H.species.survival_gear(H), slot_r_hand)
 		else
 			H.equip_or_collect(new H.species.survival_gear(H.back), slot_in_backpack)
-		return 1 */
+		return 1
 
 
 
@@ -152,13 +152,13 @@
 	flag = CARGOTECH
 	department_flag = CIVILIAN
 	faction = "Station"
-	total_positions = 3
-	spawn_positions = 3
-	supervisors = "the head of personnel"
+	total_positions = 2
+	spawn_positions = 2
+	supervisors = "the quartermaster and the head of personnel"
 	selection_color = "#dddddd"
 	idtype = /obj/item/weapon/card/id/supply
 	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mint, access_mining, access_mining_station)
-	minimal_access = list(access_maint_tunnels, access_cargo, access_cargo_bot, access_mining, access_mint, access_mining_station, access_mailsorting)
+	minimal_access = list(access_maint_tunnels, access_cargo, access_cargo_bot, access_mailsorting)
 
 	pdaslot=slot_belt
 	pdatype=/obj/item/device/pda/cargo
@@ -169,7 +169,7 @@
 		H.equip_or_collect(new /obj/item/clothing/under/rank/cargotech(H), slot_w_uniform)
 		H.equip_or_collect(new /obj/item/clothing/shoes/black(H), slot_shoes)
 		//H.equip_or_collect(new /obj/item/device/pda/cargo(H), slot_belt)
-		H.equip_or_collect(new /obj/item/clothing/gloves/black(H), slot_gloves)
+//		H.equip_or_collect(new /obj/item/clothing/gloves/black(H), slot_gloves)
 		if(H.backbag == 1)
 			H.equip_or_collect(new H.species.survival_gear(H), slot_r_hand)
 		else
@@ -177,7 +177,7 @@
 		return 1
 
 
-/*
+
 /datum/job/mining
 	title = "Shaft Miner"
 	flag = MINER
@@ -219,7 +219,7 @@
 			if(H.species.name == "Human" && !(H.f_style == "Dwarf Beard"))
 				H.h_style = "Dwarf Beard"
 				H.update_hair()
-		return 1 */
+		return 1
 
 /datum/job/clown
 	title = "Clown"
@@ -327,7 +327,6 @@
 
 
 //More or less assistants
-/*
 /datum/job/librarian
 	title = "Librarian"
 	flag = LIBRARIAN
@@ -402,4 +401,3 @@
 		L.imp_in = H
 		L.implanted = 1
 		return 1
-*/
