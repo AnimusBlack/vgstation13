@@ -147,6 +147,7 @@ var/global/datum/controller/vote/vote = new()
 			world << "World restarting due to vote..."
 			feedback_set_details("end_error","restart vote")
 			if(blackbox)	blackbox.save_all_data_to_sql()
+			CallHook("Reboot",list())
 			sleep(50)
 			log_game("Rebooting due to restart vote")
 			world.Reboot()
@@ -247,7 +248,7 @@ var/global/datum/controller/vote/vote = new()
 		else
 			. += "<h2>Start a vote:</h2><hr><ul><li>"
 			//restart
-			if(trialmin || config.allow_vote_restart)          
+			if(trialmin || config.allow_vote_restart)           //For the love of god, stop.
 				. += "<a href='?src=\ref[src];vote=restart'>Restart</a>"
 			else
 				. += "<font color='grey'>Restart (Disallowed)</font>"

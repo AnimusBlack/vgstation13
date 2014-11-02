@@ -20,7 +20,7 @@ var/global/list/special_roles = list( //keep synced with the defines BE_* in set
 	"vampire" = IS_MODE_COMPILED("vampire")			 // 13
 )
 
-var/const/MAX_SAVE_SLOTS = 10
+var/const/MAX_SAVE_SLOTS = 8
 
 //used for alternate_option
 #define GET_RANDOM_JOB 0
@@ -29,8 +29,12 @@ var/const/MAX_SAVE_SLOTS = 10
 
 datum/preferences
 	//doohickeys for savefiles
+	var/database/db = ("players2.sqlite")
 	var/path
 	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
+	var/slot = 1
+	var/list/slot_names = new
+
 	var/savefile_version = 0
 
 	//non-preference stuff
@@ -124,152 +128,41 @@ datum/preferences
 	b_type = pick(4;"O-", 36;"O+", 3;"A-", 28;"A+", 1;"B-", 20;"B+", 1;"AB-", 5;"AB+")
 	if(istype(C))
 		if(!IsGuestKey(C.key))
-			load_path(C.ckey)
-			if(load_preferences())
-				if(load_character())
+			var/load_pref = load_preferences_sqlite(C.ckey)
+			if(load_pref)
+				if(load_save_sqlite(C.ckey, src, default_slot))
 					return
-	gender = pick(MALE, FEMALE)
+	randomize_appearance_for()
 	real_name = random_name(gender)
+	save_character_sqlite(src, C.ckey, default_slot)
 
 /datum/preferences
-	proc/ZeroSkills(var/forced = 0)
-		for(var/V in SKILLS) for(var/datum/skill/S in SKILLS[V])
-			if(!skills.Find(S.ID) || forced)
-				skills[S.ID] = SKILL_NONE
-	proc/CalculateSkillPoints()
-		used_skillpoints = 0
-		for(var/V in SKILLS) for(var/datum/skill/S in SKILLS[V])
-			var/multiplier = 1
-			switch(skills[S.ID])
-				if(SKILL_NONE)
-					used_skillpoints += 0 * multiplier
-				if(SKILL_BASIC)
-					used_skillpoints += 1 * multiplier
-				if(SKILL_ADEPT)
-					// secondary skills cost less
-					if(S.secondary)
-						used_skillpoints += 1 * multiplier
-					else
-						used_skillpoints += 3 * multiplier
-				if(SKILL_EXPERT)
-					// secondary skills cost less
-					if(S.secondary)
-						used_skillpoints += 3 * multiplier
-					else
-						used_skillpoints += 6 * multiplier
-
-	proc/GetSkillClass(points)
-		// skill classes describe how your character compares in total points
-		var/original_points = points
-		points -= min(round((age - 20) / 2.5), 4) // every 2.5 years after 20, one extra skillpoint
-		if(age > 30)
-			points -= round((age - 30) / 5) // every 5 years after 30, one extra skillpoint
-		if(original_points > 0 && points <= 0) points = 1
-		switch(points)
-			if(0)
-				return "Unconfigured"
-			if(1 to 3)
-				return "Terrifying"
-			if(4 to 6)
-				return "Below Average"
-			if(7 to 10)
-				return "Average"
-			if(11 to 14)
-				return "Above Average"
-			if(15 to 18)
-				return "Exceptional"
-			if(19 to 24)
-				return "Genius"
-			if(24 to 1000)
-				return "God"
-
-	proc/SetSkills(mob/user)
-		if(SKILLS == null)
-			setup_skills()
-
-		if(skills.len == 0)
-			ZeroSkills()
-
-
-		var/HTML = "<body>"
-
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:185: HTML += "<b>Select your Skills</b><br>"
-		HTML += {"<b>Select your Skills</b><br>
-			Current skill level: <b>[GetSkillClass(used_skillpoints)]</b> ([used_skillpoints])<br>
-			<a href=\"byond://?src=\ref[user];preference=skills;preconfigured=1;\">Use preconfigured skillset</a><br>
-			<table>"}
-		// END AUTOFIX
-		for(var/V in SKILLS)
-
-			// AUTOFIXED BY fix_string_idiocy.py
-			// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:190: HTML += "<tr><th colspan = 5><b>[V]</b>"
-			HTML += {"<tr><th colspan = 5><b>[V]</b>
-				</th></tr>"}
-			// END AUTOFIX
-			for(var/datum/skill/S in SKILLS[V])
-				var/level = skills[S.ID]
-
-				// AUTOFIXED BY fix_string_idiocy.py
-				// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:194: HTML += "<tr style='text-align:left;'>"
-				HTML += {"<tr style='text-align:left;'>
-					<th><a href='byond://?src=\ref[user];preference=skills;skillinfo=\ref[S]'>[S.name]</a></th>
-					<th><a href='byond://?src=\ref[user];preference=skills;setskill=\ref[S];newvalue=[SKILL_NONE]'><font color=[(level == SKILL_NONE) ? "red" : "black"]>\[Untrained\]</font></a></th>"}
-				// END AUTOFIX
-				// secondary skills don't have an amateur level
-				if(S.secondary)
-					HTML += "<th></th>"
-				else
-					HTML += "<th><a href='byond://?src=\ref[user];preference=skills;setskill=\ref[S];newvalue=[SKILL_BASIC]'><font color=[(level == SKILL_BASIC) ? "red" : "black"]>\[Amateur\]</font></a></th>"
-
-				// AUTOFIXED BY fix_string_idiocy.py
-				// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:202: HTML += "<th><a href='byond://?src=\ref[user];preference=skills;setskill=\ref[S];newvalue=[SKILL_ADEPT]'><font color=[(level == SKILL_ADEPT) ? "red" : "black"]>\[Trained\]</font></a></th>"
-				HTML += {"<th><a href='byond://?src=\ref[user];preference=skills;setskill=\ref[S];newvalue=[SKILL_ADEPT]'><font color=[(level == SKILL_ADEPT) ? "red" : "black"]>\[Trained\]</font></a></th>
-					<th><a href='byond://?src=\ref[user];preference=skills;setskill=\ref[S];newvalue=[SKILL_EXPERT]'><font color=[(level == SKILL_EXPERT) ? "red" : "black"]>\[Professional\]</font></a></th>
-					</tr>"}
-				// END AUTOFIX
-
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:205: HTML += "</table>"
-		HTML += {"</table>
-			<a href=\"byond://?src=\ref[user];preference=skills;cancel=1;\">\[Done\]</a>"}
-		// END AUTOFIX
-		user << browse(null, "window=preferences")
-		user << browse(HTML, "window=show_skills;size=600x800")
-		return
 
 	proc/ShowChoices(mob/user)
 		if(!user || !user.client)	return
 		update_preview_icon()
-		user << browse_rsc(preview_icon_front, "previewicon.png")
-		user << browse_rsc(preview_icon_side, "previewicon2.png")
+		var/preview_front = fcopy_rsc(preview_icon_front)
+		var/preview_side = fcopy_rsc(preview_icon_side)
+		user << browse_rsc(preview_front, "previewicon.png")
+		user << browse_rsc(preview_side, "previewicon2.png")
 		var/dat = "<html><body><center>"
 
-		if(path)
-
-			// AUTOFIXED BY fix_string_idiocy.py
-			// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:220: dat += "<center>"
+		if(!IsGuestKey(user.key))
 			dat += {"<center>
 				Slot <b>[slot_name]</b> -
 				<a href=\"byond://?src=\ref[user];preference=open_load_dialog\">Load slot</a> -
 				<a href=\"byond://?src=\ref[user];preference=save\">Save slot</a> -
 				<a href=\"byond://?src=\ref[user];preference=reload\">Reload slot</a>
 				</center>"}
-			// END AUTOFIX
 		else
 			dat += "Please create an account to save your preferences."
 
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:230: dat += "</center><hr><table><tr><td width='340px' height='320px'>"
 		dat += {"</center><hr><table><tr><td width='340px' height='320px'>
 			<b>Name:</b> "}
-		// END AUTOFIX
 		if(appearance_isbanned(user))
 			dat += "<b>You are banned from using custom names and appearances. You can continue to adjust your characters, but you will be randomised once you join the game.</b><br>"
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:234: dat += "<a href='?_src_=prefs;preference=name;task=input'><b>[real_name]</b></a><br>"
 		dat += {"<a href='?_src_=prefs;preference=name;task=input'><b>[real_name]</b></a><br>
 			(<a href='?_src_=prefs;preference=name;task=random'>Random Name</A>)
 			(<a href='?_src_=prefs;preference=name'>Always Random Name: [be_random_name ? "Yes" : "No"]</a>)
@@ -286,14 +179,13 @@ datum/preferences
 			<b>Randomized Character Slot:</b> <a href='?_src_=prefs;preference=randomslot'><b>[randomslot ? "Yes" : "No"]</b></a><br>
 			<b>Ghost ears:</b> <a href='?_src_=prefs;preference=ghost_ears'><b>[(toggles & CHAT_GHOSTEARS) ? "Nearest Creatures" : "All Speech"]</b></a><br>
 			<b>Ghost sight:</b> <a href='?_src_=prefs;preference=ghost_sight'><b>[(toggles & CHAT_GHOSTSIGHT) ? "Nearest Creatures" : "All Emotes"]</b></a><br>
-			<b>Ghost radio:</b> <a href='?_src_=prefs;preference=ghost_radio'><b>[(toggles & CHAT_GHOSTRADIO) ? "Nearest Speakers" : "All Chatter"]</b></a><br>"}
-		// END AUTOFIX
+			<b>Ghost radio:</b> <a href='?_src_=prefs;preference=ghost_radio'><b>[(toggles & CHAT_GHOSTRADIO) ? "Nearest Speakers" : "All Chatter"]</b></a><br>
+			<b>Ghost PDA:</b> <a href='?_src_=prefs;preference=ghost_pda'><b>[(toggles & CHAT_GHOSTPDA) ? "No PDA Messages" : "All PDA Messages"]</b></a><br>
+			<b>Special Windows:</b><a href='?_src_=prefs;preference=special_popup'><b>[special_popup ? "Yes" : "No"]</b></a><br>"}
 		if(config.allow_Metadata)
 			dat += "<b>OOC Notes:</b> <a href='?_src_=prefs;preference=metadata;task=input'> Edit </a><br>"
 
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:252: dat += "<br><b>Occupation Choices</b><br>"
 		dat += {"<br><b>Occupation Choices</b><br>
 			\t<a href='?_src_=prefs;preference=job;task=menu'><b>Set Preferences</b></a><br>
 			<br><table><tr><td><b>Body</b>
@@ -303,17 +195,13 @@ datum/preferences
 			Secondary Language:<br><a href='byond://?src=\ref[user];preference=language;task=input'>[language]</a><br>
 			Blood Type: <a href='byond://?src=\ref[user];preference=b_type;task=input'>[b_type]</a><br>
 			Skin Tone: <a href='?_src_=prefs;preference=s_tone;task=input'>[-s_tone + 35]/220<br></a>"}
-		// END AUTOFIX
 		//dat += "Skin pattern: <a href='byond://?src=\ref[user];preference=skin_style;task=input'>Adjust</a><br>"
 
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:264: dat += "<br><b>Handicaps</b><br>"
 		dat += {"<br><b>Handicaps</b><br>
 			\t<a href='byond://?src=\ref[user];task=input;preference=disabilities'><b>\[Set Disabilities\]</b></a><br>
 			\tLimbs: <a href='byond://?src=\ref[user];preference=limbs;task=input'>Adjust</a><br>
 			\tInternal Organs: <a href='byond://?src=\ref[user];preference=organs;task=input'>Adjust</a><br>"}
-		// END AUTOFIX
 		//display limbs below
 		var/ind = 0
 		for(var/name in organ_data)
@@ -341,6 +229,12 @@ datum/preferences
 					organ_name = "heart"
 				if("eyes")
 					organ_name = "eyes"
+				if("lungs")
+					organ_name = "lungs"
+				if("liver")
+					organ_name = "liver"
+				if("kidneys")
+					organ_name = "kidneys"
 
 			if(status == "cyborg")
 				++ind
@@ -386,35 +280,25 @@ datum/preferences
 		else
 			dat += "Underwear: <a href ='?_src_=prefs;preference=underwear;task=input'><b>[underwear_f[underwear]]</b></a><br>"
 
-
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:312: dat += "Backpack Type:<br><a href ='?_src_=prefs;preference=bag;task=input'><b>[backbaglist[backbag]]</b></a><br>"
 		dat += {"Backpack Type:<br><a href ='?_src_=prefs;preference=bag;task=input'><b>[backbaglist[backbag]]</b></a><br>
 			Nanotrasen Relation:<br><a href ='?_src_=prefs;preference=nt_relation;task=input'><b>[nanotrasen_relation]</b></a><br>
 			</td><td><b>Preview</b><br><img src=previewicon.png height=64 width=64><img src=previewicon2.png height=64 width=64></td></tr></table>
 			</td><td width='300px' height='300px'>"}
-		// END AUTOFIX
 		if(jobban_isbanned(user, "Records"))
 			dat += "<b>You are banned from using character records.</b><br>"
 		else
 			dat += "<b><a href=\"byond://?src=\ref[user];preference=records;record=1\">Character Records</a></b><br>"
 
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:325: dat += "\t<a href=\"byond://?src=\ref[user];preference=skills\"><b>Set Skills</b> (<i>[GetSkillClass(used_skillpoints)][used_skillpoints > 0 ? " [used_skillpoints]" : "0"])</i></a><br>"
-		dat += {"\t<a href=\"byond://?src=\ref[user];preference=skills\"><b>Set Skills</b> (<i>[GetSkillClass(used_skillpoints)][used_skillpoints > 0 ? " [used_skillpoints]" : "0"])</i></a><br>
-			<a href='byond://?src=\ref[user];preference=flavor_text;task=input'><b>Set Flavor Text</b></a><br>"}
-		// END AUTOFIX
-		if(lentext(flavor_text) <= 40)
-			if(!lentext(flavor_text))
+		dat += {"<a href='byond://?src=\ref[user];preference=flavor_text;task=input'><b>Set Flavor Text</b></a><br>"}
+		if(length(flavor_text) <= 40)
+			if(!length(flavor_text))
 				dat += "\[...\]"
 			else
 				dat += "[flavor_text]"
 		else
 			dat += "[copytext(flavor_text, 1, 37)]...<br>"
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:335: dat += "<br>"
 		dat += {"<br>
 			<br><b>Hair</b><br>
 			<a href='?_src_=prefs;preference=hair;task=input'>Change Color</a> <font face='fixedsys' size='3' color='#[num2hex(r_hair, 2)][num2hex(g_hair, 2)][num2hex(b_hair, 2)]'><table style='display:inline;' bgcolor='#[num2hex(r_hair, 2)][num2hex(g_hair, 2)][num2hex(b_hair)]'><tr><td>__</td></tr></table></font>
@@ -425,7 +309,6 @@ datum/preferences
 			<br><b>Eyes</b><br>
 			<a href='?_src_=prefs;preference=eyes;task=input'>Change Color</a> <font face='fixedsys' size='3' color='#[num2hex(r_eyes, 2)][num2hex(g_eyes, 2)][num2hex(b_eyes, 2)]'><table  style='display:inline;' bgcolor='#[num2hex(r_eyes, 2)][num2hex(g_eyes, 2)][num2hex(b_eyes)]'><tr><td>__</td></tr></table></font>
 			<br><br>"}
-		// END AUTOFIX
 		if(jobban_isbanned(user, "Syndicate"))
 			dat += "<b>You are banned from antagonist roles.</b>"
 			src.be_special = 0
@@ -444,14 +327,6 @@ datum/preferences
 		dat += "</td></tr></table><hr><center>"
 
 		if(!IsGuestKey(user.key))
-
-			// AUTOFIXED BY fix_string_idiocy.py
-			// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:367: dat += "<a href='?_src_=prefs;preference=load'>Undo</a> - "
-			dat += {"<a href='?_src_=prefs;preference=load'>Undo</a> -
-				<a href='?_src_=prefs;preference=save'>Save Setup</a> - "}
-			// END AUTOFIX
-
-
 		// AUTOFIXED BY fix_string_idiocy.py
 		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:370: dat += "<a href='?_src_=prefs;preference=reset_all'>Reset Setup</a>"
 		dat += {"<a href='?_src_=prefs;preference=reset_all'>Reset Setup</a>
@@ -581,6 +456,8 @@ datum/preferences
 		HTML += ShowDisabilityState(user,DISABILITY_FLAG_FAT,        "Obese")
 		HTML += ShowDisabilityState(user,DISABILITY_FLAG_EPILEPTIC,  "Seizures")
 		HTML += ShowDisabilityState(user,DISABILITY_FLAG_DEAF,       "Deaf")
+		/*HTML += ShowDisabilityState(user,DISABILITY_FLAG_COUGHING,   "Coughing")
+		HTML += ShowDisabilityState(user,DISABILITY_FLAG_TOURETTES,   "Tourettes") Still working on it! -Angelite*/
 
 
 		// AUTOFIXED BY fix_string_idiocy.py
@@ -815,40 +692,6 @@ datum/preferences
 					SetDisabilities(user)
 				else
 					SetDisabilities(user)
-			return 1
-		else if(href_list["preference"] == "skills")
-			if(href_list["cancel"])
-				user << browse(null, "window=show_skills")
-				ShowChoices(user)
-			else if(href_list["skillinfo"])
-				var/datum/skill/S = locate(href_list["skillinfo"])
-				var/HTML = "<b>[S.name]</b><br>[S.desc]"
-				user << browse(HTML, "window=\ref[user]skillinfo")
-			else if(href_list["setskill"])
-				var/datum/skill/S = locate(href_list["setskill"])
-				var/value = text2num(href_list["newvalue"])
-				skills[S.ID] = value
-				CalculateSkillPoints()
-				SetSkills(user)
-			else if(href_list["preconfigured"])
-				var/selected = input(user, "Select a skillset", "Skillset") as null|anything in SKILL_PRE
-				if(!selected) return
-
-				ZeroSkills(1)
-				for(var/V in SKILL_PRE[selected])
-					if(V == "field")
-						skill_specialization = SKILL_PRE[selected]["field"]
-						continue
-					skills[V] = SKILL_PRE[selected][V]
-				CalculateSkillPoints()
-
-				SetSkills(user)
-			else if(href_list["setspecialization"])
-				skill_specialization = href_list["setspecialization"]
-				CalculateSkillPoints()
-				SetSkills(user)
-			else
-				SetSkills(user)
 			return 1
 
 		else if(href_list["preference"] == "records")
@@ -1114,11 +957,11 @@ datum/preferences
 							nanotrasen_relation = new_relation
 
 					if("flavor_text")
-						var/msg = sanitize_uni(input(usr,"Set the flavor text in your 'examine' verb. This can also be used for OOC notes and preferences!","Flavor Text",html_decode(flavor_text)) as message)
+						var/msg = input(usr,"Set the flavor text in your 'examine' verb. This can also be used for OOC notes and preferences!","Flavor Text",html_decode(flavor_text)) as message
 
 						if(msg != null)
 							msg = copytext(msg, 1, MAX_MESSAGE_LEN)
-							msg = sanitize_uni(msg)
+							msg = html_encode(msg)
 
 							flavor_text = msg
 
@@ -1187,7 +1030,7 @@ datum/preferences
 										organ_data[second_limb] = "amputated"
 
 					if("organs")
-						var/organ_name = input(user, "Which internal function do you want to change?") as null|anything in list("Heart", "Eyes")
+						var/organ_name = input(user, "Which internal function do you want to change?") as null|anything in list("Heart", "Eyes", "Lungs", "Liver", "Kidneys")
 						if(!organ_name) return
 
 						var/organ = null
@@ -1196,6 +1039,12 @@ datum/preferences
 								organ = "heart"
 							if("Eyes")
 								organ = "eyes"
+							if("Lungs")
+								organ = "lungs"
+							if("Liver")
+								organ = "liver"
+							if("Kidneys")
+								organ = "kidneys"
 
 						var/new_state = input(user, "What state do you wish the organ to be in?") as null|anything in list("Normal","Assisted","Mechanical")
 						if(!new_state) return
@@ -1251,6 +1100,9 @@ datum/preferences
 					if("name")
 						be_random_name = !be_random_name
 
+					if("special_popup")
+						special_popup = !special_popup
+
 					if("randomslot")
 						randomslot = !randomslot
 
@@ -1273,13 +1125,21 @@ datum/preferences
 					if("ghost_radio")
 						toggles ^= CHAT_GHOSTRADIO
 
+					if("ghost_pda")
+						toggles ^= CHAT_GHOSTPDA
+
 					if("save")
-						save_preferences()
-						save_character()
+						if(world.timeofday >= (lastPolled + POLLED_LIMIT))
+							save_preferences_sqlite(user, user.ckey)
+							save_character_sqlite(user.ckey, user, default_slot)
+							lastPolled = world.timeofday
+						else
+							user << "You need to wait [round((((lastPolled + POLLED_LIMIT) - world.timeofday) / 10))] seconds before you can save again."
+						//random_character_sqlite(user, user.ckey)
 
 					if("reload")
-						load_preferences()
-						load_character()
+						load_preferences_sqlite(user, user.ckey)
+						load_save_sqlite(user.ckey, user, default_slot)
 
 					if("open_load_dialog")
 						if(!IsGuestKey(user.key))
@@ -1289,7 +1149,9 @@ datum/preferences
 						close_load_dialog(user)
 
 					if("changeslot")
-						load_character(text2num(href_list["num"]))
+						var/num = text2num(href_list["num"])
+						load_save_sqlite(user.ckey, user, num)
+						default_slot = num
 						close_load_dialog(user)
 
 		ShowChoices(user)
@@ -1375,6 +1237,10 @@ datum/preferences
 			character.disabilities|=EPILEPSY
 		if(disabilities & DISABILITY_FLAG_DEAF)
 			character.sdisabilities|=DEAF
+		/*if(disabilities & DISABILITY_FLAG_COUGHING)
+			character.sdisabilities|=COUGHING
+		if(disabilities & DISABILITY_FLAG_TOURETTES)
+			character.sdisabilities|=TOURETTES Still working on it. - Angelite */
 
 		if(underwear > underwear_m.len || underwear < 1)
 			underwear = 0 //I'm sure this is 100% unnecessary, but I'm paranoid... sue me. //HAH NOW NO MORE MAGIC CLONING UNDIES
@@ -1392,23 +1258,32 @@ datum/preferences
 
 	proc/open_load_dialog(mob/user)
 
+		var/database/query/q = new
+		var/list/name_list[MAX_SAVE_SLOTS]
+
+		q.Add("select real_name, player_slot from players where player_ckey=?", user.ckey)
+		if(q.Execute(db))
+			while(q.NextRow())
+				name_list[q.GetColumn(2)] = q.GetColumn(1)
+		else
+			message_admins("Error #: [q.Error()] - [q.ErrorMsg()]")
+			warning("Error #:[q.Error()] - [q.ErrorMsg()]")
+			return 0
 		// AUTOFIXED BY fix_string_idiocy.py
 		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:1283: var/dat = "<body>"
-		var/dat = {"<body>
-<tt><center>"}
+		var/dat = {"<body><tt><center>"}
 		// END AUTOFIX
-		var/savefile/S = new /savefile(path)
-		if(S)
-			dat += "<b>Select a character slot to load</b><hr>"
-			var/name
-			for(var/i=1, i<=MAX_SAVE_SLOTS, i++)
-				S.cd = "/character[i]"
-				S["real_name"] >> name
-				if(!name)	name = "Character[i]"
-				if(i==default_slot)
-					name = "<b>[name]</b>"
-				dat += "<a href='?_src_=prefs;preference=changeslot;num=[i];'>[name]</a><br>"
-
+		dat += "<b>Select a character slot to load</b><hr>"
+		var/counter = 1
+		while(counter <= MAX_SAVE_SLOTS)
+			if(counter==default_slot)
+				dat += "<a href='?_src_=prefs;preference=changeslot;num=[counter];'><b>[name_list[counter]]</b></a><br>"
+			else
+				if(!name_list[counter])
+					dat += "<a href='?_src_=prefs;preference=changeslot;num=[counter];'>Character[counter]</a><br>"
+				else
+					dat += "<a href='?_src_=prefs;preference=changeslot;num=[counter];'>[name_list[counter]]</a><br>"
+			counter++
 
 		// AUTOFIXED BY fix_string_idiocy.py
 		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:1228: dat += "<hr>"
