@@ -277,21 +277,21 @@
 		if(access_court)
 			return "Courtroom"
 		if(access_forensics_lockers)
-			return "Detective's Office"
+			return "Forensics"
 		if(access_medical)
 			return "Medical"
 		if(access_genetics)
 			return "Genetics Lab"
-		/*if(access_morgue)
-			return "Morgue"*/
+		if(access_morgue)
+			return "Morgue"
 		if(access_tox)
-			return "Research Lab"
+			return "R&D Lab"
 		if(access_tox_storage)
-			return "Toxins Storage"
+			return "Toxins Lab"
 		if(access_chemistry)
 			return "Chemistry Lab"
-		/*if(access_rd)
-			return "RD Private"*/
+		if(access_rd)
+			return "Research Director"
 		if(access_bar)
 			return "Bar"
 		if(access_janitor)
@@ -299,7 +299,7 @@
 		if(access_engine)
 			return "Engineering"
 		if(access_engine_equip)
-			return "APCs"
+			return "Power Equipment"
 		if(access_maint_tunnels)
 			return "Maintenance"
 		if(access_external_airlocks)
@@ -308,26 +308,26 @@
 			return "Emergency Storage"
 		if(access_change_ids)
 			return "ID Computer"
-		/*if(access_ai_upload)
+		if(access_ai_upload)
 			return "AI Upload"
 		if(access_teleporter)
-			return "Teleporter"*/
+			return "Teleporter"
 		if(access_eva)
 			return "EVA"
 		if(access_heads)
 			return "Bridge"
-		/*if(access_captain)
-			return "Captain Private"*/
+		if(access_captain)
+			return "Captain"
 		if(access_all_personal_lockers)
 			return "Personal Lockers"
-		/*if(access_chapel_office)
-			return "Chapel Office"*/
+		if(access_chapel_office)
+			return "Chapel Office"
 		if(access_tech_storage)
 			return "Technical Storage"
 		if(access_atmospherics)
 			return "Atmospherics"
-		/*if(access_crematorium)
-			return "Crematorium"*/
+		if(access_crematorium)
+			return "Crematorium"
 		if(access_armory)
 			return "Armory"
 		if(access_construction)
@@ -336,7 +336,7 @@
 			return "Kitchen"
 		if(access_hydroponics)
 			return "Hydroponics"
-		/*if(access_library)
+		if(access_library)
 			return "Library"
 		if(access_lawyer)
 			return "Law Office"
@@ -344,18 +344,20 @@
 			return "Robotics"
 		if(access_virology)
 			return "Virology"
+		if(access_psychiatrist)
+			return "Psychiatrist's Office"
 		if(access_cmo)
-			return "CMO Private"
+			return "Chief Medical Officer"
 		if(access_qm)
-			return "Quartermaster's Office"
+			return "Quartermaster"
 		if(access_clown)
 			return "HONK! Access"
 		if(access_mime)
-			return "Silent Access"*/
+			return "Silent Access"
 		if(access_surgery)
 			return "Surgery"
-		/*if(access_theatre)
-			return "Theatre"*/
+		if(access_theatre)
+			return "Theatre"
 		if(access_manufacturing)
 			return "Manufacturing"
 		if(access_research)
@@ -365,7 +367,7 @@
 		if(access_mining_office)
 			return "Mining Office"
 		if(access_mailsorting)
-			return "Delivery Office"
+			return "Cargo Office"
 		if(access_mint)
 			return "Mint"
 		if(access_mint_vault)
@@ -373,23 +375,23 @@
 		if(access_heads_vault)
 			return "Main Vault"
 		if(access_mining_station)
-			return "Mining Station EVA"
+			return "Mining EVA"
 		if(access_xenobiology)
 			return "Xenobiology Lab"
 		if(access_hop)
-			return "HoP Private"
-		/*if(access_hos)
-			return "HoS Private"
+			return "Head of Personnel"
+		if(access_hos)
+			return "Head of Security"
 		if(access_ce)
-			return "CE Private"*/
+			return "Chief Engineer"
 		if(access_RC_announce)
 			return "RC Announcements"
 		if(access_keycard_auth)
 			return "Keycode Auth. Device"
 		if(access_tcomsat)
 			return "Telecommunications"
-		/*if(access_gateway)
-			return "Gateway"*/
+		if(access_gateway)
+			return "Gateway"
 		if(access_sec_doors)
 			return "Brig"
 // /vg/ shit
