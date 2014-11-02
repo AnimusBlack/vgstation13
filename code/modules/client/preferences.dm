@@ -26,6 +26,7 @@ var/const/MAX_SAVE_SLOTS = 8
 #define GET_RANDOM_JOB 0
 #define BE_ASSISTANT 1
 #define RETURN_TO_LOBBY 2
+#define POLLED_LIMIT	300
 
 datum/preferences
 	//doohickeys for savefiles
@@ -34,6 +35,7 @@ datum/preferences
 	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
 	var/slot = 1
 	var/list/slot_names = new
+	var/lastPolled = 0
 
 	var/savefile_version = 0
 
@@ -52,6 +54,7 @@ datum/preferences
 	var/toggles = TOGGLES_DEFAULT
 	var/UI_style_color = "#ffffff"
 	var/UI_style_alpha = 255
+	var/special_popup = 0
 
 	//character preferences
 	var/real_name						//our character's name
@@ -327,11 +330,12 @@ datum/preferences
 		dat += "</td></tr></table><hr><center>"
 
 		if(!IsGuestKey(user.key))
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:370: dat += "<a href='?_src_=prefs;preference=reset_all'>Reset Setup</a>"
+
+			dat += {"<a href='?_src_=prefs;preference=load'>Undo</a> -
+				<a href='?_src_=prefs;preference=save'>Save Setup</a> - "}
+
 		dat += {"<a href='?_src_=prefs;preference=reset_all'>Reset Setup</a>
 			</center></body></html>"}
-		// END AUTOFIX
 		user << browse(dat, "window=preferences;size=560x580")
 
 	proc/SetChoices(mob/user, limit = 17, list/splitJobs = list("Chief Engineer", "AI"), width = 550, height = 550)
@@ -346,14 +350,11 @@ datum/preferences
 
 		var/HTML = "<body>"
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:386: HTML += "<tt><center>"
 		HTML += {"<tt><center>
 			<b>Choose occupation chances</b><br>Unavailable occupations are in red.<br><br>
 			<center><a href='?_src_=prefs;preference=job;task=close'>\[Done\]</a></center><br>
 			<table width='100%' cellpadding='1' cellspacing='0'><tr><td width='20%'>
 			<table width='100%' cellpadding='1' cellspacing='0'>"}
-		// END AUTOFIX
 		var/index = -1
 
 		//The job before the current job. I only use this to get the previous jobs color when I'm filling in blank rows.
@@ -390,11 +391,8 @@ datum/preferences
 				HTML += "[rank]"
 
 
-			// AUTOFIXED BY fix_string_idiocy.py
-			// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:426: HTML += "</td><td width='40%'>"
 			HTML += {"</td><td width='40%'>
 				<a href='?_src_=prefs;preference=job;task=input;text=[rank]'>"}
-			// END AUTOFIX
 			if(rank == "Assistant")//Assistant is special
 				if(job_civilian_low & ASSISTANT)
 					HTML += " <font color=green>\[Yes]</font>"
@@ -416,11 +414,8 @@ datum/preferences
 			HTML += "</a></td></tr>"
 
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:450: HTML += "</td'></tr></table>"
 		HTML += {"</td'></tr></table>
 			</center></table>"}
-		// END AUTOFIX
 		switch(alternate_option)
 			if(GET_RANDOM_JOB)
 				HTML += "<center><br><u><a href='?_src_=prefs;preference=job;task=random'><font color=green>Get random job if preferences unavailable</font></a></u></center><br>"
@@ -430,11 +425,8 @@ datum/preferences
 				HTML += "<center><br><u><a href='?_src_=prefs;preference=job;task=random'><font color=purple>Return to lobby if preference unavailable</font></a></u></center><br>"
 
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:462: HTML += "<center><a href='?_src_=prefs;preference=job;task=reset'>\[Reset\]</a></center>"
 		HTML += {"<center><a href='?_src_=prefs;preference=job;task=reset'>\[Reset\]</a></center>
 			</tt>"}
-		// END AUTOFIX
 		user << browse(null, "window=preferences")
 		user << browse(HTML, "window=mob_occupation;size=[width]x[height]")
 		return
@@ -447,11 +439,8 @@ datum/preferences
 	proc/SetDisabilities(mob/user)
 		var/HTML = "<body>"
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:474: HTML += "<tt><center>"
 		HTML += {"<tt><center>
 			<b>Choose disabilities</b><ul>"}
-		// END AUTOFIX
 		HTML += ShowDisabilityState(user,DISABILITY_FLAG_NEARSIGHTED,"Needs Glasses")
 		HTML += ShowDisabilityState(user,DISABILITY_FLAG_FAT,        "Obese")
 		HTML += ShowDisabilityState(user,DISABILITY_FLAG_EPILEPTIC,  "Seizures")
@@ -460,13 +449,10 @@ datum/preferences
 		HTML += ShowDisabilityState(user,DISABILITY_FLAG_TOURETTES,   "Tourettes") Still working on it! -Angelite*/
 
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:481: HTML += "</ul>"
 		HTML += {"</ul>
 			<a href=\"?_src_=prefs;task=close;preference=disabilities\">\[Done\]</a>
 			<a href=\"?_src_=prefs;task=reset;preference=disabilities\">\[Reset\]</a>
 			</center></tt>"}
-		// END AUTOFIX
 		user << browse(null, "window=preferences")
 		user << browse(HTML, "window=disabil;size=350x300")
 		return
@@ -474,12 +460,9 @@ datum/preferences
 	proc/SetRecords(mob/user)
 		var/HTML = "<body>"
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:492: HTML += "<tt><center>"
 		HTML += {"<tt><center>
 			<b>Set Character Records</b><br>
 			<a href=\"byond://?src=\ref[user];preference=records;task=med_record\">Medical Records</a><br>"}
-		// END AUTOFIX
 		if(length(med_record) <= 40)
 			HTML += "[med_record]"
 		else
@@ -500,12 +483,9 @@ datum/preferences
 			HTML += "[copytext(sec_record, 1, 37)]...<br>"
 
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:516: HTML += "<br>"
 		HTML += {"<br>
 			<a href=\"byond://?src=\ref[user];preference=records;records=-1\">\[Done\]</a>
 			</center></tt>"}
-		// END AUTOFIX
 		user << browse(null, "window=preferences")
 		user << browse(HTML, "window=records;size=350x300")
 		return
@@ -1269,10 +1249,7 @@ datum/preferences
 			message_admins("Error #: [q.Error()] - [q.ErrorMsg()]")
 			warning("Error #:[q.Error()] - [q.ErrorMsg()]")
 			return 0
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:1283: var/dat = "<body>"
 		var/dat = {"<body><tt><center>"}
-		// END AUTOFIX
 		dat += "<b>Select a character slot to load</b><hr>"
 		var/counter = 1
 		while(counter <= MAX_SAVE_SLOTS)
@@ -1285,12 +1262,9 @@ datum/preferences
 					dat += "<a href='?_src_=prefs;preference=changeslot;num=[counter];'>[name_list[counter]]</a><br>"
 			counter++
 
-		// AUTOFIXED BY fix_string_idiocy.py
-		// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\client\preferences.dm:1228: dat += "<hr>"
 		dat += {"<hr>
 			<a href='byond://?src=\ref[user];preference=close_load_dialog'>Close</a><br>
 			</center></tt>"}
-		// END AUTOFIX
 		user << browse(dat, "window=saves;size=300x390")
 
 	proc/close_load_dialog(mob/user)
