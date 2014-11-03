@@ -8,8 +8,8 @@
 /obj/machinery/party/turntable
 	name = "Jukebox"
 	desc = "A jukebox is a partially automated music-playing device, usually a coin-operated machine, that will play a patron's selection from self-contained media."
-	icon = 'ss13_dark_alpha7_old.dmi'
-	icon_state = "Jukeboxalt"
+	icon = 'icons/obj/jukebox.dmi'
+	icon_state = "jukebox2"
 	var/playing = 0
 	anchored = 1
 	density = 1
