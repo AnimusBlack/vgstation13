@@ -136,8 +136,8 @@ macro "macro"
 		command = ".options"
 		is-disabled = false
 	elem 
-		name = "F2+REP"
-		command = ".screenshot auto"
+		name = "F2"
+		command = "ooc"
 		is-disabled = false
 	elem 
 		name = "SHIFT+F2+REP"
@@ -153,7 +153,7 @@ macro "macro"
 		is-disabled = false
 	elem 
 		name = "F5"
-		command = "Aghost"
+		command = "asay"
 		is-disabled = false
 	elem 
 		name = "F6"
@@ -378,8 +378,8 @@ macro "hotkeymode"
 		command = ".options"
 		is-disabled = false
 	elem 
-		name = "F2+REP"
-		command = ".screenshot auto"
+		name = "F2"
+		command = "ooc"
 		is-disabled = false
 	elem 
 		name = "SHIFT+F2+REP"
@@ -395,7 +395,7 @@ macro "hotkeymode"
 		is-disabled = false
 	elem 
 		name = "F5"
-		command = "Aghost"
+		command = "asay"
 		is-disabled = false
 	elem 
 		name = "F6"
