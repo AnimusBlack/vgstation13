@@ -28,9 +28,8 @@
 	origin_tech = "bluespace=4"
 	item_state = "holdingpack"
 	icon_state = "holdingpack"
-	storage_slots = 8
-	max_w_class = 8
-	max_combined_w_class = 48
+	max_w_class = 4
+	max_combined_w_class = 28
 
 	suicide_act(mob/user)
 		viewers(user) << "\red <b>[user] puts the [src.name] on \his head and stretches the bag around \himself. With a sudden snapping sound, the bag shrinks to it's original size, leaving no trace of [user] </b>"

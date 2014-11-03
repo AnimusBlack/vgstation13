@@ -145,7 +145,7 @@
 			if(dish.growth >= 100)
 				state("The [src.name] pings", "blue")
 		if(radiation)
-			if(radiation > 50 & prob(8))
+			if(radiation > 50 & prob(5))
 				dish.virus2.log += "<br />[timestamp()] MAJORMUTATE (incubator rads)"
 				dish.virus2.majormutate()
 				if(dish.info)
@@ -153,7 +153,7 @@
 					dish.analysed = 0
 				state("The [src.name] beeps", "blue")
 
-			else if(prob(10))
+			else if(prob(5))
 				dish.virus2.minormutate()
 			radiation -= 1
 		if(toxins && prob(5))

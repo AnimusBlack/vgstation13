@@ -3583,13 +3583,13 @@ datum
 			reagent_state = LIQUID
 			nutriment_factor = 0 //So alcohol can fill you up! If they want to.
 			color = "#404030" // rgb: 64, 64, 48
-			var/dizzy_adj = 7
-			var/slurr_adj = 7
-			var/confused_adj = 5
-			var/slur_start = 40			//amount absorbed after which mob starts slurring
-			var/confused_start = 70	//amount absorbed after which mob starts confusing directions
-			var/blur_start = 110	//amount absorbed after which mob starts getting blurred vision
-			var/pass_out = 140	//amount absorbed after which mob starts passing out
+			var/dizzy_adj = 3
+			var/slurr_adj = 3
+			var/confused_adj = 2
+			var/slur_start = 65			//amount absorbed after which mob starts slurring
+			var/confused_start = 130	//amount absorbed after which mob starts confusing directions
+			var/blur_start = 260	//amount absorbed after which mob starts getting blurred vision
+			var/pass_out = 325	//amount absorbed after which mob starts passing out
 
 			on_mob_life(var/mob/living/M as mob)
 

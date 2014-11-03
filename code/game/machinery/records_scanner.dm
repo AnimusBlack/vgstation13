@@ -2,8 +2,8 @@
 obj/machinery/scanner
 	name = "Identity Analyser"
 	var/outputdir = 0
-	icon = 'icons/obj/computer.dmi'
-	icon_state = "computer_generic"
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "scanner_idle"
 	density = 1
 	anchored = 1
 	var/lastuser = null
@@ -30,10 +30,10 @@ obj/machinery/scanner/New()
 /obj/machinery/scanner/power_change()
 	if(!powered())
 		spawn(rand(0, 15))
-			icon_state = "comm0"
+			icon_state = "scanner_off"
 			stat |= NOPOWER
 	else
-		icon_state = "computer_generic"
+		icon_state = "scanner_idle"
 		stat &= ~NOPOWER
 
 obj/machinery/scanner/attack_hand(mob/living/carbon/human/user)
@@ -42,7 +42,7 @@ obj/machinery/scanner/attack_hand(mob/living/carbon/human/user)
 	if(!ishuman(user) || lastuser == user.real_name)
 		return
 	use_power(500)
-	flick("computer_generic",src)
+	flick("scanner_on",src)
 	lastuser = user.real_name
 	var/mname = user.real_name
 	var/dna = user.dna.unique_enzymes

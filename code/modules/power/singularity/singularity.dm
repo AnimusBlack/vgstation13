@@ -257,9 +257,8 @@ var/global/list/uneatable = list(
 		M.gib()
 	else if (istype(A, /obj/))
 		if (istype(A, /obj/item/weapon/storage/backpack/holding))
-			del(A)
-			explosion(src.loc,10,15,20,40)
-			if(src) del(src)
+			var/dist = max((current_size - 2), 1)
+			explosion(get_turf(src), dist, dist * 2, dist * 4)
 			return
 
 		if (istype(A, /obj/machinery/singularity)) // Welp now you did it.

@@ -1,7 +1,6 @@
 /obj/machinery/atmospherics/unary/vent_pump
 	icon = 'icons/obj/atmospherics/vent_pump.dmi'
 	icon_state = "off"
-	autoignition_temperature = 0
 
 	name = "Air Vent"
 	desc = "Has a valve and pump attached to it"

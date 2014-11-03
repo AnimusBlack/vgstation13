@@ -370,6 +370,9 @@
 	else if(href_list["warn"])
 		usr.client.warn(href_list["warn"])
 
+	else if(href_list["unwarn"])
+		usr.client.unwarn(href_list["unwarn"])
+
 	else if(href_list["unbane"])
 		if(!check_rights(R_BAN))	return
 
@@ -2434,7 +2437,7 @@
 						W.req_access = list()
 				message_admins("[key_name_admin(usr)] activated Egalitarian Station mode")
 				command_alert("Centcomm airlock control override activated. Please take this time to get acquainted with your coworkers.")
-				world << sound('sound/AI/command_report.ogg')
+				world << sound('sound/AI/commandreport.ogg')
 			if("dorf")
 				feedback_inc("admin_secrets_fun_used",1)
 				feedback_add_details("admin_secrets_fun_used","DF")
@@ -2450,7 +2453,7 @@
 				var/show_log = alert(usr, "Show ion message?", "Message", "Yes", "No")
 				if(show_log == "Yes")
 					command_alert("Ion storm detected near the station. Please check all AI-controlled equipment for errors.", "Anomaly Alert")
-					world << sound('sound/AI/ion_storm.ogg')
+					world << sound('sound/AI/ionstorm.ogg')
 			if("spacevines")
 				feedback_inc("admin_secrets_fun_used",1)
 				feedback_add_details("admin_secrets_fun_used","K")
