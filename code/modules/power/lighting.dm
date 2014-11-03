@@ -218,6 +218,10 @@
 
 // the smaller bulb light fixture
 
+/obj/machinery/light/cultify()
+	new /obj/structure/cult/pylon(loc)
+	qdel(src)
+
 /obj/machinery/light/small
 	icon_state = "bulb1"
 	base_state = "bulb"
@@ -451,11 +455,11 @@
 		flickering = 0
 
 /obj/machinery/light/attack_ghost(mob/user)
-/*	if(blessed) return
+	if(blessed) return
 	src.add_hiddenprint(user)
 	src.flicker(1)
 	return
-*/
+
 // ai attack - make lights flicker, because why not
 /obj/machinery/light/attack_ai(mob/user)
 	// attack_robot is flaky.

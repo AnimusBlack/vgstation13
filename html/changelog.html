@@ -50,7 +50,7 @@ ADDING CREDITS?  EDIT templates/header.html (or footer.html if they're for old t
 					Sprites:
 				</dt>
 				<dd>
-					Bustatime, Cloroxygen, Cogwerks, Dbuhos, Emisune, ISaidNo, Kokuten, N3X15, Osaifh, Rei1226
+					Bustatime, Cloroxygen, Cogwerks, Dbuhos, Emisune, ISaidNo, Kokuten, N3X15, Osaifh, Rei1226, Skowron
 				</dd>
 				<dt class="creditsection">
 					Sounds:
@@ -78,6 +78,501 @@ ADDING CREDITS?  EDIT templates/header.html (or footer.html if they're for old t
 		*** DO NOT FUCK WITH THIS FILE OR YOU WILL CAUSE MERGE CONFLICTS. ***
 		
 		-->
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.31</h2>
+			<h3 class="author">Comic updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">All lockboxes made by Science machines can now be unlocked with any ID, but will track who uses them.</li>
+				<li class="tweak">Bar and crematorium backrooms now require maintenance access as well as their departmental access.</li>
+			</ul>
+			<h3 class="author">Deity Link updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Fixed a bug where tables wouldn't appear properly on pictures.</li>
+				<li class="rscadd">Cameras produced from the Sepia Slime Extract + Plasma reaction will take pictures in sepia.</li>
+				<li class="tweak">Sepia Cameras pictures will show invisible mobs (such as Ghosts, booooo)</li>
+				<li class="tweak">Dead monkeys can now be directly drag'n'dropped into Xenobiology's Monkey Recycler.</li>
+				<li class="tweak">Dead slimes and monkeys can now be directly drag'n'dropped into Xenobiology's Slime Processor.</li>
+			</ul>
+			<h3 class="author">Pomf123 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Ported bay12's hydro port, and xenobotany.</li>
+				<li class="rscadd">HYDROPONICS <br>Closed hydro trays are now possible, taking atmospherics from a portables connector beneath them.<br>Lysis-isolation centrifuge and ballistic delivery system are in, allowing for gene modifications.<br>The plant analyzer has been rewritten from the ground up to be more useful and immersive.</li>
+				<li class="rscadd">SEEDS AND PLANTS<br>Seed/plant/product data is stored in a set of global seed datums.<br>These datums can diverge to form new species and be manipulated via genetic engineering.<br>These datums handle harvesting and mutating independantly of hydroponics trays.<br>Mutant species varieties are now handled in a modular way.<br>Plants now have ideal heat, light and pressure values, as well as tolerances for differences.<br>Plants can produce multiple different kinds of product.<br>Reagent information is held in the datums rather than the product item.<br>Arbitrary living products are now possible (current legit case is dionaea).<br>Bioluminescent plants and vines are both possible.<br></li>
+				<li class="rscadd">SPACE VINES<br>Space vines are now plantsegments pathwise in view of future intentions to make them more general.<br>Spawned event kudzu should be identical to the current master implementation as it has no seed datum and ignores all the new code.<br>Space vines now make use of seed data if spawned with a reference and can be harvested from.<br>Vines now cause physical damage if they are carnivorous, and inject reagents if their seed data includes them.<br>Vines will die if they find themselves in area outside of their tolerance.</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.30</h2>
+			<h3 class="author">Comic updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added the material synthesizer, which takes in matter and is capable of producing rare materials. Available through research, to help improve access to rare materials in exchange for metal and glass.</li>
+				<li class="experiment">Added the material synthesizer to MoMMIs. Use it to scan materials, make materials, and fill machines with materials.</li>
+				<li class="rscdel">Removed material modules from MoMMIs. All previous modules can now be made with the synthesizer.</li>
+				<li class="rscadd">Added alternate jumpsuits to lockers and wardrobes. Play dressup in your spacemen!</li>
+			</ul>
+			<h3 class="author">Deity Link updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Water now directly damages slimes, even when not used from a fire extinguisher of sprayer.</li>
+				<li class="rscadd">Water will as well deal some small toxin damage to "humanoid slimes" (green extract mutation)</li>
+				<li class="tweak">Water calms down rabid slimes.</li>
+				<li class="bugfix">Fixed an issue that prevented Greys from taking any damage when they were splashed with water. The damage is brute and may cause bleeding.</li>
+				<li class="tweak">Showers now clean items and mobs at every process(), rather than only when turned on.</li>
+				<li class="rscadd">Showers now actually apply some water to things that they clean. (things like monkey cubes and Greys will react in consequence)</li>
+				<li class="rscadd">Placing a beaker or other container under a shower will slowly fill it with water.</li>
+				<li class="rscadd">Showers now actually wet the floor as well. No running!</li>
+				<li class="experiment">Did some backend changes that'll allow in the future to replace which liquid is being sprayed by showers.</li>
+			</ul>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">Switch up some values for specific events</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.29</h2>
+			<h3 class="author">Deity Link updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="experiment">The Red Slime Extract + Blood reaction will now actually make slimes rabid! When rabid they behave like any hostile monster.</li>
+				<li class="experiment">Player-controlled slimes may now be tamed with docility potions. However the slime will be the one who gets to choose his name.</li>
+				<li class="tweak">Tame slimes can become rabid, unless they are player controlled (more to code later in that aspect)</li>
+				<li class="rscadd">Rabid slimes may be calmed and turned into normal slimes again by lowering their body temperature bellow (dark blue slimes or a temperature gun really comes handy there)</li>
+				<li class="tweak">Slimes spawned from killed adult slimes will be rabid. (they were supposed to be rabid according to the half-implemented rabid code)</li>
+			</ul>
+			<h3 class="author">Pomf123 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added Trainer's Belt to Miner's Equipment Storage buy list, sprite thanks to skowron.</li>
+				<li class="rscadd">Added the ability to rename mobs in a lazarus capsule using a pen.</li>
+				<li class="rscadd">Miner has an antag item now, a trainer's belt that contains 6 random hostile mobs.</li>
+				<li class="tweak">Lazarus revived mobs now only share a faction with the owner, this means you can fight mobs now!</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.28</h2>
+			<h3 class="author">Deity Link updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">Narsie now converts floor tiles by changing their icon, rather than using changeTurf().</li>
+				<li class="bugfix">Replacing a hundred of /red with <span class='warning'.</li>
+				<li class="bugfix">Fixing Teleport talismans not working.</li>
+				<li class="tweak">The Teleport Other rune now actually swaps the objects and mobs between the two runes rather than just sending them from the touched rune to the other.</li>
+				<li class="tweak">Reduced the self-inflicted damage of both this rune and the Free Cultist rune (Because sending 3 cultists into crit to summon one sounds a bit wonky to me, take_overall_damage ain't no joke).</li>
+				<li class="imageadd">Added animations for the Summon Cultist rune. (and people near the cultist before he gets summoned get a message)</li>
+			</ul>
+			<h3 class="author">Wild Bill updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">Re-added bots to emergency crate</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.27</h2>
+			<h3 class="author">Angelite Entyshak updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Certain mobs can no longer be forced to walk indefinately by targeting guns with allowing hostages to walk. (I probably fucked up wording this.)</li>
+			</ul>
+			<h3 class="author">Deity Link updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Fixing areas with colored lights showing all white on pictures.</li>
+				<li class="bugfix">Fixed many objects and some turfs not appearing at all on pictures (all the doors, the kitchen's floor, etc...)</li>
+				<li class="bugfix">Fixed many objects not appearing on pictures if they have been pulled in certain directions.</li>
+				<li class="tweak">Mobs will now always appear to face south on pictures. A necessary evil related to human species and limbs. humanoids would always face south while their clothes would face their actual direction, causing an ugly dissonance. If someone can make humans face their actual direction on pictures and not just their clothes, please do. I am unable to.</li>
+				<li class="bugfix">Mobs that are lying on the ground now appear as such pictures.</li>
+				<li class="bugfix">fixed windoors not properly staying open when you click on them</li>
+				<li class="bugfix">fixed windoors not being emaggable</li>
+			</ul>
+			<h3 class="author">N3X15 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">VLC is now used for all media, fixing issues with Windows Media Player.</li>
+				<li class="bugfix">Jukeboxes properly unhook from areas when unwrenched.</li>
+			</ul>
+			<h3 class="author">iconleap updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Make threat detectors usable again.</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.26</h2>
+			<h3 class="author">Deity Link updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">tweaked cult structucture sprites a little.</li>
+				<li class="tweak">red pylons now emit red light.</li>
+				<li class="tweak">red pylons have collisions, but can be broken just like light bulbs.</li>
+				<li class="rscadd">Artificers can spawn red pylons (20 seconds recharge time).</li>
+				<li class="tweak">in hell, cultified floor tiles convert light bulbs to red pylons.</li>
+				<li class="imageadd"><span class="redletter">NARSIE HAS GOTTEN A NEW LOOK</span>, twice more pixels! And his eyes glow in the dark.</li>
+				<li class="rscadd"><span class="redletter">NAR-SIE</span> now converts the station:<br>Floor tiles (except carpets) and Wall tiles are replaced with their cult counterparts.<br>Grilles are replaced with cult walls.<br>Light bulbs are replaced with Red Pylons..<br>External airlocks become wooden doors.<br>Books become arcane tomes.<br>Chairs become pretty wooden chairs.<br>Tables become wooden tables.<br>Most machines and all computers get replaced by various cult structures, unused up to now.</li>
+				<li class="tweak"><span class="redletter">NAR-SIE</span> ignores hell monsters (faithless/bats/creatures), constructs and shades.</li>
+				<li class="rscadd">once the shuttle docks, all the hell monsters will make their way toward escape (a few seconds of lag occur at the exact moment it docks).</li>
+				<li class="rscadd">admins can toggle <span class="redletter">NAR-SIE</span>'s behaviour to use either the new one or the old one at any time.</li>
+				<li class="tweak">once <span class="redletter">NAR-SIE HAS RISEN</span>, the rune count cap is removed.</li>
+				<li class="rscadd">constructs now have HUD icons for their spells. The icon updates depending on the spell's availability.</li>
+				<li class="rscadd">cult armor rune now lets you change a construct's type.</li>
+				<li class="rscadd">cultists get turned by <span class="redletter">NAR-SIE</span> into Harvester constructs:<br>Harvester constructs are as fast and powerful as wraith, and twice as durable,<br>they can see mobs through walls,<br>they can use runes and talismans, and write new runes every 10 seconds (without need for a tome or for cult words),<br>they can disintegrate doors in a radius of 3 tiles every 10 seconds,<br>they can teleport themselves and any other living mob on their tile back to NAR-SIE at anytime (unless that mob is carrying a null rod).</li>
+				<li class="rscadd">once <span class="redletter">NAR-SIE HAS RISEN</span>, pre-existing constructs can be turned into Harvesters by cult armor runes.</li>
+				<li class="rscadd">ghosts that touch <span class="redletter">NAR-SIE</span> become visible to the living.</li>
+				<li class="imageadd">these ghosts get provided with a new sprite.</li>
+				<li class="imageadd">added pretty spess overlay for once <span class="redletter">NAR-SIE HAS RISEN</span>.</li>
+				<li class="imageadd">added animations for a few runes (convert, teleport, imbue talisman, sacrifice).</li>
+				<li class="imageadd">added animations for tiles getting converted/doors getting disintegrated.</li>
+				<li class="rscadd">arcane tomes can FINALLY be put onto bookshelves (spellbooks as well, why not).</li>
+				<li class="imageadd">new sprite for construct shells.</li>
+				<li class="imageadd">cultists turned into monkeys can summon monkey-sized cult armor.</li>
+				<li class="tweak"><span class="redletter">NAR-SIE</span>'s sprite will now render even when he's hidden behind walls or when he's over 12 tiles from the player.</li>
+				<li class="rscadd"><span class="redletter">NAR-SIE</span> now leaves "footsteps". those footsteps may open path through walls.</li>
+			</ul>
+			<h3 class="author">Pomf123 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">Anybody can force open a firelock with a crowbar now.</li>
+				<li class="tweak">AI can now open or close firelocks.</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.25</h2>
+			<h3 class="author">Angelite Entyshak updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">added colored hats to the hat vendor</li>
+			</ul>
+			<h3 class="author">Cutelildick updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">The Excavation Gear Belt now actually holds damn Pickaxes, Hand Picks, and Welders.</li>
+				<li class="bugfix">Anomaly Harvester now charges batteries at the variable rate of chargemaxlevel / effectrange</li>
+				<li class="bugfix">Anomaly Analyzer now properly identifies Touch, Aura, and Pulse types.</li>
+				<li class="bugfix">The Anomaly Battery Utilizer menu is no longer a piece of shit and infinite range.</li>
+				<li class="bugfix">The Anomaly Battery Utilizer now actually works with Aura and Pulse types of effects.</li>
+				<li class="tweak">Large Artifact secondary effects now appear in the Analyzer all of the time, no activation needed.</li>
+				<li class="tweak">Large Artifacts now only accept reagents from glasses, beakers, and droppers.</li>
+				<li class="tweak">Droppers now properly lose their reagents when used on Large Artifacts.</li>
+			</ul>
+			<h3 class="author">Pomf123 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Gave detective thermals again for now.</li>
+				<li class="bugfix">Fixed mohawks.</li>
+				<li class="bugfix">Fixed erroneously removing brainchips or fixing a bleeder in your target's head when targetting anything but the head.</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.24</h2>
+			<h3 class="author">Clusterfack updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Stopped the emergency shuttle from leaving structures in place when it arrives (i.e. grilles)</li>
+			</ul>
+			<h3 class="author">Skowron updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Screams of agony are now audible. Tators beware!</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.23</h2>
+			<h3 class="author">Pomf123 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added hud indicator for external organ damage.</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.22</h2>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">Chameleon Projectors now force mobs into the object layer (and back) AND are no longer anchored. This should fix a large amount of problems, existing and potential</li>
+				<li class="tweak">Syringes, beakers, toolboxes, pills and chemistry bottles now recycle</li>
+				<li class="tweak">Beaker glass cost changed slightly</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.21</h2>
+			<h3 class="author">Deity Link updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Monkeys have two new inventory slots; Headwear and Uniform. They can wear any hat, but they can only wear monkey-sized uniforms.</li>
+				<li class="rscadd">Farwa and Neaera can use them slots as well, but Stok can only use hats. Diona can't use either :(</li>
+				<li class="imageadd">The unused Pun Pun sprite has been modified a bit so it can now be used for a monkey-sized waiter suit.</li>
+				<li class="rscadd">Added two of those suits in the bartender's closet at roundstart.</li>
+				<li class="imageadd">Duplicated the hat folder and edited some of them so they fit well on monkeys.</li>
+				<li class="imageadd">Added monkey-sized cult robes.</li>
+			</ul>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Atmospherics Automation Consoles can now be deconstructed and built as intended</li>
+				<li class="rscadd">Atmoshperics Automation Console boards can now be R&D'd (Programming 3)</li>
+				<li class="bugfix">Vending machines should no longer shock users remotely if someone else interacts with it after them</li>
+				<li class="tweak">If you get shocked while trying to interact with a vending machine, do not show the menu</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.20</h2>
+			<h3 class="author">Deity Link updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Slime Extracts can now be put in Large Chem Grenades (up to one) and Ex Chem Grenades (up to two). Mechanics explained <a href="https://cloud.githubusercontent.com/assets/7573912/4601459/fa2d7194-50ff-11e4-8f5f-dea1be8a82ca.png">here</a>.</li>
+				<li class="rscadd">The yellow slime extract + water reaction now actually does something to bring you light. Added <a href="https://cloud.githubusercontent.com/assets/7573912/4601438/55b4baba-50fe-11e4-9c67-9339b8817b17.gif">slime lamps</a>.</li>
+				<li class="tweak">Science Goggles now actually protect you from the slime extract reaction-based flashs (gold/silver slime reactions).</li>
+				<li class="tweak">Replaced "The solution begins to bubble." with fitting lines when the reaction occurs in a human's body or in a grenade.</li>
+				<li class="imageadd">over 57 items finally got their in-hand icons. belt too for some.</li>
+				<li class="experiment">Maracas. Chick-chiky boom, chick-chiky boom.</li>
+				<li class="rscadd">Adding maracas. Hold CTRL and move in all directions to shake them like Cuban Pete!</li>
+				<li class="rscadd">Added a pair of maracas to the Party supply crate</li>
+				<li class="rscadd">Awarding a pair of maracas to those who outbomb Cuban Pete</li>
+			</ul>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Re-add second bioprinter to Medbay</li>
+				<li class="wip">Reweighting event odds. Furthermore, events no longer trigger until about 50 minutes in. By all logic, this only affects DYNAMIC EVENTS, not admin ones</li>
+			</ul>
+			<h3 class="author">Pomf123 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Fixed turning streaming off causing the current streamed song to not stop, and to continue until it ended.</li>
+				<li class="bugfix">Fixed head reattachment surgery</li>
+			</ul>
+			<h3 class="author">iconleap updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">SORD now add 0.5 brute damage to the wielder (suggestion by jjenjr)</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.14</h2>
+			<h3 class="author">Deity Link updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Constructs' red "eyes" now glow in the dark, like the MoMMis' eyes</li>
+				<li class="rscadd">Added a Corgi UI</li>
+				<li class="rscadd">Added a Shade UI</li>
+				<li class="rscadd">Added a Construct UI</li>
+				<li class="bugfix">manifested ghosts are no longer affected by DNA Injectors.</li>
+				<li class="bugfix">manifested ghosts are no longer affected by green slimes/black slimes mutation toxins.</li>
+				<li class="bugfix">manifested ghosts can no longer be put in DNA Modifiers.</li>
+				<li class="bugfix">manifested ghosts are no longer affected by Staff of Change (yes, I do really intend to plug that loophole).</li>
+				<li class="bugfix">manifested ghosts can now see other cultists/ be seen by other cultists as one of them.</li>
+				<li class="bugfix">Fixed a runtime error caused by a missing sanity check in the Corgi UI.</li>
+				<li class="bugfix">Lockboxes that had their openned/closed state changed by an EMP now properly update their sprite</li>
+				<li class="tweak">Reworked the Temperature Gun. Explanations <a href="https://cloud.githubusercontent.com/assets/7573912/4605468/84cf561c-51e3-11e4-9912-fea92231110e.png">here</a>.</li>
+				<li class="tweak">Temperatures below 50K now deal 301 tox damage per tick to slimes instead of 200 per tick. Killing them instantly (since slimes die at -100 health).</li>
+				<li class="tweak">Syndicate Energy Crossbows now spawn at R&D inside a lockbox.</li>
+				<li class="tweak">When player controlled, simple_animals don't randomly move around or speak</li>
+				<li class="tweak">Reworked some of the corgi code, player-controlled corgi can now eat food, chase their tail.</li>
+				<li class="tweak">Bats, Creatures, and Faithless spawned accross the universe once Nar-Sie has risen no longer attack each others, they won't attack cultists either</li>
+				<li class="imageadd">Added a sprite for the Latex Glove boxes</li>
+				<li class="imageadd">Added a new sprite for the Juggernaut's Shield spell.</li>
+				<li class="imageadd">manifested ghosts are now their own mob (no longer Test Dummies) and as such have a new sprite.</li>
+				<li class="imageadd">added new animations for appearing/disappearing manifested ghosts.</li>
+			</ul>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="wip">Bioprinter now has density (aka solid, can't walk over it), can be anchored and deanchored using a wrench, has luminescence, uses top-quality visible_message and span</li>
+				<li class="tweak">Surgery now starts with three full advanced trauma kits to perform actual organ surgery. R&D never does their job, and lungs seem to be made of nitroglycerin now.</li>
+				<li class="wip">Changed how random events trigger. They now come faster, base on round duration and playercount, and event probability no longer matters on job counts</li>
+			</ul>
+			<h3 class="author">Pomf123 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added Necromancy to wizman in a very basic form, if it turns out to not be shit then I'll expand it maybe.</li>
+				<li class="bugfix">Fixed PDA not working with borgos.</li>
+				<li class="bugfix">Fixed cloning nonhuman mobs.</li>
+			</ul>
+			<h3 class="author">Skowron updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">New Vox quillstyles and facial quills for a special snowflake race.</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.05</h2>
+			<h3 class="author">Pomf123 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">Severely nerfed the holodeck burn test.</li>
+				<li class="tweak">DJ station jukebox starts off at round start to encourage players to find it and become the DJ.</li>
+			</ul>
+			<h3 class="author">Ririchiyo updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added the surgery icons from baystation. Included are some laser scapels which will be included in research later. They allow for bloodless incisions.</li>
+				<li class="rscadd">Added the bioprinters from baystation. These are used to print normal organs or prosthetic organs both should function about the same.</li>
+				<li class="experiment">Added the baystation organ removal system.</li>
+				<li class="experiment">Ported over changes baystation made to the advanced medical scanner, it should now properly show implants as well as some other information. It can now also print.</li>
+				<li class="experiment">Infections should be in and can affect people during surgery so make sure to wear gloves and properly clean yourself and your tools.</li>
+				<li class="experiment">Partially utilizing some of the baystation updateHud flags to see if it improves or doesn't help much in regard to UI updating.</li>
+				<li class="wip">Some of the surgery steps were changed. When dealing with the head most of the surgery is now the same as chest which should be easier to remember.</li>
+				<li class="wip">Fixing internal damage to an organ is now using an advanced trauma kit or nanopaste depending on the type of organ.</li>
+				<li class="bugfix">Small fix to a reagent that was producing a runtime which should hopefully be fixed now.</li>
+				<li class="tweak">Adjusted some variables related to species so administrators can adjust the species datum and modify how harmful something is to that species.</li>
+				<li class="tweak">Ported over the baystation blood_splatter() proc which should make it easier to deal with in the future.</li>
+				<li class="tweak">Ported over baystation's edge system which makes some objects have edges and sharp for dealing with specific kinds of injuries.</li>
+				<li class="tweak">Organs can fail and you can now treat necrosis with some of the organs with surgery with a FixOVein.</li>
+				<li class="tweak">There is now something new with fractures.</li>
+				<li class="tweak">Blood color should now be able to be changed and be the proper color.</li>
+				<li class="tweak">Some new chemistry reagents were ported from baystation that will be adjusted and included in the future at some point later.</li>
+			</ul>
+			<h3 class="author">iconleap updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">fixed syringe range exploit (thanks mrnewvegas for bug report).</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.03</h2>
+			<h3 class="author">Angelite Entyshak updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added an OOC and Me command buttons to the interface to streamline chat box related interactions.</li>
+			</ul>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Unfucking two checks in the Radiation Storm event, one that got monkeys kill every time, even when in protected areas</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.10.02</h2>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="spellcheck">Removed all broken <br /> tags from Malfunction code and tweaked the dialogue slightly</li>
+				<li class="tweak">Explode verb is now available from the start to fix wonky behavior. For obvious reasons, multiple checks were added to avoid early trigger</li>
+			</ul>
+			<h3 class="author">Hoshi-chan updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added foam extinguishers to MoMMIs and Engineering cyborgs. Added pill collector to Medical cyborgs. Added proto-kinetic accelerator to Mining cyborgs. Added bandages, ointment, and soap to Standard cyborgs.</li>
+				<li class="tweak">Cyborg lasers now recharge in cyborg recharge stations</li>
+				<li class="rscadd">Added splints to Medical cyborgs and activated charcoal to their upgraded cyborg hypospray. Added police tape and pepperspray to Security cyborgs. Added atmospherics and engineering tape to Engineering cyborgs.</li>
+				<li class="tweak">Replaced bandages and ointment on Medical cyborgs with advanced trauma and burn kits due to changes in the way that surgery is performed.</li>
+			</ul>
+			<h3 class="author">dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bufix">Body bag boxes (now body bag kits, sprite left unchanged) now behave correctly. Body bag naming code simplified</li>
+				<li class="bugfix">Flash range on bombs should now be functional.</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.09.30</h2>
+			<h3 class="author">Comic updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added new alternative jumpsuits for certain jobs. All new sprites are thanks to nameless.</li>
+			</ul>
+			<h3 class="author">Duny updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="imageadd">Added nameless' AI sprites (SHODAN, girl, boy, clover and Yotsuba holograms; girl, boy, malf versions of those and 4chan AI cores)</li>
+			</ul>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="wip">Streamlining Meteor code to try and reduce lag as much as possible. For those who wonder, the gamemode doesn't crash anymore, so that's that</li>
+				<li class="bugfix">Defibrilator is no longer one-use. Secondary delay has also been removed, now only attack delay (1 s) and setup delay (5 s) actually count</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.09.27</h2>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="wip">Ported AI HUD for /tg/station</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.09.26</h2>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">Attempting to fix the defibrilator further. Please ensure to get AS MUCH INFO AS POSSIBLE if there are problems with it still. Anything counts</li>
+			</ul>
+			<h3 class="author">Ririchiyo updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added an add reagent verb for administrators.</li>
+				<li class="rscadd">Added a way for administrators to add custom virus2 diseases.</li>
+				<li class="bugfix">Fixed a couple of bugs with diseases where sunglasses, horse heads, and clown masks were replicating forever.</li>
+				<li class="experiment">Switched the preference system from flatfile over to an sqlite database -- expect there to be a few bugs.</li>
+			</ul>
+			<h3 class="author">Skowron updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Nuclear op suit sprite for vox</li>
+				<li class="tweak">Vox can now wear nukeop suits</li>
+				<li class="tweak">Vox nukeops should now spawn with proper internals</li>
+			</ul>
+			<h3 class="author">Wild Bill updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Fixed ghosts interacting with shieldgens and shield_gens</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.09.21</h2>
+			<h3 class="author">Duny updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="wip">Efficiency - Added faxes to the bridge and IAA office, fixed research outpost dock.</li>
+			</ul>
+			<h3 class="author">Skowron updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added soviet vending machine with fitting costumes.</li>
+				<li class="rscadd">Added soviet and nazi themed hardsuits and energy weaponry.</li>
+				<li class="rscadd">Added alternate versions of the soviet and nazi vending machines with contraband hardsuits and weapons. Potentially hilarious or disastrous.</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.09.19</h2>
+			<h3 class="author">Dylanstrategie updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="wip">Added Security Toilets, Secure Armory, Medbay Storage and Science Shuttle Bay areas. Tweaked hallway areas to unfuck shuttle alert sprites</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.09.18</h2>
+			<h3 class="author">Duny updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="wip">Defficiency - Changed a whole bunch of things. See github for more precisions.</li>
+				<li class="bugfix">Box - Fixed atmos techs not having access to the engineering pod.</li>
+				<li class="bugfix">Box - Fixed tech storage camera showing the outside of robotics.</li>
+				<li class="tweak">Box - The virology access door south of medbay can now be open by anyone with medbay access. Previously virology only.</li>
+				<li class="tweak">Box - Fireaxe cabinets are back to being locked at roundstart.</li>
+			</ul>
+			<h3 class="author">Pomf123 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Fix ryetalyn not removing genes and their spells/verbs properly. No more getting multiple hulk or leap activations.</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.09.16</h2>
+			<h3 class="author">Duny updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="tweak">Made an attempt at unfucking cargo's air alarm. The ore redemption machine now prevents gases from getting through.</li>
+				<li class="tweak">Another attempt at unfucking cargo. Cargo lobby, delivery and office are now their own areas. Delivery office now has a windoor at its desk, and the plastic flaps are now airtight.</li>
+			</ul>
+			<h3 class="author">Wild Bill updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Fixed viro maint not being radiation-shielded</li>
+				<li class="bugfix">Fixed silicons grabbing things from deep fryers</li>
+				<li class="bugfix">Fixed strange "You cannot say that...?" debug message</li>
+				<li class="bugfix">Fixed unpowered wires shocking people</li>
+				<li class="bugfix">Fixed ghosts interacting with AI/cyborg uploads</li>
+				<li class="tweak">Refactored new cooking machines and custom foods</li>
+				<li class="tweak">Added various vars and an adminverb for cooking silliness</li>
+				<li class="tweak">Lowered defult custom food size cap (to 30 from 600)</li>
+				<li class="bugfix">Fixed robutts deep-frying their modules</li>
+				<li class="bugfix">Fixed ghosts printing books</li>
+				<li class="bugfix">Fixed deconstructive analyzer eating items</li>
+				<li class="bugfix">Fixed apiaries spawning hydro tray parts when attached</li>
+				<li class="bugfix">Fixed dirt spawning hydro tray parts when cleaned up</li>
+				<li class="bugfix">Fixed airlocks being un-emag-able</li>
+				<li class="bugfix">Fixed airlocks spawning multiple door assemblies</li>
+				<li class="bugfix">Fixed pizza boxes eating pizza</li>
+				<li class="bugfix">Fixed constructs being useless due to ZAS perma-stun</li>
+				<li class="rscadd">Added map objects (spawners + nests) for mappers to use</li>
+				<li class="bugfix">Fixed missing custom food sprites/overlays</li>
+				<li class="bugfix">Fixed a variety of roundstart runtimes</li>
+				<li class="rscdel">Removed a bunch of old unused shit</li>
+			</ul>
+		</div>
+
+		<div class="commit sansserif">
+			<h2 class="date">2014.09.13</h2>
+			<h3 class="author">Spike68 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Fixed bug '#1381 Door timing override does nothing'. Also fixed doors not closing when they are expected to.</li>
+				<li class="bugfix">Fixes bug '#1412 Gibtonite in-hand sprite is a spear'</li>
+			</ul>
+		</div>
 
 		<div class="commit sansserif">
 			<h2 class="date">2014.08.22</h2>

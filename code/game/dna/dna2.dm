@@ -29,11 +29,8 @@
 #define DNA_UI_EYES_B      10
 #define DNA_UI_GENDER      11
 #define DNA_UI_BEARD_STYLE 12
-#define DNA_UI_SKIN_R      13
-#define DNA_UI_SKIN_G      14
-#define DNA_UI_SKIN_B      15
-#define DNA_UI_HAIR_STYLE  16
-#define DNA_UI_LENGTH      16 // Update this when you add something, or you WILL break shit.
+#define DNA_UI_HAIR_STYLE  13
+#define DNA_UI_LENGTH      13 // Update this when you add something, or you WILL break shit.
 
 #define DNA_SE_LENGTH 50 // Was STRUCDNASIZE, size 27. 15 new blocks added = 42, plus room to grow.
 
@@ -52,6 +49,42 @@ var/global/list/datum/dna/gene/dna_genes[0]
 var/global/list/good_blocks[0]
 var/global/list/bad_blocks[0]
 
+var/global/list/skin_styles_female_list = list() //Unused
+
+// Hair Lists //////////////////////////////////////////////////
+
+var/global/list/hair_styles_list				= list()
+var/global/list/hair_styles_male_list			= list()
+var/global/list/hair_styles_female_list			= list()
+var/global/list/facial_hair_styles_list			= list()
+var/global/list/facial_hair_styles_male_list	= list()
+var/global/list/facial_hair_styles_female_list	= list()
+
+/proc/buildHairLists()
+	var/list/paths
+	var/datum/sprite_accessory/hair/H
+	paths = typesof(/datum/sprite_accessory/hair) - /datum/sprite_accessory/hair
+	for(. in paths)
+		H = new .
+		hair_styles_list[H.name] = H
+		switch(H.gender)
+			if(MALE)	hair_styles_male_list += H.name
+			if(FEMALE)	hair_styles_female_list += H.name
+			else
+				hair_styles_male_list += H.name
+				hair_styles_female_list += H.name
+	paths = typesof(/datum/sprite_accessory/facial_hair) - /datum/sprite_accessory/facial_hair
+	for(. in paths)
+		H = new .
+		facial_hair_styles_list[H.name] = H
+		switch(H.gender)
+			if(MALE)	facial_hair_styles_male_list += H.name
+			if(FEMALE)	facial_hair_styles_female_list += H.name
+			else
+				facial_hair_styles_male_list += H.name
+				facial_hair_styles_female_list += H.name
+	return
+	
 /////////////////
 // GENE DEFINES
 /////////////////
@@ -150,10 +183,6 @@ var/global/list/bad_blocks[0]
 	SetUIValueRange(DNA_UI_EYES_R,    character.r_eyes,    255,    1)
 	SetUIValueRange(DNA_UI_EYES_G,    character.g_eyes,    255,    1)
 	SetUIValueRange(DNA_UI_EYES_B,    character.b_eyes,    255,    1)
-
-	SetUIValueRange(DNA_UI_SKIN_R,    character.r_skin,    255,    1)
-	SetUIValueRange(DNA_UI_SKIN_G,    character.g_skin,    255,    1)
-	SetUIValueRange(DNA_UI_SKIN_B,    character.b_skin,    255,    1)
 
 	SetUIValueRange(DNA_UI_SKIN_TONE, 35-character.s_tone, 220,    1) // Value can be negative.
 

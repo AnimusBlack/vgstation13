@@ -29,12 +29,6 @@
 		if(M.lying)	return
 		if(istype(M, /mob/living/carbon/human))
 			var/mob/living/carbon/human/H = M
-			if(locate(/obj/item/weapon, src) && prob(5) && H.m_intent == "run")
-				H.stop_pulling()
-				H << "\blue You stumbled over something!"
-				playsound(get_turf(src), 'sound/weapons/thudswoosh.ogg', 50, 1, -3)
-				H.Stun(2)
-				H.Weaken(2)
 			if(istype(H.shoes, /obj/item/clothing/shoes/clown_shoes))
 				var/obj/item/clothing/shoes/clown_shoes/O = H.shoes
 				if(H.m_intent == "run")
@@ -45,11 +39,6 @@
 						O.footstep++
 				else
 					playsound(src, "clownstep", 20, 1)
-			else if(H.shoes)
-				if(H.m_intent == "run")
-					playsound(src, pick('sound/effects/footsteps/concrete_step2.ogg','sound/effects/footsteps/concrete_step3.ogg','sound/effects/footsteps/concrete_step4.ogg'), 25, 1) // this will get annoying very fast.
-				else
-					playsound(src, 'sound/effects/footsteps/concrete_step5.ogg', 20, 1)
 
 			// Tracking blood
 			var/list/bloodDNA = null
@@ -167,23 +156,19 @@
 	for(var/obj/effect/decal/cleanable/blood/B in contents)
 		if(!B.blood_DNA[M.dna.unique_enzymes])
 			B.blood_DNA[M.dna.unique_enzymes] = M.dna.b_type
+			B.virus2 = virus_copylist(M.virus2)
 		return 1 //we bloodied the floor
 
-	//if there isn't a blood decal already, make one.
-	var/obj/effect/decal/cleanable/blood/newblood = new /obj/effect/decal/cleanable/blood(src)
-	newblood.blood_DNA[M.dna.unique_enzymes] = M.dna.b_type
+	blood_splatter(src,M.get_blood(M.vessel),1)
 	return 1 //we bloodied the floor
 
 
 // Only adds blood on the floor -- Skie
 /turf/simulated/proc/add_blood_floor(mob/living/carbon/M as mob)
-	if( istype(M, /mob/living/carbon/monkey) || istype(M, /mob/living/carbon/human))
-		var/obj/effect/decal/cleanable/blood/this = new /obj/effect/decal/cleanable/blood(src)
-		this.blood_DNA[M.dna.unique_enzymes] = M.dna.b_type
-
+	if(istype(M, /mob/living/carbon/monkey))
+		blood_splatter(src,M,1)
 	else if( istype(M, /mob/living/carbon/alien ))
 		var/obj/effect/decal/cleanable/blood/xeno/this = new /obj/effect/decal/cleanable/blood/xeno(src)
 		this.blood_DNA["UNKNOWN BLOOD"] = "X*"
-
 	else if( istype(M, /mob/living/silicon/robot ))
 		new /obj/effect/decal/cleanable/blood/oil(src)

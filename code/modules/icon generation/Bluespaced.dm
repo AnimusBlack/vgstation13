@@ -236,4 +236,8 @@
 	set src in view()
 	src.icon = generate_bluespace_icon(src.icon, src.icon_state)
 
+/mob/verb/bluespam()
+	for(var/turf/t in view(5))
+		var/obj/s = new /obj/square(t)
+		s.icon = generate_bluespace_icon(s.icon, s.icon_state)
 
