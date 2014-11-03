@@ -73,7 +73,6 @@ var/global/list/organ_damage_overlays = list(
 	var/oxygen_alert = 0
 	var/toxins_alert = 0
 	var/fire_alert = 0
-	var/havecancer = 0
 	var/pressure_alert = 0
 	var/prev_gender = null // Debug for plural genders
 	var/temperature_alert = 0
@@ -1450,23 +1449,6 @@ var/global/list/organ_damage_overlays = list(
 			if (getToxLoss() >= 45 && nutrition > 20)
 				vomit()
 
-			if((air_master.current_cycle % 3) == 0)
-				if (getToxLoss() >= 40)
-					var/chancesick = (getToxLoss() / 4)
-					if(havecancer == 0)
-						if(prob(chancesick))
-							havecancer = 1
-				if(havecancer)
-					if(prob(10))
-						Get_Cancer()
-					if(prob(20))
-						emote("cough")
-					if(src.radiation >= 50)
-						havecancer = 0
-						src.h_style = "Bald"
-						src.f_style = "Shaved"
-						src.update_hair()
-
 			// No hair for radroaches
 			if(src.radiation >= 50)
 				src.h_style = "Bald"
@@ -1595,12 +1577,6 @@ var/global/list/organ_damage_overlays = list(
 		if(shock_stage >= 150)
 			Weaken(20)
 
-		if(mind && shock_stage >= 10 && prob(5))
-			if((mind.active && client != null))
-				client.view = pick (6,8)
-				spawn(5)
-					client.view = world.view
-
 	proc/handle_pulse()
 
 		if(life_tick % 5) return pulse	//update pulse every 5 life ticks (~1 tick/sec, depending on server load)
@@ -1636,24 +1612,6 @@ var/global/list/organ_damage_overlays = list(
 					temp = PULSE_NONE
 
 		return temp
-
-/mob/living/carbon/human/proc/Get_Cancer()
-	if(!(ishuman(src)))
-		return
-	var/obj/item/weapon/implant/cancer/imp = new(src)
-
-
-
-	if(imp.implanted(src))
-		imp.loc = src
-		imp.imp_in = src
-		imp.implanted = 1
-		var/mob/living/carbon/human/H = src
-		var/datum/organ/external/affected = H.get_organ(randorgan())
-		affected.implants += imp
-		imp.part = affected
-
-	return
 
 /mob/living/carbon/human/proc/randorgan()
 	var/randorgan = pick("head","chest","l_arm","r_arm","l_hand","r_hand","groin","l_leg","r_leg","l_foot","r_foot")
