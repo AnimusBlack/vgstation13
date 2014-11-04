@@ -152,13 +152,13 @@
 		O.show_laws()
 		O << "<b>These laws may be changed by other players, or by you being the traitor.</b>"
 
-	O.verbs += /mob/living/silicon/ai/proc/ai_call_shuttle
+	//O.verbs += /mob/living/silicon/ai/proc/ai_call_shuttle
 	O.verbs += /mob/living/silicon/ai/proc/show_laws_verb
-	O.verbs += /mob/living/silicon/ai/proc/ai_camera_track
-	O.verbs += /mob/living/silicon/ai/proc/ai_alerts
-	O.verbs += /mob/living/silicon/ai/proc/ai_camera_list
+	//O.verbs += /mob/living/silicon/ai/proc/ai_camera_track
+	//O.verbs += /mob/living/silicon/ai/proc/ai_alerts
+	//O.verbs += /mob/living/silicon/ai/proc/ai_camera_list
 	O.verbs += /mob/living/silicon/ai/proc/ai_statuschange
-	O.verbs += /mob/living/silicon/ai/proc/ai_roster
+	//O.verbs += /mob/living/silicon/ai/proc/ai_roster
 
 	O.job = "AI"
 
@@ -168,11 +168,14 @@
 
 
 //human -> robot
-/mob/living/carbon/human/proc/Robotize()
+/mob/living/carbon/human/proc/Robotize(var/delete_items = 0)
 	if (monkeyizing)
 		return
 	for(var/obj/item/W in src)
-		drop_from_inventory(W)
+		if(delete_items)
+			del(W)
+		else
+			drop_from_inventory(W)
 	regenerate_icons()
 	monkeyizing = 1
 	canmove = 0
@@ -188,7 +191,6 @@
 	O.cell.maxcharge = 7500
 	O.cell.charge = 7500
 
-
 	O.gender = gender
 	O.invisibility = 0
 
@@ -196,24 +198,16 @@
 		mind.transfer_to(O)
 		if(O.mind.assigned_role == "Cyborg")
 			O.mind.original = O
-		else if(mind && mind.special_role)
+		else if(mind&&mind.special_role)
 			O.mind.store_memory("In case you look at this after being borged, the objectives are only here until I find a way to make them not show up for you, as I can't simply delete them without screwing up round-end reporting. --NeoFite")
 	else
 		O.key = key
 
 	O.loc = loc
 	O.job = "Cyborg"
-	if(O.mind.assigned_role == "Cyborg")
-		if(O.mind.role_alt_title == "Android")
-			O.mmi = new /obj/item/device/mmi/posibrain(O)
-		else if(O.mind.role_alt_title == "Robot")
-			O.mmi = null //Robots do not have removable brains.
-		else
-			O.mmi = new /obj/item/device/mmi(O)
 
-		if(O.mmi) O.mmi.transfer_identity(src) //Does not transfer key/client.
-
-	callHook("borgify", list(O))
+	O.mmi = new /obj/item/device/mmi(O)
+	O.mmi.transfer_identity(src)//Does not transfer key/client.
 
 	O.Namepick()
 

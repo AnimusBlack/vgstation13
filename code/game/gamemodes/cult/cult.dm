@@ -23,9 +23,9 @@
 	restricted_jobs = list("Chaplain","AI", "Cyborg", "Security Officer", "Warden", "Detective", "Head of Security", "Captain", "Internal Affairs Agent", "Mobile MMI")
 	protected_jobs = list()
 	required_players = 5
-	required_players_secret = 15
-	required_enemies = 3
-	recommended_enemies = 4
+	required_players_secret = 10
+	required_enemies = 2
+	recommended_enemies = 3
 
 	uplink_welcome = "Nar-Sie Uplink Console:"
 	uplink_uses = 10
@@ -93,7 +93,11 @@
 
 		if(possible_targets.len > 0)
 			sacrifice_target = pick(possible_targets)
-
+		if(!sacrifice_target)
+			for(var/datum/mind/possible_target in ticker.minds)
+				if(ishuman(possible_target.current) && (possible_target.current.stat != 2) && !(possible_target in cult))
+					possible_targets += possible_target
+			sacrifice_target = pick(possible_targets)
 	for(var/datum/mind/cult_mind in cult)
 		equip_cultist(cult_mind.current)
 		grant_runeword(cult_mind.current)

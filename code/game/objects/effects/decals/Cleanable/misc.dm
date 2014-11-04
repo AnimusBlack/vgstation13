@@ -10,7 +10,6 @@
 
 /obj/effect/decal/cleanable/ash
 	name = "ashes"
-	autoignition_temperature = 0
 	desc = "Ashes to ashes, dust to dust, and into space."
 	gender = PLURAL
 	icon = 'icons/obj/objects.dmi'

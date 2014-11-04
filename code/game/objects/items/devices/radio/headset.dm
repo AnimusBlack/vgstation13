@@ -101,13 +101,6 @@
 	item_state = "headset"
 	keyslot2 = new /obj/item/device/encryptionkey/heads/captain
 
-/obj/item/device/radio/headset/heads/centcomm
-	name = "centcomm officer's headset"
-	desc = "The headset of the NanoTrasen representative. Channels are as follows: :c - command, :s - security, :e - engineering, :u - supply, :d - service, :m - medical, :n - science, :h - central command."
-	icon_state = "com_headset"
-	item_state = "headset"
-	keyslot2 = new /obj/item/device/encryptionkey/heads/centcomm
-
 /obj/item/device/radio/headset/heads/rd
 	name = "Research Director's headset"
 	desc = "Headset of the researching God. To access the science channel, use :n. For command, use :c."

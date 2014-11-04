@@ -2,6 +2,26 @@
 	Datum-based species. Should make for much cleaner and easier to maintain mutantrace code.
 */
 
+// Global Lists ////////////////////////////////////////////////
+
+var/global/list/all_species = list()
+var/global/list/all_languages = list()
+var/global/list/whitelisted_species = list("Human")
+
+/proc/buildSpeciesLists()
+	var/datum/language/L
+	var/datum/species/S
+	for(. in (typesof(/datum/language)-/datum/language))
+		L = new .
+		all_languages[L.name] = L
+	for(. in (typesof(/datum/species)-/datum/species))
+		S = new .
+		all_species[S.name] = S
+		if(S.flags & WHITELISTED) whitelisted_species += S.name
+	return
+
+////////////////////////////////////////////////////////////////
+
 /datum/species
 	var/name                     // Species name.
 
@@ -44,6 +64,11 @@
 	var/brute_resist    // Physical damage reduction.
 	var/burn_resist     // Burn damage reduction.
 
+	var/brute_mod 		// brute multiplier
+	var/burn_mod		// burn multiplier
+
+	var/body_temperature = 310.15
+
 	// For grays
 	var/max_hurt_damage = 5 // Max melee damage dealt + 5 if hulk
 	var/list/default_mutations = list()
@@ -54,9 +79,9 @@
 
 	var/list/abilities = list()	// For species-derived or admin-given powers
 
-	var/blood_color = "#A10808" // Red.
-	var/flesh_color = "#FFC896" // Pink.
-
+	var/blood_color = "#A10808" //Red.
+	var/flesh_color = "#FFC896" //Pink.
+	var/base_color      //Used when setting species.
 	var/uniform_icons = 'icons/mob/uniform.dmi'
 	var/fat_uniform_icons = 'icons/mob/uniform_fat.dmi'
 	var/gloves_icons    = 'icons/mob/hands.dmi'
@@ -67,8 +92,22 @@
 	var/belt_icons      = 'icons/mob/belt.dmi'
 	var/wear_suit_icons = 'icons/mob/suit.dmi'
 	var/wear_mask_icons = 'icons/mob/mask.dmi'
-	var/base_color
 	var/back_icons      = 'icons/mob/back.dmi'
+
+
+	//Used in icon caching.
+	var/race_key = 0
+	var/icon/icon_template
+
+	var/list/has_organ = list(
+		"heart" =    /datum/organ/internal/heart,
+		"lungs" =    /datum/organ/internal/lungs,
+		"liver" =    /datum/organ/internal/liver,
+		"kidneys" =  /datum/organ/internal/kidney,
+		"brain" =    /datum/organ/internal/brain,
+		"appendix" = /datum/organ/internal/appendix,
+		"eyes" =     /datum/organ/internal/eyes
+		)
 
 /datum/species/proc/create_organs(var/mob/living/carbon/human/H) //Handles creation of mob organs.
 
@@ -87,12 +126,9 @@
 	H.organs_by_name["r_foot"] = new/datum/organ/external/r_foot(H.organs_by_name["r_leg"])
 
 	H.internal_organs = list()
-	H.internal_organs_by_name["heart"] = new/datum/organ/internal/heart(H)
-	H.internal_organs_by_name["lungs"] = new/datum/organ/internal/lungs(H)
-	H.internal_organs_by_name["liver"] = new/datum/organ/internal/liver(H)
-	H.internal_organs_by_name["kidney"] = new/datum/organ/internal/kidney(H)
-	H.internal_organs_by_name["brain"] = new/datum/organ/internal/brain(H)
-	H.internal_organs_by_name["eyes"] = new/datum/organ/internal/eyes(H)
+	for(var/organ in has_organ)
+		var/organ_type = has_organ[organ]
+		H.internal_organs_by_name[organ] = new organ_type(H)
 
 	for(var/name in H.organs_by_name)
 		H.organs += H.organs_by_name[name]
@@ -100,15 +136,14 @@
 	for(var/datum/organ/external/O in H.organs)
 		O.owner = H
 
-	/*
 	if(flags & IS_SYNTHETIC)
 		for(var/datum/organ/external/E in H.organs)
 			if(E.status & ORGAN_CUT_AWAY || E.status & ORGAN_DESTROYED) continue
 			E.status |= ORGAN_ROBOT
 		for(var/datum/organ/internal/I in H.internal_organs)
 			I.mechanize()
-	*/
 
+/datum/species/proc/handle_post_spawn(var/mob/living/carbon/human/H) //Handles anything not already covered by basic species assignment.
 	return
 
 /datum/species/proc/handle_breath(var/datum/gas_mixture/breath, var/mob/living/carbon/human/H)
@@ -262,9 +297,6 @@
 					H.fire_alert = max(H.fire_alert, 2)
 	return 1
 
-/datum/species/proc/handle_post_spawn(var/mob/living/carbon/C) //Handles anything not already covered by basic species assignment.
-	return
-
 // Used for species-specific names (Vox, etc)
 /datum/species/proc/makeName(var/gender,var/mob/living/carbon/C=null)
 	if(gender==FEMALE)	return capitalize(pick(first_names_female)) + " " + capitalize(pick(last_names))
@@ -294,6 +326,15 @@
 
 	flags = HAS_SKIN_TONE | HAS_LIPS | HAS_UNDERWEAR | CAN_BE_FAT
 
+/datum/species/manifested
+	name = "Manifested"
+	icobase = 'icons/mob/human_races/r_manifested.dmi'
+	deform = 'icons/mob/human_races/r_def_manifested.dmi'
+	language = "Sol Common"
+	primitive = /mob/living/carbon/monkey
+
+	flags = HAS_SKIN_TONE | HAS_LIPS | HAS_UNDERWEAR | CAN_BE_FAT
+
 /datum/species/unathi
 	name = "Unathi"
 	icobase = 'icons/mob/human_races/r_lizard.dmi'
@@ -303,7 +344,6 @@
 	attack_verb = "scratch"
 	punch_damage = 5
 	primitive = /mob/living/carbon/monkey/unathi
-	base_color = "#066000"
 	darksight = 3
 
 	cold_level_1 = 280 //Default 260 - Lower is better
@@ -314,7 +354,7 @@
 	heat_level_2 = 480 //Default 400
 	heat_level_3 = 1100 //Default 1000
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL | HAS_SKIN_COLOR
+	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL
 
 	flesh_color = "#34AF10"
 
@@ -330,7 +370,7 @@
 	language = "Clatter"
 	attack_verb = "punch"
 
-	flags = HAS_LIPS | /*HAS_TAIL | NO_EAT |*/ NO_BREATHE /*| NON_GENDERED*/ | NO_BLOOD
+	flags = IS_WHITELISTED | HAS_LIPS | /*HAS_TAIL | NO_EAT |*/ NO_BREATHE /*| NON_GENDERED*/ | NO_BLOOD
 
 	default_mutations=list(SKELETON)
 
@@ -348,7 +388,6 @@
 	tail = "tajtail"
 	attack_verb = "scratch"
 	punch_damage = 5
-	base_color = "#000000"
 	darksight = 8
 
 	cold_level_1 = 200 //Default 260
@@ -361,7 +400,7 @@
 
 	primitive = /mob/living/carbon/monkey/tajara
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL | HAS_SKIN_COLOR
+	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_TAIL
 
 	flesh_color = "#AFA59E"
 
@@ -377,7 +416,7 @@
 			"silly rabbit",
 			"sandwich", // won't work too well with plurals OH WELL
 			"recolor",
-			"party foxy"
+			"party pooper"
 		)
 	)
 	filter.addWordReplacement("me","meow")
@@ -394,14 +433,14 @@
 		message = ""
 		if(prob(50))
 			message = pick(
-				"MEOW!",
-				"Purr. Purr.",
-				"Raaaawr!",
+				"GOD, PLEASE",
+				"NO, GOD",
+				"AGGGGGGGH",
 			)+" "
 		message += pick(
-			"Meowl!",
-			"Surrrf",
-			"Mooowrl",
+			"KILL ME",
+			"END MY SUFFERING",
+			"I CAN'T DO THIS ANYMORE",
 		)
 		return message
 	if(copytext(message, 1, 2) != "*")
@@ -421,15 +460,11 @@
 
 	primitive = /mob/living/carbon/monkey // TODO
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | CAN_BE_FAT
+	flags = WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | CAN_BE_FAT
 
 	// Both must be set or it's only a 45% chance of manifesting.
 	default_mutations=list(M_REMOTE_TALK)
 	default_block_names=list("REMOTETALK")
-
-	equip(var/mob/living/carbon/human/H)
-		H.gender = "male"
-		H.prev_gender = "male"
 
 /datum/species/muton // /vg/
 	name = "Muton"
@@ -462,7 +497,7 @@
 	language = "Skrellian"
 	primitive = /mob/living/carbon/monkey/skrell
 
-	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_SKIN_COLOR
+	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR
 
 	flesh_color = "#8CD7A3"
 
@@ -484,7 +519,7 @@
 	eyes = "vox_eyes_s"
 	breath_type = "nitrogen"
 
-	flags = IS_WHITELISTED | NO_SCAN | NO_BLOOD
+	flags = WHITELISTED | NO_SCAN | NO_BLOOD
 
 	blood_color = "#2299FC"
 	flesh_color = "#808D11"
@@ -567,34 +602,7 @@
 	heat_level_2 = 3000
 	heat_level_3 = 4000
 
-	flags = NO_BREATHE | REQUIRE_LIGHT | NO_SCAN | IS_PLANT | RAD_ABSORB | NO_BLOOD | IS_SLOW | NO_PAIN
+	flags = IS_WHITELISTED | NO_BREATHE | REQUIRE_LIGHT | NO_SCAN | IS_PLANT | RAD_ABSORB | NO_BLOOD | IS_SLOW | NO_PAIN
 
 	blood_color = "#004400"
 	flesh_color = "#907E4A"
-
-/datum/species/ipc
-	name = "IPC"
-	icobase = 'icons/mob/human_races/r_machine.dmi'
-	deform = 'icons/mob/human_races/r_machine.dmi'
-	language = "Sol Common"
-	attack_verb = "bumps"
-	punch_damage = 3
-	primitive = /mob/living/carbon/monkey/
-	darksight = 3
-
-	cold_level_1 = 220 //Default 260 - Lower is better
-	cold_level_2 = 180 //Default 200
-	cold_level_3 = 100 //Default 120
-
-	heat_level_1 = 560 //Default 360 - Higher is better
-	heat_level_2 = 680 //Default 400
-	heat_level_3 = 1100 //Default 1000
-
-	flags = IS_WHITELISTED | NO_BREATHE | NO_BLOOD | NO_PAIN
-
-	blood_color = "#000000"
-	flesh_color = "#333333"
-
-	equip(var/mob/living/carbon/human/H)
-		H.gender = "male"
-		H.prev_gender = "male"

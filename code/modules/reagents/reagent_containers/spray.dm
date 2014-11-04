@@ -134,19 +134,6 @@
 	..()
 	reagents.add_reagent("condensedcapsaicin", 40)
 
-/obj/item/weapon/reagent_containers/spray/pepperelited
-	name = "pepperspray"
-	desc = "Manufactured by InspectionInc, used to blind and down an opponent quickly."
-	icon = 'icons/obj/weapons.dmi'
-	icon_state = "pepperspray_old"
-	item_state = "pepperspray_old"
-	volume = 9000
-	amount_per_transfer_from_this = 40
-
-
-/obj/item/weapon/reagent_containers/spray/pepper/New()
-	..()
-	reagents.add_reagent("condensedcapsaicin", 9000)
 
 //chemsprayer
 /obj/item/weapon/reagent_containers/spray/chemsprayer
@@ -252,8 +239,6 @@
 
 
 /obj/item/weapon/reagent_containers/spray/plantbgone/afterattack(atom/A as mob|obj, mob/user as mob)
-	if (istype(A, /obj/machinery/hydroponics)) // We are targeting hydrotray
-		return
 
 	if (istype(A, /obj/effect/blob)) // blob damage in blob code
 		return

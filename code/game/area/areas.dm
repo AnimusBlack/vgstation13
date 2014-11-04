@@ -377,14 +377,16 @@
 	CallHook("MobAreaChange", list("mob" = M, "new" = Obj.areaMaster, "old" = oldAreaMaster))
 
 	// Being ready when you change areas gives you a chance to avoid falling all together.
-	if (!oldAreaMaster.has_gravity && M.areaMaster.has_gravity && M.m_intent == "run")
+	if(!oldAreaMaster || !M.areaMaster)
+		thunk(M)
+	else if (!oldAreaMaster.has_gravity && M.areaMaster.has_gravity && M.m_intent == "run")
 		thunk(M)
 
 	if (isnull(M.client))
 		return
 
 	if (M.client.prefs.toggles & SOUND_AMBIENCE)
-		if (!M.client.ambience_playing)
+		if (isnull(M.areaMaster.media_source) && !M.client.ambience_playing)
 			M.client.ambience_playing = 1
 			var/sound = 'sound/ambience/shipambience.ogg'
 
@@ -407,7 +409,7 @@
 				else if (istype(src, /area/shuttle/salvage/derelict))
 					sound = pick('sound/ambience/derelict1.ogg', 'sound/ambience/derelict2.ogg', 'sound/ambience/derelict3.ogg', 'sound/ambience/derelict4.ogg')
 				else if (istype(src, /area/mine/explored) || istype(src, /area/mine/unexplored))
-					sound = pick('sound/ambience/ambimine.ogg', 'sound/ambience/song_game.ogg')
+					sound = pick('sound/ambience/ambimine.ogg', 'sound/ambience/song_game.ogg', 'sound/music/torvus.ogg')
 				else if (istype(src, /area/maintenance/fsmaint2) || istype(src, /area/maintenance/port) || istype(src, /area/maintenance/aft) || istype(src, /area/maintenance/asmaint))
 					sound = pick('sound/ambience/spookymaint1.ogg', 'sound/ambience/spookymaint2.ogg')
 				else if (istype(src, /area/tcommsat) || istype(src, /area/turret_protected/tcomwest) || istype(src, /area/turret_protected/tcomeast) || istype(src, /area/turret_protected/tcomfoyer) || istype(src, /area/turret_protected/tcomsat))
