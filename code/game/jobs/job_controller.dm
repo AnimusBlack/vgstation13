@@ -192,17 +192,16 @@ var/global/datum/controller/occupations/job_master
 		Debug("Running DO")
 		SetupOccupations()
 
-		//Holder for Triumvirate is stored in the ticker, this just processes it
+/*		//Holder for Triumvirate is stored in the ticker, this just processes it
 		if(ticker)
 			for(var/datum/job/ai/A in occupations)
 				if(ticker.triai)
-					A.spawn_positions = 3
+					A.spawn_positions = 3 */
 
 		//Get the players who are ready
 		for(var/mob/new_player/player in player_list)
 			if(player.ready && player.mind && !player.mind.assigned_role)
 				unassigned += player
-				if(player.client.prefs.randomslot) player.client.prefs.random_character_sqlite(player, player.ckey)
 		Debug("DO, Len: [unassigned.len]")
 		if(unassigned.len == 0)	return 0
 

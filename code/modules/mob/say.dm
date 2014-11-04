@@ -126,11 +126,9 @@
 
 	return "<span class='say_quote'>[speech_verb],</span> \"<span class='[speech_style]'>[text]</span>\""
 
-
-/mob/proc/emote(var/act, var/type, var/message, var/auto)
+/mob/proc/emote(var/act, var/type, var/message)
 	if(act == "me")
 		return custom_emote(type, message)
-
 
 /mob/proc/get_ear()
 	// returns an atom representing a location on the map from which this

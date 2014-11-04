@@ -1,6 +1,3 @@
-/obj/effect/decal/remains/cultify()
-	return
-
 /obj/effect/decal/remains/human
 	name = "remains"
 	desc = "They look like human remains. They have a strange aura about them."

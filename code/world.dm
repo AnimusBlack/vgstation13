@@ -7,7 +7,6 @@
 #define RECOMMENDED_VERSION 501
 /world/New()
 	// Honk honk, fuck you science
-	populate_seed_list()
 	WORLD_X_OFFSET=rand(-50,50)
 	WORLD_Y_OFFSET=rand(-50,50)
 
@@ -16,21 +15,13 @@
 	midicon = rotate_icon('icons/obj/lightning.dmi', "lightning")
 	endicon = rotate_icon('icons/obj/lightning.dmi', "lightningend")
 	*/
-
-	// logs
+	//logs
 	var/date_string = time2text(world.realtime, "YYYY/MM-Month/DD-Day")
-
 	href_logfile = file("data/logs/[date_string] hrefs.htm")
 	diary = file("data/logs/[date_string].log")
 	diaryofmeanpeople = file("data/logs/[date_string] Attack.log")
-	admin_diary = file("data/logs/[date_string] admin only.log")
-
-	var/log_start = "---------------------\n\[[time_stamp()]\]WORLD: starting up..."
-
-	diary << log_start
-	diaryofmeanpeople << log_start
-	admin_diary << log_start
-
+	diary << "\n\nStarting up. [time2text(world.timeofday, "hh:mm.ss")]\n---------------------"
+	diaryofmeanpeople << "\n\nStarting up. [time2text(world.timeofday, "hh:mm.ss")]\n---------------------"
 	changelog_hash = md5('html/changelog.html')					//used for telling if the changelog has changed recently
 
 	if(byond_version < RECOMMENDED_VERSION)
@@ -59,7 +50,6 @@
 	LoadBans()
 	SetupHooks() // /vg/
 
-	copy_logs() // Just copy the logs.
 
 	if(config && config.server_name != null && config.server_suffix && world.port > 0)
 		// dumb and hardcoded but I don't care~
@@ -166,7 +156,6 @@
 			n++
 		s["players"] = n
 
-		if(revdata)	s["revision"] = revdata.revision
 		s["admins"] = admins
 
 		return list2params(s)
@@ -218,7 +207,6 @@
 /world/proc/load_configuration()
 	config = new /datum/configuration()
 	config.load("config/config.txt")
-	config.load("config/game_options.txt","game_options")
 	config.loadsql("config/dbconfig.txt")
 	// apply some settings from config..
 	abandon_allowed = config.respawn
@@ -297,7 +285,7 @@
 		features += "hosted by <b>[config.hostedby]</b>"
 
 	if (features)
-		s += ": [list2text(features, ", ")]"
+		s += ": [dd_list2text(features, ", ")]"
 
 	/* does this help? I do not know */
 	if (src.status != s)

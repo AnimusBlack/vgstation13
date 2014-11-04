@@ -370,9 +370,6 @@
 	else if(href_list["warn"])
 		usr.client.warn(href_list["warn"])
 
-	else if(href_list["unwarn"])
-		usr.client.unwarn(href_list["unwarn"])
-
 	else if(href_list["unbane"])
 		if(!check_rights(R_BAN))	return
 
@@ -1138,29 +1135,22 @@
 		message_admins("\blue [key_name_admin(usr)] forced [key_name_admin(M)] to say: [speech]")
 
 	else if(href_list["sendtoprison"])
-		// Reworked to be useful for investigating shit.
-		if(!check_rights(R_ADMIN))
-			return
+		if(!check_rights(R_ADMIN))	return
 
-		if(alert(usr, "Warp to prison?", "Message", "Yes", "No") != "Yes")
+		if(alert(usr, "Send to admin prison for the round?", "Message", "Yes", "No") != "Yes")
 			return
 
 		var/mob/M = locate(href_list["sendtoprison"])
-
 		if(!ismob(M))
 			usr << "This can only be used on instances of type /mob"
 			return
-
 		if(istype(M, /mob/living/silicon/ai))
 			usr << "This cannot be used on instances of type /mob/living/silicon/ai"
 			return
 
 		var/turf/prison_cell = pick(prisonwarp)
+		if(!prison_cell)	return
 
-		if(!prison_cell)
-			return
-
-		/*
 		var/obj/structure/closet/secure_closet/brig/locker = new /obj/structure/closet/secure_closet/brig(prison_cell)
 		locker.opened = 0
 		locker.locked = 1
@@ -1172,31 +1162,18 @@
 				I.loc = locker
 				I.layer = initial(I.layer)
 				I.dropped(M)
-
 		M.update_icons()
-		*/
 
 		//so they black out before warping
 		M.Paralyse(5)
-		M.visible_message(
-			"<span class=\"sinister\">You hear the sound of cell doors slamming shut, and [M.name] suddenly vanishes!</span>",
-			"<span class=\"sinister\">You hear the sound of cell doors slamming shut!</span>")
-
 		sleep(5)
-
-		if(!M)
-			return
-
-		// TODO: play sound here.  Thinking of using Wolfenstein 3D's cell door closing sound.
+		if(!M)	return
 
 		M.loc = prison_cell
-
-		/*
 		if(istype(M, /mob/living/carbon/human))
 			var/mob/living/carbon/human/prisoner = M
 			prisoner.equip_to_slot_or_del(new /obj/item/clothing/under/color/orange(prisoner), slot_w_uniform)
 			prisoner.equip_to_slot_or_del(new /obj/item/clothing/shoes/orange(prisoner), slot_shoes)
-		*/
 
 		M << "\red You have been sent to the prison station!"
 		log_admin("[key_name(usr)] sent [key_name(M)] to the prison station.")
@@ -1636,12 +1613,9 @@
 		H << "You hear something crackle in your headset for a moment before a voice speaks.  \"Please stand by for a message from your benefactor.  Message as follows, agent. <b>\"[input]\"</b>  Message ends.\""
 
 	else if(href_list["CentcommFaxView"])
-		var/obj/item/weapon/paper/P = locate(href_list["CentcommFaxView"])
-		var/info_2 = ""
-		if(P.img)
-			usr << browse_rsc(P.img.img, "tmp_photo.png")
-			info_2 = "<img src='tmp_photo.png' width='192' style='-ms-interpolation-mode:nearest-neighbor' /><br>"
-		usr << browse("<HTML><HEAD><TITLE>Centcomm Fax Message</TITLE></HEAD><BODY>[info_2][P.info]</BODY></HTML>", "window=Centcomm Fax Message")
+		var/info = locate(href_list["CentcommFaxView"])
+
+		usr << browse("<HTML><HEAD><TITLE>Centcomm Fax Message</TITLE></HEAD><BODY>[info]</BODY></HTML>", "window=Centcomm Fax Message")
 
 	else if(href_list["CentcommFaxReply"])
 		var/mob/living/carbon/human/H = locate(href_list["CentcommFaxReply"])
@@ -1823,7 +1797,7 @@
 			alert("Select fewer object types, (max 5)")
 			return
 		else if(length(removed_paths))
-			alert("Removed:\n" + list2text(removed_paths, "\n"))
+			alert("Removed:\n" + dd_list2text(removed_paths, "\n"))
 
 		var/list/offset = text2list(href_list["offset"],",")
 		var/number = dd_range(1, 100, text2num(href_list["object_count"]))
@@ -2437,7 +2411,7 @@
 						W.req_access = list()
 				message_admins("[key_name_admin(usr)] activated Egalitarian Station mode")
 				command_alert("Centcomm airlock control override activated. Please take this time to get acquainted with your coworkers.")
-				world << sound('sound/AI/commandreport.ogg')
+				world << sound('sound/AI/command_report.ogg')
 			if("dorf")
 				feedback_inc("admin_secrets_fun_used",1)
 				feedback_add_details("admin_secrets_fun_used","DF")
@@ -2453,7 +2427,7 @@
 				var/show_log = alert(usr, "Show ion message?", "Message", "Yes", "No")
 				if(show_log == "Yes")
 					command_alert("Ion storm detected near the station. Please check all AI-controlled equipment for errors.", "Anomaly Alert")
-					world << sound('sound/AI/ionstorm.ogg')
+					world << sound('sound/AI/ion_storm.ogg')
 			if("spacevines")
 				feedback_inc("admin_secrets_fun_used",1)
 				feedback_add_details("admin_secrets_fun_used","K")
@@ -2464,35 +2438,6 @@
 				feedback_add_details("admin_secrets_fun_used","OO")
 				usr.client.only_one()
 //				message_admins("[key_name_admin(usr)] has triggered a battle to the death (only one)")
-			if("togglenarsie")
-				feedback_inc("admin_secrets_fun_used",1)
-				feedback_add_details("admin_secrets_fun_used","NA")
-				var/choice = input("How do you wish for narsie to interact with her surroundings?") in list("CultStation13", "Nar-Singulo")
-				if(choice == "CultStation13")
-					message_admins("[key_name_admin(usr)] has set narsie's behaviour to \"CultStation13\".")
-					narsie_behaviour = "CultStation13"
-				if(choice == "Nar-Singulo")
-					message_admins("[key_name_admin(usr)] has set narsie's behaviour to \"Nar-Singulo\".")
-					narsie_behaviour = "Nar-Singulo"
-			if("hellonearth")
-				feedback_inc("admin_secrets_fun_used",1)
-				feedback_add_details("admin_secrets_fun_used","NS")
-				var/choice = input("You sure you want to end the round and summon narsie at your location? Misuse of this could result in removal of flags or halarity.") in list("PRAISE SATAN", "Cancel")
-				if(choice == "PRAISE SATAN")
-					new /obj/machinery/singularity/narsie/large(get_turf(usr))
-					SetUniversalState(/datum/universal_state/hell)
-					message_admins("[key_name_admin(usr)] has summoned narsie and brought about a new realm of suffering.")
-			if("supermattercascade")
-				feedback_inc("admin_secrets_fun_used",1)
-				feedback_add_details("admin_secrets_fun_used","SC")
-				var/choice = input("You sure you want to destroy the universe and create a large explosion at your location? Misuse of this could result in removal of flags or halarity.") in list("NO TIME TO EXPLAIN", "Cancel")
-				if(choice == "NO TIME TO EXPLAIN")
-					explosion(get_turf(usr), 8, 16, 24, 32, 1)
-					new /turf/unsimulated/wall/supermatter(get_turf(usr))
-					SetUniversalState(/datum/universal_state/supermatter_cascade)
-					message_admins("[key_name_admin(usr)] has managed to destroy the universe with a supermatter cascade. Good job, [key_name_admin(usr)]")
-
-
 		if(usr)
 			log_admin("[key_name(usr)] used secret [href_list["secretsfun"]]")
 			if (ok)
@@ -2615,10 +2560,6 @@
 				J.total_positions = -1
 				J.spawn_positions = -1
 				message_admins("[key_name_admin(usr)] has removed the cap on security officers.")
-			if("virus_custom")
-				if(virus2_make_custom(usr.client))
-					feedback_add_details("admin_secrets_fun_used", "V_C")
-					message_admins("[key_name_admin(usr)] has trigger a custom virus outbreak.", 1)
 
 	else if(href_list["ac_view_wanted"])            //Admin newscaster Topic() stuff be here
 		src.admincaster_screen = 18                 //The ac_ prefix before the hrefs stands for AdminCaster.
@@ -2627,7 +2568,7 @@
 	else if(href_list["ac_set_channel_name"])
 		src.admincaster_feed_channel.channel_name = strip_html_simple(sanitize_uni(input(usr, "Provide a Feed Channel Name", "Network Channel Handler", "")))
 		while (findtext(src.admincaster_feed_channel.channel_name," ") == 1)
-			src.admincaster_feed_channel.channel_name = copytext(src.admincaster_feed_channel.channel_name,2,length(src.admincaster_feed_channel.channel_name)+1)
+			src.admincaster_feed_channel.channel_name = copytext(src.admincaster_feed_channel.channel_name,2,lentext(src.admincaster_feed_channel.channel_name)+1)
 		src.access_news_network()
 
 	else if(href_list["ac_set_channel_lock"])
@@ -2666,7 +2607,7 @@
 	else if(href_list["ac_set_new_message"])
 		src.admincaster_feed_message.body = adminscrub(input(usr, "Write your Feed story", "Network Channel Handler", ""))
 		while (findtext(src.admincaster_feed_message.body," ") == 1)
-			src.admincaster_feed_message.body = copytext(src.admincaster_feed_message.body,2,length(src.admincaster_feed_message.body)+1)
+			src.admincaster_feed_message.body = copytext(src.admincaster_feed_message.body,2,lentext(src.admincaster_feed_message.body)+1)
 		src.access_news_network()
 
 	else if(href_list["ac_submit_new_message"])
@@ -2720,13 +2661,13 @@
 	else if(href_list["ac_set_wanted_name"])
 		src.admincaster_feed_message.author = adminscrub(input(usr, "Provide the name of the Wanted person", "Network Security Handler", ""))
 		while (findtext(src.admincaster_feed_message.author," ") == 1)
-			src.admincaster_feed_message.author = copytext(admincaster_feed_message.author,2,length(admincaster_feed_message.author)+1)
+			src.admincaster_feed_message.author = copytext(admincaster_feed_message.author,2,lentext(admincaster_feed_message.author)+1)
 		src.access_news_network()
 
 	else if(href_list["ac_set_wanted_desc"])
 		src.admincaster_feed_message.body = adminscrub(input(usr, "Provide the a description of the Wanted person and any other details you deem important", "Network Security Handler", ""))
 		while (findtext(src.admincaster_feed_message.body," ") == 1)
-			src.admincaster_feed_message.body = copytext(src.admincaster_feed_message.body,2,length(src.admincaster_feed_message.body)+1)
+			src.admincaster_feed_message.body = copytext(src.admincaster_feed_message.body,2,lentext(src.admincaster_feed_message.body)+1)
 		src.access_news_network()
 
 	else if(href_list["ac_submit_wanted"])

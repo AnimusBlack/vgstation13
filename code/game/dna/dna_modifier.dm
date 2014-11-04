@@ -65,7 +65,9 @@
 		/obj/item/weapon/stock_parts/scanning_module,
 		/obj/item/weapon/stock_parts/manipulator,
 		/obj/item/weapon/stock_parts/micro_laser,
-		/obj/item/weapon/stock_parts/console_screen
+		/obj/item/weapon/stock_parts/console_screen,
+		/obj/item/weapon/cable_coil,
+		/obj/item/weapon/cable_coil
 	)
 
 	RefreshParts()
@@ -114,16 +116,13 @@
 	if(usr.restrained() || usr.stat || usr.weakened || usr.stunned || usr.paralysis || usr.resting) //are you cuffed, dying, lying, stunned or other
 		return
 	if (!ishuman(usr) && !ismonkey(usr)) //Make sure they're a mob that has dna
-		usr << "<span class='notice'> Try as you might, you can not climb up into the scanner.</span>"
-		return
-	if (istype(usr, /mob/living/carbon/human/manifested))
-		usr << "<span class='notice'> For some reason, the scanner is unable to read your genes.</span>"//to prevent a loophole that allows cultist to turn manifested ghosts into normal humans
+		usr << "\blue Try as you might, you can not climb up into the scanner."
 		return
 	if (src.occupant)
-		usr << "<span class='notice'> <B>The scanner is already occupied!</B></span>"
+		usr << "\blue <B>The scanner is already occupied!</B>"
 		return
 	if (usr.abiotic())
-		usr << "<span class='notice'> <B>Subject cannot have abiotic items on.</B></span>"
+		usr << "\blue <B>Subject cannot have abiotic items on.</B>"
 		return
 	usr.stop_pulling()
 	usr.client.perspective = EYE_PERSPECTIVE
@@ -135,8 +134,6 @@
 	return
 
 /obj/machinery/dna_scannernew/MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
-	if(!istype(O) || isturf(O)) // Cant drag the floor man
-		return
 	if(O.loc == user) //no you can't pull things out of your ass
 		return
 	if(user.restrained() || user.stat || user.weakened || user.stunned || user.paralysis || user.resting) //are you cuffed, dying, lying, stunned or other
@@ -155,9 +152,6 @@
 		return
 	if(occupant)
 		user << "\blue <B>The DNA Scanner is already occupied!</B>"
-		return
-	if (istype(O, /mob/living/carbon/human/manifested))
-		usr << "<span class='notice'> For some reason, the scanner is unable to read that person's genes.</span>"//to prevent a loophole that allows cultist to turn manifested ghosts into normal humans
 		return
 	if(isrobot(user))
 		if(!istype(user:module, /obj/item/weapon/robot_module/medical))
@@ -190,11 +184,11 @@
 			src.opened = 0
 			user << "You close the maintenance hatch of [src]."
 			//src.icon_state = "autolathe"
-		return 1
+			return 1
 	else if(istype(item, /obj/item/weapon/crowbar))
 		if (occupant)
 			user << "\red You cannot disassemble this [src], it's occupado."
-			return
+			return 1
 		if (opened)
 			playsound(get_turf(src), 'sound/items/Crowbar.ogg', 50, 1)
 			var/obj/machinery/constructable_frame/machine_frame/M = new /obj/machinery/constructable_frame/machine_frame(src.loc)
@@ -205,7 +199,7 @@
 					I.crit_fail = 1
 				I.loc = src.loc
 			del(src)
-			return 1
+			return
 	else if(istype(item, /obj/item/weapon/reagent_containers/glass))
 		if(beaker)
 			user << "\red A beaker is already loaded into the machine."
@@ -216,20 +210,20 @@
 		item.loc = src
 		user.visible_message("[user] adds \a [item] to \the [src]!", "You add \a [item] to \the [src]!")
 		return
-	if(istype(item, /obj/item/weapon/grab)) //sanity checks, you chucklefucks
-		var/obj/item/weapon/grab/G = item
-		if (!ismob(G.affecting))
-			return
-		if (src.occupant)
-			user << "\blue <B>The scanner is already occupied!</B>"
-			return
-		if (G.affecting.abiotic())
-			user << "\blue <B>Subject cannot have abiotic items on.</B>"
-			return
-		put_in(G.affecting)
-		src.add_fingerprint(user)
-		del(G)
-		return 1
+	else if (!istype(item, /obj/item/weapon/grab))
+		return
+	var/obj/item/weapon/grab/G = item
+	if (!ismob(G.affecting))
+		return
+	if (src.occupant)
+		user << "\blue <B>The scanner is already occupied!</B>"
+		return
+	if (G.affecting.abiotic())
+		user << "\blue <B>Subject cannot have abiotic items on.</B>"
+		return
+	put_in(G.affecting)
+	src.add_fingerprint(user)
+	del(G)
 	return
 
 /obj/machinery/dna_scannernew/proc/put_in(var/mob/M)
@@ -241,15 +235,17 @@
 	src.icon_state = "scanner_1"
 
 	// search for ghosts, if the corpse is empty and the scanner is connected to a cloner
-	for(dir in list(NORTH, EAST, SOUTH, WEST))
-		if(locate(/obj/machinery/computer/cloning, get_step(src, dir)))
-			if(!M.client && M.mind)
-				for(var/mob/dead/observer/ghost in player_list)
-					if(ghost.mind == M.mind)
-						ghost << 'sound/effects/adminhelp.ogg'
-						ghost << "<b><font color = #330033><font size = 3>Your corpse has been placed into a cloning scanner. Return to your body if you want to be resurrected/cloned!</b> (Verbs -> Ghost -> Re-enter corpse)</font color>"
-						break
-			break
+	if(locate(/obj/machinery/computer/cloning, get_step(src, NORTH)) \
+		|| locate(/obj/machinery/computer/cloning, get_step(src, SOUTH)) \
+		|| locate(/obj/machinery/computer/cloning, get_step(src, EAST)) \
+		|| locate(/obj/machinery/computer/cloning, get_step(src, WEST)))
+
+		if(!M.client && M.mind)
+			for(var/mob/dead/observer/ghost in player_list)
+				if(ghost.mind == M.mind)
+					ghost << 'sound/effects/adminhelp.ogg'
+					ghost << "<b><font color = #330033><font size = 3>Your corpse has been placed into a cloning scanner. Return to your body if you want to be resurrected/cloned!</b> (Verbs -> Ghost -> Re-enter corpse)</font color>"
+					break
 	return
 
 /obj/machinery/dna_scannernew/proc/go_out()
@@ -311,7 +307,6 @@
 	anchored = 1
 	idle_power_usage = 200
 	active_power_usage = 400
-	circuit = "/obj/item/weapon/circuitboard/scan_consolenew"
 
 	var/selected_ui_block = 1.0
 	var/selected_ui_subblock = 1.0
@@ -336,15 +331,43 @@
 
 	l_color = "#0000FF"
 
-/obj/machinery/computer/scan_consolenew/attackby(obj/O as obj, mob/user as mob)
-	..()
-	if (istype(O, /obj/item/weapon/disk/data)) //INSERT SOME diskS
+/obj/machinery/computer/scan_consolenew/attackby(obj/item/I as obj, mob/user as mob)
+	if(istype(I, /obj/item/weapon/screwdriver))
+		playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
+		if(do_after(user, 20))
+			if (src.stat & BROKEN)
+				user << "\blue The broken glass falls out."
+				var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
+				getFromPool(/obj/item/weapon/shard, loc)
+				var/obj/item/weapon/circuitboard/scan_consolenew/M = new /obj/item/weapon/circuitboard/scan_consolenew( A )
+				for (var/obj/C in src)
+					C.loc = src.loc
+				A.circuit = M
+				A.state = 3
+				A.icon_state = "3"
+				A.anchored = 1
+				del(src)
+			else
+				user << "\blue You disconnect the monitor."
+				var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
+				var/obj/item/weapon/circuitboard/scan_consolenew/M = new /obj/item/weapon/circuitboard/scan_consolenew( A )
+				for (var/obj/C in src)
+					C.loc = src.loc
+				A.circuit = M
+				A.state = 4
+				A.icon_state = "4"
+				A.anchored = 1
+				del(src)
+	if (istype(I, /obj/item/weapon/disk/data)) //INSERT SOME diskS
 		if (!src.disk)
 			user.drop_item()
-			O.loc = src
-			src.disk = O
-			user << "You insert [O]."
+			I.loc = src
+			src.disk = I
+			user << "You insert [I]."
 			nanomanager.update_uis(src) // update all UIs attached to src()
+			return
+	else
+		src.attack_hand(user)
 	return
 
 /obj/machinery/computer/scan_consolenew/ex_act(severity)
@@ -383,17 +406,14 @@
 	for(var/i=0;i<3;i++)
 		buffers[i+1]=new /datum/dna2/record
 	spawn(5)
-		connected = findScanner()
+		for(dir in list(NORTH,EAST,SOUTH,WEST))
+			connected = locate(/obj/machinery/dna_scannernew, get_step(src, dir))
+			if(!isnull(connected))
+				break
 		spawn(250)
 			src.injector_ready = 1
 		return
 	return
-
-/obj/machinery/computer/scan_consolenew/proc/findScanner()
-	for(dir in list(NORTH,EAST,SOUTH,WEST))
-		var/foundmachine = locate(/obj/machinery/dna_scannernew, get_step(src, dir))
-		if(foundmachine)
-			return foundmachine
 
 /obj/machinery/computer/scan_consolenew/proc/all_dna_blocks(var/list/buffer)
 	var/list/arr = list()
@@ -409,6 +429,14 @@
 	I.block = id
 	I.buf = buffer
 	return 1
+
+/obj/machinery/computer/scan_consolenew/attackby(obj/item/W as obj, mob/user as mob)
+	if ((istype(W, /obj/item/weapon/disk/data)) && (!src.disk))
+		user.drop_item()
+		W.loc = src
+		src.disk = W
+		user << "You insert [W]."
+		nanomanager.update_uis(src) // update all UIs attached to src()
 
 /obj/machinery/computer/scan_consolenew/process()
 	if (stat & (BROKEN | NOPOWER | MAINT | EMPED))
@@ -437,8 +465,6 @@
 
 /obj/machinery/computer/scan_consolenew/attack_hand(user as mob)
 	if(!..())
-		if(!connected)
-			connected = findScanner() //lets get that machine
 		ui_interact(user)
 
  /**
@@ -454,11 +480,7 @@
   */
 /obj/machinery/computer/scan_consolenew/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null)
 
-	if(connected)
-		if(user == connected.occupant || user.stat)
-			return
-	else
-		src.visible_message("\icon[src]<span class='notice'>No scanner connected!<span>")
+	if(user == connected.occupant || user.stat)
 		return
 
 	// this is the data which will be sent to the ui

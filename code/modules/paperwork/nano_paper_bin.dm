@@ -62,14 +62,14 @@
 
 /obj/item/weapon/paper_bin/nano/examine()
 	set src in oview(1)
-	var/desc = "This machine dispenses nano paper"
+	var/desc = "<span class='notice'>This machine dispenses nano paper</span>"
 	usr << desc
 
 	if(in_range(usr, src))
 		if(ressources)
-			usr << "There is [ressources] nano paper left in the dispenser!"
+			usr << "<span class='notice'>There is [ressources] nano paper left in the dispenser!</span>"
 		else
-			usr << "<span class='warning'>The nano paper dispenser is empty! add more plasteel to refil!</span>"
+			usr << "<span class='notice'>The nano paper dispenser is empty! add more plasteel to refil!</span>"
 		return
 
 

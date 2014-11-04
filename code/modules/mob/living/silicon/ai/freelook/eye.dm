@@ -61,9 +61,7 @@
 		var/mob/living/silicon/ai/AI = usr
 		if(AI.eyeobj && AI.client.eye == AI.eyeobj)
 			AI.cameraFollow = null
-			//AI.eyeobj.setLoc(src)
-			if (isturf(src.loc) || isturf(src))
-				AI.eyeobj.setLoc(src)
+			AI.eyeobj.setLoc(src)
 
 /mob/living/Click()
 	if(isAI(usr))
@@ -103,8 +101,16 @@
 
 	//user.unset_machine() //Uncomment this if it causes problems.
 	//user.lightNearbyCamera()
-	if (user.camera_light_on)
-		user.light_cameras()
+
+
+// Return to the Core.
+
+/mob/living/silicon/ai/verb/core()
+	set category = "AI Commands"
+	set name = "AI Core"
+
+	view_core()
+
 
 /mob/living/silicon/ai/proc/view_core()
 

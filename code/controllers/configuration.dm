@@ -8,7 +8,6 @@
 	var/log_access = 0					// log login/logout
 	var/log_say = 0						// log client say
 	var/log_admin = 0					// log admin actions
-	var/log_admin_only = FALSE
 	var/log_debug = 1					// log debug output
 	var/log_game = 0					// log game events
 	var/log_vote = 0					// log voting
@@ -84,7 +83,6 @@
 	var/forumurl = "http://baystation12.net/forums/"
 
 	var/media_base_url = "" // http://ss13.nexisonline.net/media
-	var/media_secret_key = "" // Random string
 
 	//Alert level description
 	var/alert_desc_green = "All threats to the station have passed. Security may not have weapons visible, privacy laws are once again fully enforced."
@@ -148,11 +146,6 @@
 	var/assistantlimit = 0 //enables assistant limiting
 	var/assistantratio = 2 //how many assistants to security members
 
-	var/emag_energy = -1
-	var/emag_starts_charged = 1
-	var/emag_recharge_rate = 0
-	var/emag_recharge_ticks = 0
-
 /datum/configuration/New()
 	. = ..()
 	var/list/L = typesof(/datum/game_mode) - /datum/game_mode
@@ -203,7 +196,7 @@
 		if(type == "config")
 			switch (name)
 				if ("resource_urls")
-					config.resource_urls = text2list(value, " ")
+					config.resource_urls = stringsplit(value, " ")
 
 				if ("admin_legacy_system")
 					config.admin_legacy_system = 1
@@ -234,9 +227,6 @@
 
 				if ("log_admin")
 					config.log_admin = 1
-
-				if("log_admin_only")
-					config.log_admin_only = TRUE
 
 				if ("log_debug")
 					config.log_debug = text2num(value)
@@ -500,67 +490,49 @@
 					copy_logs=value
 				if("media_base_url")
 					media_base_url = value
-				if("media_secret_key")
-					media_secret_key = value
 				if("vgws_base_url")
 					vgws_base_url = value
-				else
-					diary << "Unknown setting in configuration: '[name]'"
 
-		else if(type == "game_options")
-			if(!value)
-				diary << "Unknown value for setting [name] in [filename]."
-			value = text2num(value)
-
-			switch(name)
 				if("max_explosion_range")
-					MAX_EXPLOSION_RANGE = value
+					MAX_EXPLOSION_RANGE = text2num(value)
 				if("health_threshold_crit")
-					config.health_threshold_crit = value
+					config.health_threshold_crit = text2num(value)
 				if("health_threshold_softcrit")
-					config.health_threshold_softcrit = value
+					config.health_threshold_softcrit = text2num(value)
 				if("health_threshold_dead")
-					config.health_threshold_dead = value
+					config.health_threshold_dead = text2num(value)
 				if("revival_pod_plants")
-					config.revival_pod_plants = value
+					config.revival_pod_plants = text2num(value)
 				if("revival_cloning")
-					config.revival_cloning = value
+					config.revival_cloning = text2num(value)
 				if("revival_brain_life")
-					config.revival_brain_life = value
+					config.revival_brain_life = text2num(value)
 				if("run_speed")
-					config.run_speed = value
+					config.run_speed = text2num(value)
 				if("walk_speed")
-					config.walk_speed = value
+					config.walk_speed = text2num(value)
 				if("human_delay")
-					config.human_delay = value
+					config.human_delay = text2num(value)
 				if("robot_delay")
-					config.robot_delay = value
+					config.robot_delay = text2num(value)
 				if("monkey_delay")
-					config.monkey_delay = value
+					config.monkey_delay = text2num(value)
 				if("alien_delay")
-					config.alien_delay = value
+					config.alien_delay = text2num(value)
 				if("slime_delay")
-					config.slime_delay = value
+					config.slime_delay = text2num(value)
 				if("animal_delay")
-					config.animal_delay = value
+					config.animal_delay = text2num(value)
 				if("organ_health_multiplier")
-					config.organ_health_multiplier = value / 100
+					config.organ_health_multiplier = text2num(value) / 100
 				if("organ_regeneration_multiplier")
-					config.organ_regeneration_multiplier = value / 100
+					config.organ_regeneration_multiplier = text2num(value) / 100
 				if("bones_can_break")
-					config.bones_can_break = value
+					config.bones_can_break = text2num(value)
 				if("limbs_can_break")
-					config.limbs_can_break = value
+					config.limbs_can_break = text2num(value)
 				if("respawn_delay")
-					config.respawn_delay = value
-				if("emag_energy")
-					config.emag_energy = value
-				if("emag_starts_charged")
-					config.emag_starts_charged = value
-				if("emag_recharge_rate")
-					config.emag_recharge_rate = value
-				if("emag_recharge_ticks")
-					config.emag_recharge_ticks = value
+					config.respawn_delay = text2num(value)
 				else
 					diary << "Unknown setting in configuration: '[name]'"
 
@@ -599,12 +571,6 @@
 				sqllogin = value
 			if ("password")
 				sqlpass = value
-			if ("feedback_database")
-				sqlfdbkdb = value
-			if ("feedback_login")
-				sqlfdbklogin = value
-			if ("feedback_password")
-				sqlfdbkpass = value
 			if ("enable_stat_tracking")
 				sqllogging = 1
 			else

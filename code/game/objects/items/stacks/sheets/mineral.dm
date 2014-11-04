@@ -31,7 +31,7 @@ Mineral Sheets
 	sheettype = "sandstone"
 
 var/global/list/datum/stack_recipe/sandstone_recipes = list ( \
-	new/datum/stack_recipe("pile of dirt", /obj/machinery/portable_atmospherics/hydroponics/soil, 3, time = 10, one_per_turf = 1, on_floor = 1), \
+	new/datum/stack_recipe("pile of dirt", /obj/machinery/hydroponics/soil, 3, time = 10, one_per_turf = 1, on_floor = 1), \
 	new/datum/stack_recipe("sandstone door", /obj/structure/mineral_door/sandstone, 10, one_per_turf = 1, on_floor = 1), \
 /*	new/datum/stack_recipe("sandstone wall", ???), \
 		new/datum/stack_recipe("sandstone floor", ???),\ */
@@ -57,7 +57,7 @@ var/global/list/datum/stack_recipe/sandstone_recipes = list ( \
 	w_class = 3.0
 	throw_range = 3
 	origin_tech = "materials=6"
-	perunit = 1750
+	perunit = 3750
 	sheettype = "diamond"
 
 var/global/list/datum/stack_recipe/diamond_recipes = list ( \
@@ -204,8 +204,9 @@ var/global/list/datum/stack_recipe/phazon_recipes = list()
 	singular_name = "phazon sheet"
 	desc = "Holy christ what is this?"
 	icon_state = "sheet-phazon"
-	item_state = "sheet-phazon"
-	perunit = 1500
+	item_state = "sheet-metal"
+	m_amt = 7500
+	w_type = RECYK_METAL
 	throwforce = 15.0
 	flags = FPRINT | TABLEPASS | CONDUCT
 	origin_tech = "materials=9"

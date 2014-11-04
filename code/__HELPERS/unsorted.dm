@@ -4,6 +4,34 @@
  * A large number of misc global procs.
  */
 
+//Inverts the colour of an HTML string
+/proc/invertHTML(HTMLstring)
+
+	if (!( istext(HTMLstring) ))
+		CRASH("Given non-text argument!")
+		return
+	else
+		if (length(HTMLstring) != 7)
+			CRASH("Given non-HTML argument!")
+			return
+	var/textr = copytext(HTMLstring, 2, 4)
+	var/textg = copytext(HTMLstring, 4, 6)
+	var/textb = copytext(HTMLstring, 6, 8)
+	var/r = hex2num(textr)
+	var/g = hex2num(textg)
+	var/b = hex2num(textb)
+	textr = num2hex(255 - r)
+	textg = num2hex(255 - g)
+	textb = num2hex(255 - b)
+	if (length(textr) < 2)
+		textr = text("0[]", textr)
+	if (length(textg) < 2)
+		textr = text("0[]", textg)
+	if (length(textb) < 2)
+		textr = text("0[]", textb)
+	return text("#[][][]", textr, textg, textb)
+	return
+
 //Returns the middle-most value
 /proc/dd_range(var/low, var/high, var/num)
 	return max(low,min(high,num))
@@ -270,7 +298,7 @@ Turf and target are seperate in case you want to teleport some distance from a t
 		var/pos
 		for(var/datum/objective/objective in O)
 			if(objective.target != mind) continue
-			length = length(oldname)
+			length = lentext(oldname)
 			pos = findtextEx(objective.explanation_text, oldname)
 			objective.explanation_text = copytext(objective.explanation_text, 1, pos)+newname+copytext(objective.explanation_text, pos+length)
 	return 1
@@ -794,7 +822,7 @@ proc/anim(turf/location as turf,target as mob|obj,a_icon,a_icon_state as text,fl
 
 //Returns: all the areas in the world, sorted.
 /proc/return_sorted_areas()
-	return sortNames(return_areas())
+	return sortAtom(return_areas())
 
 //Takes: Area type as text string or as typepath OR an instance of the area.
 //Returns: A list of all areas of that type in the world.
@@ -1472,9 +1500,4 @@ proc/rotate_icon(file, state, step = 1, aa = FALSE)
 /proc/iscatwalk(atom/A)
 	if(istype(A, /turf/simulated/floor/plating/airless/catwalk))
 		return 1
-	return 0
-
-/proc/has_edge(obj/O as obj)
-	if (!O) return 0
-	if(O.edge) return 1
 	return 0

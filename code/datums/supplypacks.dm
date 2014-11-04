@@ -133,9 +133,7 @@ var/list/all_supply_groups = list("Supplies","Clothing","Security","Hospitality"
 					/obj/item/weapon/reagent_containers/food/drinks/beer,
 					/obj/item/weapon/reagent_containers/food/drinks/beer,
 					/obj/item/weapon/reagent_containers/food/drinks/beer,
-					/obj/item/weapon/reagent_containers/food/drinks/beer,
-					/obj/item/device/maracas,
-					/obj/item/device/maracas)
+					/obj/item/weapon/reagent_containers/food/drinks/beer)
 	cost = 20
 	containertype = /obj/structure/closet/crate
 	containername = "Party equipment"
@@ -169,12 +167,8 @@ var/list/all_supply_groups = list("Supplies","Clothing","Security","Hospitality"
 					/obj/item/clothing/mask/gas,
 					/obj/item/clothing/mask/gas,
 					/obj/item/clothing/mask/gas,
-					/obj/item/clothing/mask/gas,
-					/obj/machinery/bot/floorbot,
-					/obj/machinery/bot/floorbot,
-					/obj/machinery/bot/medbot,
-					/obj/machinery/bot/medbot)
-	cost = 40
+					/obj/item/clothing/mask/gas)
+	cost = 35
 	containertype = /obj/structure/closet/crate/internals
 	containername = "Emergency Crate"
 	group = "Supplies"
@@ -341,18 +335,17 @@ var/list/all_supply_groups = list("Supplies","Clothing","Security","Hospitality"
 	group = "Hydroponics"
 
 /datum/supply_packs/exoticseeds
-	name = "Exotic seeds crate"
-	contains = list(/obj/item/seeds/replicapod,
+	name = "Exotic Seeds Crate"
+	contains = list(/obj/item/seeds/nettleseed,
 					/obj/item/seeds/replicapod,
+					/obj/item/seeds/replicapod,
+					/obj/item/seeds/replicapod,
+					/obj/item/seeds/plumpmycelium,
 					/obj/item/seeds/libertymycelium,
+					/obj/item/seeds/amanitamycelium,
 					/obj/item/seeds/reishimycelium,
-					/obj/item/seeds/random,
-					/obj/item/seeds/random,
-					/obj/item/seeds/random,
-					/obj/item/seeds/random,
-					/obj/item/seeds/random,
-					/obj/item/seeds/random,
-					/obj/item/seeds/kudzuseed)
+					/obj/item/seeds/bananaseed,
+					/obj/item/seeds/eggyseed)
 	cost = 15
 	containertype = /obj/structure/closet/crate/hydroponics
 	containername = "Exotic Seeds crate"
@@ -864,7 +857,6 @@ var/list/all_supply_groups = list("Supplies","Clothing","Security","Hospitality"
 	containername = "Arts and Crafts crate"
 	group = "Supplies"
 
-
 /datum/supply_packs/randomised/contraband
 	num_contained = 5
 	contains = list(/obj/item/seeds/bloodtomatoseed,
@@ -1145,3 +1137,31 @@ var/list/all_supply_groups = list("Supplies","Clothing","Security","Hospitality"
 	containername = "Supermatter Shard Crate"
 	group = "Engineering"
 	access = access_ce
+
+/datum/supply_packs/engineering/oxygen
+	name = "Oxygen Canister"
+	contains = list(/obj/machinery/portable_atmospherics/canister/oxygen)
+	cost = 15
+	containertype = /obj/structure/largecrate
+	containername = "oxygen canister crate"
+
+/datum/supply_packs/engineering/toxins
+	name = "Toxins Canister"
+	contains = list(/obj/machinery/portable_atmospherics/canister/toxins)
+	cost = 30
+	containertype = /obj/structure/largecrate
+	containername = "toxins canister crate"
+
+/datum/supply_packs/engineering/nitrogen
+	name = "Nitrogen Canister"
+	contains = list(/obj/machinery/portable_atmospherics/canister/nitrogen)
+	cost = 20
+	containertype = /obj/structure/largecrate
+	containername = "nitrogen canister crate"
+
+/datum/supply_packs/engineering/carbon_dio
+	name = "Carbon Dioxide Canister"
+	contains = list(/obj/machinery/portable_atmospherics/canister/carbon_dioxide)
+	cost = 35
+	containertype = /obj/structure/largecrate
+	containername = "carbon dioxide canister crate"

@@ -12,11 +12,6 @@
 	m_amt = 1875
 	max_amount = 60
 	attack_verb = list("hit", "bludgeoned", "whacked")
-	w_type=RECYK_METAL
-
-/obj/item/stack/rods/recycle(var/datum/materials/rec)
-	rec.addAmount("iron",amount/2)
-	return RECYK_METAL
 
 /obj/item/stack/rods/attackby(obj/item/W as obj, mob/user as mob)
 	..()
@@ -45,11 +40,11 @@
 /obj/item/stack/rods/attack_self(mob/user as mob)
 	src.add_fingerprint(user)
 
-	if(!istype(user.loc, /turf)) return 0
+	if(!istype(user.loc,/turf)) return 0
 
-	if(locate(/obj/structure/grille, user.loc))
-		for(var/obj/structure/grille/G in user.loc)
-			if(G.destroyed)
+	if (locate(/obj/structure/grille, usr.loc))
+		for(var/obj/structure/grille/G in usr.loc)
+			if (G.destroyed)
 				G.health = 10
 				G.density = 1
 				G.destroyed = 0
@@ -59,15 +54,13 @@
 				return 1
 	else
 		if(amount < 2)
-			user << "<span class='notice'>You need at least two rods to do this.</span>"
+			user << "\blue You need at least two rods to do this."
 			return
-
-		user << "<span class='notice'>Assembling grille...</span>"
-
-		if(!do_after(user, 10))
+		usr << "\blue Assembling grille..."
+		if (!do_after(usr, 10))
 			return
-
-		var/obj/structure/grille/Grille = getFromPool(/obj/structure/grille, user.loc)
-		user << "<span class='notice'>You assembled a grille!</span>"
-		Grille.add_fingerprint(user)
+		var/obj/structure/grille/F = new /obj/structure/grille/ ( usr.loc )
+		usr << "\blue You assemble a grille"
+		F.add_fingerprint(usr)
 		use(2)
+	return

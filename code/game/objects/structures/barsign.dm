@@ -37,7 +37,6 @@
 
 	var/sign_name = ""
 	var/list/barsigns=list()
-	var/cult = 0
 
 /obj/structure/sign/double/barsign/attack_ai(mob/user as mob)
 	return src.attack_hand(user)
@@ -69,12 +68,3 @@
 		desc = picked.desc
 	else
 		desc = "It displays \"[name]\"."
-
-/obj/structure/sign/double/barsign/cultify()
-	if(cult)
-		return
-	else
-		icon_state = "narsiebistro"
-		name = "Narsie Bistro"
-		desc = "The last pub before the World's End."
-		cult = 1

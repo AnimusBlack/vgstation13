@@ -1,6 +1,6 @@
 /datum/event/rogue_drone
-	startWhen = 5
-	endWhen = 450
+	startWhen = 10
+	endWhen = 1000
 	var/list/drones_list = list()
 
 /datum/event/rogue_drone/start()

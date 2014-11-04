@@ -18,7 +18,7 @@
 
 	var/fire_sound = 'sound/weapons/Gunshot.ogg'
 	var/obj/item/projectile/in_chamber = null
-	var/list/caliber //the ammo the gun will accept. Now multiple types (make sure to set them to =1)
+	var/caliber = ""
 	var/silenced = 0
 	var/recoil = 0
 	var/ejectshell = 1
@@ -41,7 +41,7 @@
 		else
 			return 0
 
-	proc/process_chambered()
+	proc/load_into_chamber()
 		return 0
 
 	proc/special_check(var/mob/M) //Placeholder for any special checks, like detective's revolver.
@@ -107,7 +107,7 @@
 			user << "<span class='warning'>[src] is not ready to fire again!"
 		return
 
-	if(!process_chambered()) //CHECK
+	if(!load_into_chamber()) //CHECK
 		return click_empty(user)
 
 	if(!in_chamber)
@@ -141,7 +141,6 @@
 	user.next_move = world.time + 4
 	in_chamber.silenced = silenced
 	in_chamber.current = curloc
-	in_chamber.OnFired()
 	in_chamber.yo = targloc.y - curloc.y
 	in_chamber.xo = targloc.x - curloc.x
 
@@ -166,7 +165,7 @@
 		user.update_inv_r_hand()
 
 /obj/item/weapon/gun/proc/can_fire()
-	return process_chambered()
+	return load_into_chamber()
 
 /obj/item/weapon/gun/proc/can_hit(var/mob/living/target as mob, var/mob/living/user as mob)
 	return in_chamber.check_fire(target,user)
@@ -191,7 +190,7 @@
 			M.visible_message("\blue [user] decided life was worth living")
 			mouthshoot = 0
 			return
-		if (process_chambered())
+		if (load_into_chamber())
 			user.visible_message("<span class = 'warning'>[user] pulls the trigger.</span>")
 			if(silenced)
 				playsound(user, fire_sound, 10, 1)
@@ -213,7 +212,7 @@
 			mouthshoot = 0
 			return
 
-	if (src.process_chambered())
+	if (src.load_into_chamber())
 		//Point blank shooting if on harm intent or target we were targeting.
 		if(user.a_intent == "hurt")
 			user.visible_message("\red <b> \The [user] fires \the [src] point blank at [M]!</b>")

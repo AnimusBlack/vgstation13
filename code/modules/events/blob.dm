@@ -1,6 +1,6 @@
 /datum/event/blob
-	announceWhen	= 30
-	endWhen			= 150
+	announceWhen	= 12
+	endWhen			= 120
 
 	var/obj/effect/blob/core/Blob
 	var/list/datum/mind/infected_crew=list()

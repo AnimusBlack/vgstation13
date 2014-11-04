@@ -1,6 +1,6 @@
 #define METEOR_TEMPERATURE
 
-/var/meteor_wave_delay = 225 //Failsafe wait between waves in tenths of seconds
+/var/meteor_wave_delay = 200 //Failsafe wait between waves in tenths of seconds
 //Set it above 100 (10s delay) if you want to minimize lag for some reason
 
 /var/meteors_in_wave = 10 //Failsafe in case a number isn't called
@@ -10,9 +10,9 @@
 	if(!ticker || meteorwavecurrent)
 		return
 	meteorwavecurrent = 1
-	meteor_wave_delay = (rand(10,20))*10 //Between 10 and 20 seconds, makes everything more chaotic
+	meteor_wave_delay = (rand(20,40))*10 //Between 20 and 40 seconds, makes everything more chaotic
 	for(var/i = 0 to number)
-		spawn(rand(5,10)) //0.5 to 1 seconds between meteors
+		spawn(rand(20,50)) //2 to 5 seconds between meteors
 			spawn_meteor()
 	spawn(meteor_wave_delay)
 		meteorwavecurrent = 0
@@ -25,7 +25,7 @@
 	var/endy
 	var/turf/pickedstart
 	var/turf/pickedgoal
-	var/max_i = 3 //Try only three times maximum
+	var/max_i = 10//number of tries to spawn meteor.
 
 
 	do
@@ -54,23 +54,22 @@
 		pickedstart = locate(startx, starty, 1)
 		pickedgoal = locate(endx, endy, 1)
 		max_i--
-		if(max_i <= 0)
-			return
+		if(max_i<=0) return
 
-	while(!istype(pickedstart, /turf/space))
+	while(!istype(pickedstart, /turf/space) || pickedstart.loc.name != "Space" || (pickedstart.loc.name == "Emergency Shuttle Transit" && emergency_shuttle.direction != -1))
 
 	var/obj/effect/meteor/M
 	switch(rand(1, 100))
 		if(1 to 5) //5 % chance of huge boom
 			M = new /obj/effect/meteor/big(pickedstart)
-		if(6 to 65) //60 % chance of medium boom
+		if(6 to 50) //45 % chance of medium boom
 			M = new /obj/effect/meteor(pickedstart)
-		if(66 to 100) //35 % chance of small boom
+		if(51 to 100) //50 % chance of small boom
 			M = new /obj/effect/meteor/small(pickedstart)
 
 	M.dest = pickedgoal
-	//spawn(0)
-	walk_towards(M, M.dest, 1)
+	spawn(0)
+		walk_towards(M, M.dest, 1)
 	return
 
 /obj/effect/meteor
@@ -88,9 +87,9 @@
 	pass_flags = PASSTABLE
 
 /obj/effect/meteor/Move()
-	//var/turf/T = src.loc
-	//if(istype(T, /turf))
-		//T.hotspot_expose(METEOR_TEMPERATURE, 1000, surfaces = 1)
+	var/turf/T = src.loc
+	if(istype(T, /turf))
+		T.hotspot_expose(METEOR_TEMPERATURE, 1000, surfaces = 1)
 	..()
 	return
 
@@ -101,13 +100,13 @@
 				shake_camera(M, 3, 2) //Medium hit
 		if(A)
 			A.meteorhit(src)
-			playsound(get_turf(src), "explosion", 50, 1) //Medium boom
-			explosion(src.loc, 2, 4, 6, 8, 0) //Medium meteor, medium boom
+			playsound(get_turf(src), "explosion", 40, 1) //Medium boom
+			explosion(src.loc, 1, 2, 4, 8) //Medium meteor, medium boom
 			qdel(src)
 
 /obj/effect/meteor/ex_act(severity)
 
-	if(severity < 4)
+	if (severity < 4)
 		qdel(src)
 	return
 
@@ -123,8 +122,8 @@
 				shake_camera(M, 2, 1) //Poof
 		if(A)
 			A.meteorhit(src)
-			playsound(get_turf(src), 'sound/effects/meteorimpact.ogg', 10, 1)
-			explosion(src.loc, -1, 1, 3, 4, 0) //Tiny meteor doesn't cause too much damage
+			playsound(get_turf(src), 'sound/effects/meteorimpact.ogg', 30, 1)
+			explosion(src.loc, -1, 1, 2, 4) //Tiny meteor doesn't cause too much damage
 			qdel(src)
 
 
@@ -142,15 +141,11 @@
 			if(!M.stat && !istype(M, /mob/living/silicon/ai)) //bad idea to shake an ai's view
 				shake_camera(M, 7, 3) //Massive shellshock
 		if(A)
-			explosion(src.loc, 4, 6, 8, 8, 0) //You have been visited by the nuclear meteor
+			explosion(src.loc, 4, 6, 8, 8) //You have been visited by the nuclear meteor
 			playsound(get_turf(src), "explosion", 100, 1) //Deafening boom, default is 50
 			qdel(src)
 
 /obj/effect/meteor/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/pickaxe))
 		qdel(src)
-	..()
-
-/obj/effect/meteor/Destroy()
-	walk(src,0) //this cancels the walk_towards() proc
 	..()

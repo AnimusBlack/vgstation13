@@ -1,13 +1,13 @@
 /var/global/sent_spiders_to_station = 0
 
 /datum/event/spider_infestation
-	announceWhen	= 450
+	announceWhen	= 400
 
 	var/spawncount = 1
 
 
 /datum/event/spider_infestation/setup()
-	announceWhen = rand(300, 600)
+	announceWhen = rand(announceWhen, announceWhen + 50)
 	spawncount = rand(8, 12)	//spiderlings only have a 50% chance to grow big and strong
 	sent_spiders_to_station = 0
 

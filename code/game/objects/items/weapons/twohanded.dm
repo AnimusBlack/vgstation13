@@ -31,41 +31,41 @@
 	var/wieldsound = null
 	var/unwieldsound = null
 
-/obj/item/weapon/twohanded/proc/unwield(mob/user)
+/obj/item/weapon/twohanded/proc/unwield()
 	wielded = 0
 	force = force_unwielded
 	name = "[initial(name)]"
-	set_icon(user)
+	set_icon()
 
 
-/obj/item/weapon/twohanded/proc/wield(mob/user)
+/obj/item/weapon/twohanded/proc/wield()
 	wielded = 1
 	force = force_wielded
 	name = "[initial(name)] (Wielded)"
-	set_icon(user)
+	set_icon()
 
 
 
-/obj/item/weapon/twohanded/proc/set_icon(mob/user)
+/obj/item/weapon/twohanded/proc/set_icon()
+	set src in usr
 
 	if(findtext(icon_state, "fireaxe"))
 		item_state = "fireaxe[wielded]"
 
+
 	else if(findtext(icon_state, "dualsaber"))
 		item_state = "dualsaber[wielded]"
 
+
 	else if(findtext(icon_state, "hfrequency"))
 		item_state = "hfrequency[wielded]"
-
-	else if(findtext(icon_state, "Gibtonite Ore"))
-	//Do nothing. Gibtonite ore has no wielded sprites
 
 	else
 		item_state = "spearglass[wielded]"
 
 
-	user.update_inv_l_hand()
-	user.update_inv_r_hand()
+	usr.update_inv_l_hand()
+	usr.update_inv_r_hand()
 	update_icon()
 
 
@@ -82,15 +82,15 @@
 	if(user)
 		var/obj/item/weapon/twohanded/O = user.get_inactive_hand()
 		if(istype(O))
-			O.unwield(user)
-	return	unwield(user)
+			O.unwield()
+	return	unwield()
 
 //obj/item/weapon/twohanded/update_icon()
 //	return
 
 /obj/item/weapon/twohanded/pickup(mob/user)
 	wielded = 0
-	set_icon(user)
+	set_icon()
 	wielded = 0
 
 /obj/item/weapon/twohanded/attack_self(mob/user as mob)
@@ -100,14 +100,14 @@
 
 	//..()
 	if(wielded) //Trying to unwield it
-		unwield(user)
+		unwield()
 		user << "<span class='notice'>You are now carrying the [name] with one hand.</span>"
 		if (src.unwieldsound)
 			playsound(get_turf(src), unwieldsound, 50, 1)
 
 		var/obj/item/weapon/twohanded/offhand/O = user.get_inactive_hand()
 		if(O && istype(O))
-			O.unwield(user)
+			O.unwield()
 		//world << "<span class='warning'>[icon_state]</span>" // debugging
 		return
 
@@ -115,7 +115,7 @@
 		if(user.get_inactive_hand())
 			user << "<span class='warning'>You need your other hand to be empty</span>"
 			return
-		wield(user)
+		wield()
 		user << "<span class='notice'>You grab the [initial(name)] with both hands.</span>"
 		if (src.wieldsound)
 			playsound(get_turf(src), wieldsound, 50, 1)

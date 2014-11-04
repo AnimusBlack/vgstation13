@@ -644,10 +644,12 @@ var/global/floorIsLava = 0
 		<hr />
 		<ul>
 			<li>
-				<a href="?src=\ref[src];set_base_laws=ai"><b>Default Cyborg/AI Laws:</b>[base_law_type]</a>
+				<b>Default Cyborg/AI Laws:</b>
+				<a href="?src=\ref[src];set_base_laws=ai">[base_law_type]</a>
 			</li>
 			<li>
-				<a href="?src=\ref[src];set_base_laws=mommi"><b>Default MoMMI Laws:</b>[mommi_base_law_type]</a>
+				<b>Default MoMMI Laws:</b>
+				<a href="?src=\ref[src];set_base_laws=mommi">[mommi_base_law_type]</a>
 			</li>
 		</ul>
 		<hr />
@@ -737,22 +739,10 @@ var/global/floorIsLava = 0
 			<A href='?src=\ref[src];secretsfun=blackout'>Break all lights</A><BR>
 			<A href='?src=\ref[src];secretsfun=whiteout'>Fix all lights</A><BR>
 			<A href='?src=\ref[src];secretsfun=floorlava'>The floor is lava! (DANGEROUS: extremely lame)</A><BR>
-			<A href='?src=\ref[src];secretsfun=togglenarsie'>Toggle Nar-Sie's behaviour</A><BR>
-			<BR>
-			<B>Final Soloutions</B><BR>
-			<I>(Warning, these will end the round!)</I><BR>
-			<BR>
-			<A href='?src=\ref[src];secretsfun=hellonearth'>Summon Nar-Sie</A><BR>
-			<A href='?src=\ref[src];secretsfun=supermattercascade'>Start a Supermatter Cascade</A><BR>
 			"}
 
 	if(check_rights(R_SERVER,0))
-
-		dat += {"
-			<BR>
-			<B>Server</B><BR>
-			<BR>
-			<A href='?src=\ref[src];secretsfun=togglebombcap'>Toggle bomb cap</A><BR>"}
+		dat += "<A href='?src=\ref[src];secretsfun=togglebombcap'>Toggle bomb cap</A><BR>"
 
 	dat += "<BR>"
 
@@ -763,7 +753,6 @@ var/global/floorIsLava = 0
 			<A href='?src=\ref[src];secretscoder=maint_access_engiebrig'>Change all maintenance doors to engie/brig access only</A><BR>
 			<A href='?src=\ref[src];secretscoder=maint_access_brig'>Change all maintenance doors to brig access only</A><BR>
 			<A href='?src=\ref[src];secretscoder=infinite_sec'>Remove cap on security officers</A><BR>
-			<a href='?src=\ref[src];secretscoder=virus_custom'>Custom Virus Outbreak</a><BR>
 			<BR>
 			<B>Coder Secrets</B><BR>
 			<BR>
@@ -799,13 +788,6 @@ var/global/floorIsLava = 0
 
 		if(blackbox)
 			blackbox.save_all_data_to_sql()
-
-		CallHook("Reboot",list())
-
-		if (watchdog.waiting)
-			world << "\blue <B>Server will shut down for an automatic update in a few seconds.</B>"
-			watchdog.signal_ready()
-			return
 
 		sleep(50)
 		world.Reboot()
@@ -993,12 +975,6 @@ var/global/floorIsLava = 0
 	if(blackbox)
 		blackbox.save_all_data_to_sql()
 
-	CallHook("Reboot",list())
-
-	if (watchdog.waiting)
-		world << "\blue <B>Server will shut down for an automatic update in a few seconds.</B>"
-		watchdog.signal_ready()
-		return
 
 	world.Reboot()
 

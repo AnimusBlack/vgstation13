@@ -60,6 +60,9 @@ var/const/VOX_DELAY = 600
 
 
 /mob/living/silicon/ai/verb/announcement()
+	set name = "Announcement"
+	set desc = "Create a vocal announcement by typing in the available words to create a sentence."
+	set category = "AI Commands"
 
 	// If we're in an APC, and APC is ded, ABORT
 	if(parent && istype(parent) && parent.stat)
@@ -82,7 +85,7 @@ var/const/VOX_DELAY = 600
 	if(!message || announcing_vox > world.time)
 		return
 
-	var/list/words = text2list(trim(message), " ")
+	var/list/words = stringsplit(trim(message), " ")
 	var/list/incorrect_words = list()
 
 	if(words.len > 30)

@@ -15,7 +15,7 @@ proc/SetupXenoarch()
 			var/turf/unsimulated/mineral/archeo_turf = turfs_to_process[1]
 
 			for(var/turf/unsimulated/mineral/T in orange(1, archeo_turf))
-				if(T.finds.len)
+				if(T.finds)
 					continue
 
 				if(T in processed_turfs)
@@ -27,7 +27,8 @@ proc/SetupXenoarch()
 			turfs_to_process.Remove(archeo_turf)
 			processed_turfs.Add(archeo_turf)
 
-			if(!archeo_turf.finds || !archeo_turf.finds.len)
+			if(isnull(archeo_turf.finds))
+				archeo_turf.finds = list()
 
 				if(prob(50))
 					archeo_turf.finds.Add(new /datum/find(digsite, rand(5,95)))

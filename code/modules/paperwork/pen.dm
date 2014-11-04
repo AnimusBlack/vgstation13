@@ -61,8 +61,8 @@
 	addReplacement(REG_BBTAG("/u"),     "</U>")
 	addReplacement(REG_BBTAG("large"),  "<font size=\"4\">")
 	addReplacement(REG_BBTAG("/large"), "</font>")
-	//addReplacement(REG_BBTAG("sign"),   "<span style=\"[style_sign]\"><USERNAME /</span>")
-	//addReplacement(REG_BBTAG("field"),  "<span class=\"paper_field\"></span>")
+	addReplacement(REG_BBTAG("sign"),   "<span style=\"[style_sign]\"><USERNAME /></span>")
+	addReplacement(REG_BBTAG("field"),  "<span class=\"paper_field\"></span>")
 
 	// Fallthrough just fucking kills the tag
 	addReplacement(REG_BBTAG("\[^\\\]\]"), "")
@@ -74,8 +74,8 @@
 			var/datum/speech_filter_action/SFA = expressions[key]
 			if(SFA && !SFA.broken)
 				t = SFA.Run(t,user,paper)
-	t = replacetext(t, "\[sign\]", "<font face=\"Times New Roman\"><i>[user.real_name]</i></font>")
-	t = replacetext(t, "\[field\]", "<span class=\"paper_field\"></span>")
+	t = replacetext(t,"<USERNAME />",user.real_name)
+
 	return "<span style=\"[style];color:[P.colour]\">[t]</span>"
 
 /datum/writing_style/pen/New()

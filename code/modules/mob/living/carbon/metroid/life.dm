@@ -65,8 +65,8 @@
 			if(150 to 900) hungry = 1
 			if(0 to 149) starving = 1
 	AIproc = 1
-	//world << "AIproc [AIproc] && stat != 2 [stat] && (attacked > 0 [attacked] || starving [starving] || hungry [hungry] || Victim [Victim] || Target [Target]"
-	while(AIproc && stat != 2 && (attacked > 0 || starving || hungry || Victim))
+	//world << "AIproc [AIproc] && stat != 2 [stat] && (attacked > 0 [attacked] || starving [starving] || hungry [hungry] || rabid [rabid] || Victim [Victim] || Target [Target]"
+	while(AIproc && stat != 2 && (attacked > 0 || starving || hungry || rabid || Victim))
 		if(Victim) // can't eat AND have this little process at the same time
 			//world << "break 1"
 			break
@@ -178,6 +178,10 @@
 	*/
 
 
+	if(loc_temp < 310.15) // a cold place
+		bodytemperature += adjust_body_temperature(bodytemperature, loc_temp, 1)
+	else // a hot place
+		bodytemperature += adjust_body_temperature(bodytemperature, loc_temp, 1)
 
 	/*
 	if(stat==2)
@@ -192,21 +196,14 @@
 
 		if(bodytemperature <= (T0C - 50)) // hurt temperature
 			if(bodytemperature <= 50) // sqrting negative numbers is bad
-				adjustToxLoss(301)				//The config.health_threshold_dead is -100 by default, and slimes have 150hp (200hp for adults),
-			else								//so the ToxLoss needs to be 300 or above to guarrantee an instant death -Deity Link
+				adjustToxLoss(200)
+			else
 				adjustToxLoss(round(sqrt(bodytemperature)) * 2)
+
 	else
 		Tempstun = 0
 
-	/*moved after the temperature damage code so freeze beams can instantly kill slimes -Deity Link*/
-	if(loc_temp < 310.15) // a cold place
-		bodytemperature += adjust_body_temperature(bodytemperature, loc_temp, 1)
-	else // a hot place
-		bodytemperature += adjust_body_temperature(bodytemperature, loc_temp, 1)
-
-
 	updatehealth()
-
 
 	return //TODO: DEFERRED
 
@@ -260,7 +257,7 @@
 
 		if(src.stat != DEAD)	src.stat = UNCONSCIOUS
 
-	if(prob(30))	//I think this is meant to allow slimes to starve to death -Deity Link
+	if(prob(30))
 		adjustOxyLoss(-1)
 		adjustToxLoss(-1)
 		adjustFireLoss(-1)
@@ -353,6 +350,7 @@
 					M.powerlevel = round(powerlevel/4)
 					M.Friends = Friends
 					M.tame = tame
+					M.rabid = rabid
 					M.Discipline = Discipline
 					if(i != 1) step_away(M,src)
 					feedback_add_details("slime_babies_born","slimebirth_[replacetext(M.colour," ","_")]")
@@ -366,6 +364,7 @@
 				A.powerlevel = max(0, powerlevel-1)
 				A.Friends = Friends
 				A.tame = tame
+				A.rabid = rabid
 				del(src)
 
 
@@ -384,8 +383,12 @@
 
 	if(Discipline > 0)
 
+		if(Discipline >= 5 && rabid)
+			if(prob(60)) rabid = 0
+
 		if(prob(10))
 			Discipline--
+
 
 	if(!client)
 
@@ -504,7 +507,7 @@
 					Target = targets[1] // closest target
 
 			if(targets.len > 0)
-				if(attacked > 0 )
+				if(attacked > 0 || rabid)
 					Target = targets[1] //closest mob probably attacked it, so override Target and attack the nearest!
 
 

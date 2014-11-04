@@ -159,6 +159,14 @@ proc/get_id_photo(var/mob/living/carbon/human/H)
 		else
 			preview_icon.Blend(rgb(-H.s_tone,  -H.s_tone,  -H.s_tone), ICON_SUBTRACT)
 
+	if(H.species.flags & HAS_SKIN_TONE)
+		if(!H.species || H.species.flags & HAS_SKIN_COLOR)
+			preview_icon.Blend(rgb(H.r_skin, H.g_skin, H.b_skin), ICON_ADD)
+
+	if(H.species.tail && H.species.flags & HAS_TAIL)
+		temp = new/icon("icon" = 'icons/effects/species.dmi', "icon_state" = "[H.species.tail]_s")
+		preview_icon.Blend(temp, ICON_OVERLAY)
+
 	var/icon/eyes_s = new/icon("icon" = 'icons/mob/human_face.dmi', "icon_state" = H.species ? H.species.eyes : "eyes_s")
 
 	eyes_s.Blend(rgb(H.r_eyes, H.g_eyes, H.b_eyes), ICON_ADD)

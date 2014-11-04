@@ -11,6 +11,7 @@
 	layer = 2.5
 	anchored = 1
 
+	var/open = 0		// true if cover is open
 	var/locked = 1		// true if controls are locked
 	var/freq = 1445		// radio frequency
 	var/location = ""	// location response text
@@ -18,8 +19,6 @@
 	var/codes_txt = ""	// codes as set on map: "tag1;tag2" or "tag1=value;tag2=value"
 
 	req_access = list(access_engine)
-
-	machine_flags = SCREWTOGGLE
 
 	New()
 		..()
@@ -60,7 +59,7 @@
 
 	// update the icon_state
 	proc/updateicon()
-		var/state="navbeacon[panel_open]"
+		var/state="navbeacon[open]"
 
 		if(invisibility)
 			icon_state = "[state]-f"	// if invisible, set icon to faded version
@@ -105,11 +104,15 @@
 		if(T.intact)
 			return		// prevent intraction when T-scanner revealed
 
-		if(..())
-			return
+		if(istype(I, /obj/item/weapon/screwdriver))
+			open = !open
+
+			user.visible_message("[user] [open ? "opens" : "closes"] the beacon's cover.", "You [open ? "open" : "close"] the beacon's cover.")
+
+			updateicon()
 
 		else if (istype(I, /obj/item/weapon/card/id)||istype(I, /obj/item/device/pda))
-			if(panel_open)
+			if(open)
 				if (src.allowed(user))
 					src.locked = !src.locked
 					user << "Controls are now [src.locked ? "locked." : "unlocked."]"
@@ -135,7 +138,7 @@
 		if(T.intact)
 			return		// prevent intraction when T-scanner revealed
 
-		if(!panel_open && !ai)	// can't alter controls if not open, unless you're an AI
+		if(!open && !ai)	// can't alter controls if not open, unless you're an AI
 			user << "The beacon's control cover is closed."
 			return
 
@@ -191,7 +194,7 @@ Transponder Codes:<UL>"}
 		if (usr.stat)
 			return
 		if ((in_range(src, usr) && istype(src.loc, /turf)) || (istype(usr, /mob/living/silicon)))
-			if(panel_open && !locked)
+			if(open && !locked)
 				usr.set_machine(src)
 
 				if (href_list["freq"])

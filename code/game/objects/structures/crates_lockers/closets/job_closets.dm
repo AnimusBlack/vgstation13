@@ -29,8 +29,6 @@
 	new /obj/item/clothing/suit/wcoat(src)
 	new /obj/item/clothing/shoes/black(src)
 	new /obj/item/clothing/shoes/black(src)
-	new /obj/item/clothing/monkeyclothes(src)
-	new /obj/item/clothing/monkeyclothes(src)
 
 /*
  * Janitor

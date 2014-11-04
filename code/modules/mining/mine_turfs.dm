@@ -18,7 +18,7 @@
 	var/last_act = 0
 	var/datum/geosample/geologic_data
 	var/excavation_level = 0
-	var/list/finds = list()//no longer null to prevent those pesky runtime errors
+	var/list/finds
 	var/next_rock = 0
 	var/archaeo_overlay = ""
 	var/excav_overlay = ""
@@ -324,8 +324,6 @@
 			while(next_rock > 100)
 				next_rock -= 100
 				var/obj/item/weapon/ore/O = new(src)
-				if(!geologic_data)
-					geologic_data = new/datum/geosample(src)
 				geologic_data.UpdateNearbyArtifactInfo(src)
 				O.geologic_data = geologic_data
 
@@ -387,8 +385,6 @@
 		X = new /obj/item/weapon/archaeological_find(src, new_item_type = F.find_type)
 	else
 		X = new /obj/item/weapon/ore/strangerock(src, inside_item_type = F.find_type)
-		if(!geologic_data)
-			geologic_data = new/datum/geosample(src)
 		geologic_data.UpdateNearbyArtifactInfo(src)
 		X:geologic_data = geologic_data
 
@@ -469,7 +465,8 @@
 
 	if(prob(20))
 		icon_state = "asteroid[rand(0,12)]"
-	updateMineralOverlays()
+	spawn(2)
+		updateMineralOverlays()
 
 /turf/unsimulated/floor/asteroid/ex_act(severity)
 	switch(severity)

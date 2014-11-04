@@ -24,6 +24,7 @@
 				world << "<font size=4 color='red'>Attention! Security level lowered to green</font>"
 				world << "<font color='red'>[config.alert_desc_green]</font>"
 				security_level = SEC_LEVEL_GREEN
+				world << sound('sound/AI/sl_lowered_green.ogg')
 				for(var/obj/machinery/firealarm/FA in machines)
 					if(FA.z == 1)
 						FA.overlays = list()
@@ -32,9 +33,12 @@
 				if(security_level < SEC_LEVEL_BLUE)
 					world << "<font size=4 color='red'>Attention! Security level elevated to blue</font>"
 					world << "<font color='red'>[config.alert_desc_blue_upto]</font>"
+					world << sound('sound/AI/intercept.ogg')
 				else
 					world << "<font size=4 color='red'>Attention! Security level lowered to blue</font>"
 					world << "<font color='red'>[config.alert_desc_blue_downto]</font>"
+					world << sound('sound/AI/sl_lowered_blue.ogg')
+
 				security_level = SEC_LEVEL_BLUE
 				for(var/obj/machinery/firealarm/FA in machines)
 					if(FA.z == 1)
@@ -47,6 +51,7 @@
 				else
 					world << "<font size=4 color='red'>Attention! Code red!</font>"
 					world << "<font color='red'>[config.alert_desc_red_downto]</font>"
+				world << sound('sound/AI/sl_red.ogg')
 				security_level = SEC_LEVEL_RED
 
 				/*	- At the time of commit, setting status displays didn't work properly
@@ -62,6 +67,7 @@
 			if(SEC_LEVEL_DELTA)
 				world << "<font size=4 color='red'>Attention! Delta security level reached!</font>"
 				world << "<font color='red'>[config.alert_desc_delta]</font>"
+				world << sound('sound/AI/sl_delta.ogg')
 				security_level = SEC_LEVEL_DELTA
 				for(var/obj/machinery/firealarm/FA in machines)
 					if(FA.z == 1)

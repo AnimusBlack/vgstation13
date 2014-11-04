@@ -71,13 +71,8 @@
 					A.relativewall()
 
 /turf/simulated/wall/New()
-	..()
-
-	// SMOOTH US WITH OUR NEIGHBORS
 	relativewall()
-
-	// WE NEED TO TELL ALL OUR FRIENDS ABOUT THIS SCANDAL
-	relativewall_neighbours()
+	..()
 
 /turf/simulated/wall/Destroy()
 
