@@ -113,7 +113,6 @@ var/list/admin_ranks = list()								//list of all ranks with associated rights
 			var/rights = query.item[3]
 			if(rank == "Removed")	continue	//This person was de-adminned. They are only in the admin list for archive purposes.
 
-			var/rights = query.item[4]
 			if(istext(rights))	rights = text2num(rights)
 			var/datum/admins/D = new /datum/admins(rank, rights, ckey)
 
